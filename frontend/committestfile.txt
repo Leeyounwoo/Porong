@@ -1,4 +1,0 @@
-commit test ok?
-vim 파일 수정
-
-:wq  로 저장하고 커밋 완료
