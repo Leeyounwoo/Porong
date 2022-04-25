@@ -6,27 +6,24 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import type {Node} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
+  Button,
+  Image,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-const Section = ({children, title}): Node => {
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+
+const imgsrc = require('./imgtest.jpg');
+
+const Section = ({title}) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -52,61 +49,92 @@ const Section = ({children, title}): Node => {
   );
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log(position.coords.latitude);
+        console.log(position.coords.longitude);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  }, []);
+
+  const btnclicktest = () => {
+    console.log('check');
   };
-  console.log('윤설님 진짜 멋있어요.');
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Hello">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.allcontainer}>
+      <View style={styles.headcontainer}>
+        <Image style={styles.imgstyle} source={require('./imgtest.jpg')} />
+      </View>
+      <Text>text message</Text>
+      <View style={styles.mapcontainer}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          initialRegion={{
+            latitude: lat,
+            longitude: lng,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121,
+          }}
+          showUserLocation={true}></MapView>
+      </View>
+      <View style={styles.btncontainer}>
+        <Button
+          style={styles.btntest}
+          title="메세지 보내러 가기"
+          onPress={btnclicktest}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  allcontainer: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  mapcontainer: {
+    height: 350,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
-  highlight: {
-    fontWeight: '700',
+  btncontainer: {
+    marginTop: 30,
+  },
+  headcontainer: {
+    backgroundColor: 'red',
+    alignSelf: 'center',
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  headcontainer2: {
+    backgroundColor: 'blue',
+    alignSelf: 'center',
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  imgstyle: {
+    width: 100,
+    height: 100,
   },
 });
 
