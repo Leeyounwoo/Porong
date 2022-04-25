@@ -1,112 +1,147 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import 'react-native-gesture-handler';
+import React, {useEffect} from 'react';
+import {View, Image} from 'react-native';
+import HomeScreen from './screens/Home';
+import LoginScreen from './screens/Login';
+import AlarmScreen from './screens/Alarm';
+import MessageScreen from './screens/SendMessage';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const Tabs = createBottomTabNavigator();
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+const HomeStack = createNativeStackNavigator();
+function HomeStackScreen() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <HomeStack.Navigator screenOptions={{headerShown: false}}>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+    </HomeStack.Navigator>
+  );
+}
+const AlarmStack = createNativeStackNavigator();
+function AlarmStackScreen() {
+  return (
+    <AlarmStack.Navigator screenOptions={{headerShown: false}}>
+      <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
+    </AlarmStack.Navigator>
+  );
+}
+const AccountStack = createNativeStackNavigator();
+function AccountStackScreen() {
+  return (
+    <AccountStack.Navigator screenOptions={{headerShown: false}}>
+      <AccountStack.Screen name="Account" component={LoginScreen} />
+    </AccountStack.Navigator>
+  );
+}
+
+const MessageStack = createNativeStackNavigator();
+function MessageStackScreen() {
+  return (
+    <MessageStack.Navigator screenOptions={{headerShown: false}}>
+      <MessageStack.Screen name="Messege" component={MessageScreen} />
+    </MessageStack.Navigator>
+  );
+}
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Tabs.Navigator
+        initialRouteName="home"
+        screenOptions={{tabBarShowLabel: false}}>
+        <Tabs.Screen
+          name="home"
+          component={HomeStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/homepage.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="alarm"
+          component={AlarmStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/bell.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="message"
+          component={MessageStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/email.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="login"
+          component={AccountStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/enter.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+      </Tabs.Navigator>
+    </NavigationContainer>
   );
 };
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
