@@ -1,141 +1,147 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import 'react-native-gesture-handler';
+import React, {useEffect} from 'react';
+import {View, Image} from 'react-native';
+import HomeScreen from './screens/Home';
+import LoginScreen from './screens/Login';
+import AlarmScreen from './screens/Alarm';
+import MessageScreen from './screens/SendMessage';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Button,
-  Image,
-} from 'react-native';
+const Tabs = createBottomTabNavigator();
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
-
-const imgsrc = require('./imgtest.jpg');
-
-const Section = ({title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
+const HomeStack = createNativeStackNavigator();
+function HomeStackScreen() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <HomeStack.Navigator screenOptions={{headerShown: false}}>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+    </HomeStack.Navigator>
   );
-};
+}
+const AlarmStack = createNativeStackNavigator();
+function AlarmStackScreen() {
+  return (
+    <AlarmStack.Navigator screenOptions={{headerShown: false}}>
+      <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
+    </AlarmStack.Navigator>
+  );
+}
+const AccountStack = createNativeStackNavigator();
+function AccountStackScreen() {
+  return (
+    <AccountStack.Navigator screenOptions={{headerShown: false}}>
+      <AccountStack.Screen name="Account" component={LoginScreen} />
+    </AccountStack.Navigator>
+  );
+}
+
+const MessageStack = createNativeStackNavigator();
+function MessageStackScreen() {
+  return (
+    <MessageStack.Navigator screenOptions={{headerShown: false}}>
+      <MessageStack.Screen name="Messege" component={MessageScreen} />
+    </MessageStack.Navigator>
+  );
+}
 
 const App = () => {
-  const [lat, setLat] = useState(0);
-  const [lng, setLng] = useState(0);
-
-  useEffect(() => {
-    Geolocation.getCurrentPosition(
-      position => {
-        console.log(position.coords.latitude);
-        console.log(position.coords.longitude);
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
-      },
-      error => {
-        // See error code charts below.
-        console.log(error.code, error.message);
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
-  }, []);
-
-  const btnclicktest = () => {
-    console.log('check');
-  };
-
   return (
-    <View style={styles.allcontainer}>
-      <View style={styles.headcontainer}>
-        <Image style={styles.imgstyle} source={require('./imgtest.jpg')} />
-      </View>
-      <Text>text message</Text>
-      <View style={styles.mapcontainer}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          initialRegion={{
-            latitude: lat,
-            longitude: lng,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
+    <NavigationContainer>
+      <Tabs.Navigator
+        initialRouteName="home"
+        screenOptions={{tabBarShowLabel: false}}>
+        <Tabs.Screen
+          name="home"
+          component={HomeStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/homepage.png')}
+                />
+              </View>
+            ),
           }}
-          showUserLocation={true}></MapView>
-      </View>
-      <View style={styles.btncontainer}>
-        <Button
-          style={styles.btntest}
-          title="메세지 보내러 가기"
-          onPress={btnclicktest}
         />
-      </View>
-    </View>
+        <Tabs.Screen
+          name="alarm"
+          component={AlarmStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/bell.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="message"
+          component={MessageStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/email.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="login"
+          component={AccountStackScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? '#4385E0' : 'grey',
+                  }}
+                  source={require('./assets/icons/enter.png')}
+                />
+              </View>
+            ),
+          }}
+        />
+      </Tabs.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  allcontainer: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  mapcontainer: {
-    height: 350,
-    width: 400,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  btncontainer: {
-    marginTop: 30,
-  },
-  headcontainer: {
-    backgroundColor: 'red',
-    alignSelf: 'center',
-    marginTop: 30,
-    marginBottom: 30,
-  },
-  headcontainer2: {
-    backgroundColor: 'blue',
-    alignSelf: 'center',
-    marginTop: 30,
-    marginBottom: 30,
-  },
-  imgstyle: {
-    width: 100,
-    height: 100,
-  },
-});
 
 export default App;
