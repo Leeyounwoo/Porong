@@ -6,8 +6,10 @@ RUN ls
 
 WORKDIR /home/spring
 
-COPY build/libs/*.jar /home/spring/application.jar
+RUN ls
 
-EXPOSE 8081
+COPY ./build/libs/*.jar /home/spring/
 
-CMD ["java", "-jar", "/home/spring/application.jar"]
+RUN ls
+
+CMD ["java", "-jar", "/home/spring/Common-0.0.1-SNAPSHOT.jar"]
