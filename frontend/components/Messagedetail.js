@@ -3,8 +3,11 @@ import {StyleSheet, View, Text,Button } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 
+const icon = require('../assets/icons/letter.png');
 
-export default function Messagedetail() {
+
+//데이터의 위치를 
+export default function Messagedetail({ sender, receiver, time, position, messageText,istype }) {
     
     const [senderName, setSenderName] = useState('sender');
     const [receiverName, setReceiverName] = useState('receiver');
@@ -14,7 +17,9 @@ export default function Messagedetail() {
     });
     const [transPos, setTransPos] = useState('ee');
     const [messageContent, setMessageContent] = useState('찾아야지? 못찾겠지?');
-    
+    const [type, setType] = useState('summary');
+    const [converttime, setConvertTime] = useState('13:10:22');
+
     Geocoder.init("AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s");
 
     useEffect(() => {
@@ -26,15 +31,11 @@ export default function Messagedetail() {
     const btnClick = () => {
         console.log("to " + senderName + "resend");
     }
-
     return (
         <View style={ styles.allcontainer }>
-            <View style={ styles.fromtoContainer }>
-                <Text style={{ color:'blue',fontSize:18 }}>{senderName}</Text>
-                <Text> 님이</Text>
-                <Text style={{ color: 'blue', fontSize: 18 }}>{receiverName}</Text>
-                <Text> 님에게</Text>
-            </View>
+            {type == 'resend' ?
+            <View style={styles.fromtoContainer}><Text style={{ color: 'blue', fontSize: 16 }}>{senderName}</Text><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 님이</Text><Text style={{ color: 'blue', fontSize: 16 }}>{receiverName}</Text><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 님에게</Text></View>
+                : <View style={styles.fromtoContainer}><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}>이 메세지는</Text><Text style={{ color: 'blue', fontSize: 16 }}>{receiverName}</Text><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 님이</Text><Text style={{ color: 'blue', fontSize: 16 }}>{converttime}</Text></View>}
             <View>
                 <MapView
                     provider={PROVIDER_GOOGLE}
@@ -47,39 +48,38 @@ export default function Messagedetail() {
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
                     }}>
-                    <Marker title="test" icon={require('./letter.png') }coordinate={{ latitude : singlePos.lat, longitude : singlePos.lng}}/>
+                    <Marker title="test" icon={ icon}coordinate={{ latitude : singlePos.lat, longitude : singlePos.lng}}/>
                 </MapView>
             </View>
             <View style={styles.positionContainer}>
-                <Text style={{ color: 'blue', fontSize: 18 }}>{transPos}</Text>
-                <Text> 에서 확인했습니다!</Text>
+                <Text style={{ color: 'blue', fontSize: 16 }}>{transPos}</Text>
+                {type == 'resend' ? <Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 에서 확인했습니다!</Text> : <Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}>에서 볼 수 있습니다!</Text> }
             </View>
             <View style={styles.messageTitle }>
-                <Text>메세지 내용</Text>
+                <Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}>메세지 내용</Text>
             </View>
             <View style={styles.messageContent }>
                 <Text>{ messageContent }</Text>
             </View>
-            <View style={styles.buttonContainer}>
+            {type == 'resend'?<View style={styles.buttonContainer}>
                 <Button onPress={btnClick } title={'답장하기'}></Button>
-            </View>
+            </View> : <View></View>}
         </View>
     );
 }
-
 const styles = StyleSheet.create({
     allcontainer: {
         flex: 1,
         alignItems: 'center',
     },
     fromtoContainer: {
-        marginLeft:25,
+        marginLeft:10,
         flexDirection: 'row',
         alignSelf:'flex-start'    
     },
     positionContainer: {
-        flexWrap:'wrap',
-        flexDirection: 'row',
+        flexWrap:'nowrap',
+        flexDirection: 'column',
         alignSelf: 'flex-start',
     },
     messageTitle: {
