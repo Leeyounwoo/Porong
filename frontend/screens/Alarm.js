@@ -18,13 +18,12 @@ export default function Alarm() {
     <View style={styles.allcontainer}>
       <View style={styles.alarmcontainer}>
         <View style={styles.profilebox}>
-          {/* <Text>{alarms.alarmcode1.profileImageUrl}</Text> */}
           <Image
             source={{uri: 'https://reactjs.org/logo-og.png'}}
             style={styles.profileimage}
           />
         </View>
-        <View>
+        <View style={styles.textbox}>
           <Text>{`${alarms.alarmcode1.username}님이 [${alarms.alarmcode1.time}] [${alarms.alarmcode1.place}] 에서`}</Text>
           <Text>볼 수 있는 메세지를 보냈습니다.</Text>
         </View>
@@ -41,7 +40,9 @@ const styles = StyleSheet.create({
   },
   alarmcontainer: {
     flexDirection: 'row',
-    alignSelf: 'flex-start',
+    flexWrap: 'nowrap',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     // backgroundColor: 'red',
   },
   profilebox: {
@@ -54,6 +55,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     'object-fit': 'cover',
+  },
+  textbox: {
+    marginHorizontal: 10,
   },
   circle: {
     width: 10,
