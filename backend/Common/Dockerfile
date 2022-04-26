@@ -6,7 +6,7 @@ RUN ls
 
 WORKDIR /home/spring
 
-COPY ./build/libs/*.jar /home/spring/application.jar
+COPY /app/backend/Common/build/libs/*.jar /home/spring/application.jar
 
 EXPOSE 8081
 
