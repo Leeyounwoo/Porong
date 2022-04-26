@@ -6,6 +6,6 @@ WORKDIR /home/spring
 
 COPY build/libs/*.jar /home/spring/application.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["java", "-jar", "/home/spring/application.jar"]
