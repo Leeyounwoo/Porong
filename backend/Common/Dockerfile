@@ -12,4 +12,4 @@ COPY ./build/libs/*.jar /home/spring/
 
 RUN ls
 
-CMD ["echo", "start"]
+CMD ["java", "-jar", "/home/spring/Common-0.0.1-SNAPSHOT.jar"]
