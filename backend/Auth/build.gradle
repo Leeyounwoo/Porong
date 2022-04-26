@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	// 2022-04-24 initial
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -29,6 +30,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// 2022-04-24 인가코드를 통해 받은 access_token 파싱을 위해 추가
+	implementation 'com.google.code.gson:gson:2.9.0'
+
+	// 2022-04-26 프론트 테스트를 위해 추가 (thymeleaf)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 }
 
 tasks.named('test') {
