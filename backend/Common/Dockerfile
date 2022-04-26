@@ -8,7 +8,7 @@ WORKDIR /home/spring
 
 RUN ls
 
-COPY ./build/libs/*.jar /home/spring/application.jar
+COPY ./build/libs/*.jar /home/spring/
 
 RUN ls
 
