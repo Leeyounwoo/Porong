@@ -10,7 +10,8 @@ export default function Login({navigation}) {
       console.log(tokens);
       const profile = await KakaoSDK.getProfile();
       console.log(profile);
-      navigation.navigate('logout');
+      alert('회원가입을 위해 새로운 페이지로 이동합니다.');
+      navigation.navigate('signin', {properties: profile.properties});
     } catch (e) {
       console.log(e);
     }
