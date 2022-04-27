@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@actbase/react-kakaosdk@^0.9.19":
+  version "0.9.19"
+  resolved "https://registry.yarnpkg.com/@actbase/react-kakaosdk/-/react-kakaosdk-0.9.19.tgz#9c6063d8406dd8958f961d70f0cf50d271426fab"
+  integrity sha512-a1Xe5hKw6HxJVJtE/vGE36c/H/YEzK8x0EvAXg1rsAMwQj2ADXnEwNRU1gbb6E8fSRd4rsXMz/vL4voaMzhdfw==
+  dependencies:
+    plist "^3.0.2"
+
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
@@ -5691,6 +5698,7 @@ react-native-geocoding@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/react-native-geocoding/-/react-native-geocoding-0.5.0.tgz#69748f896047a63d1c3c1d55255f9d67c8e275c2"
   integrity sha512-peTXRpRxPLiZpbTW43AOvoXXAEoS+eLnSo4KRY0hcL9F2hulWE5r7o5KiaLx8AWj35c6EJP3fdGHe754q2Gd2Q==
+
 react-native-gesture-handler@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.4.1.tgz#f4cb1784b6dcdf41ae35b4fff6022ec21038e2cd"

@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {View, Image} from 'react-native';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
+import LogoutScreen from './screens/Logout';
 import AlarmScreen from './screens/Alarm';
 import MessageScreen from './screens/SendMessage';
 import {NavigationContainer} from '@react-navigation/native';
@@ -14,7 +15,14 @@ const Tabs = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
 function HomeStackScreen() {
   return (
-    <HomeStack.Navigator screenOptions={{headerShown: false}}>
+    <HomeStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#4385E0',
+        },
+        headerTintColor: 'white',
+        headerTitleAlign: 'center',
+      }}>
       <HomeStack.Screen name="Home" component={HomeScreen} />
     </HomeStack.Navigator>
   );
@@ -22,7 +30,14 @@ function HomeStackScreen() {
 const AlarmStack = createNativeStackNavigator();
 function AlarmStackScreen() {
   return (
-    <AlarmStack.Navigator screenOptions={{headerShown: false}}>
+    <AlarmStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#4385E0',
+        },
+        headerTintColor: 'white',
+        headerTitleAlign: 'center',
+      }}>
       <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
     </AlarmStack.Navigator>
   );
@@ -30,8 +45,16 @@ function AlarmStackScreen() {
 const AccountStack = createNativeStackNavigator();
 function AccountStackScreen() {
   return (
-    <AccountStack.Navigator screenOptions={{headerShown: false}}>
-      <AccountStack.Screen name="Account" component={LoginScreen} />
+    <AccountStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#4385E0',
+        },
+        headerTintColor: 'white',
+        headerTitleAlign: 'center',
+      }}>
+      <AccountStack.Screen name="login" component={LoginScreen} />
+      <AccountStack.Screen name="logout" component={LogoutScreen} />
     </AccountStack.Navigator>
   );
 }
@@ -39,7 +62,14 @@ function AccountStackScreen() {
 const MessageStack = createNativeStackNavigator();
 function MessageStackScreen() {
   return (
-    <MessageStack.Navigator screenOptions={{headerShown: false}}>
+    <MessageStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#4385E0',
+        },
+        headerTintColor: 'white',
+        headerTitleAlign: 'center',
+      }}>
       <MessageStack.Screen name="Messege" component={MessageScreen} />
     </MessageStack.Navigator>
   );
@@ -50,7 +80,7 @@ const App = () => {
     <NavigationContainer>
       <Tabs.Navigator
         initialRouteName="home"
-        screenOptions={{tabBarShowLabel: false}}>
+        screenOptions={{headerShown: false, tabBarShowLabel: false}}>
         <Tabs.Screen
           name="home"
           component={HomeStackScreen}
@@ -118,7 +148,7 @@ const App = () => {
           }}
         />
         <Tabs.Screen
-          name="login"
+          name="로그인 하기"
           component={AccountStackScreen}
           options={{
             tabBarIcon: ({focused}) => (

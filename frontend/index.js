@@ -7,4 +7,4 @@ import App from './App';
 import Messagedetail from './Messagedetail';
 import {name as appName} from './app.json';
 
-AppRegistry.registerComponent(appName, () => Messagedetail);
+AppRegistry.registerComponent(appName, () => App);
