@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import KakaoSDK from '@actbase/react-kakaosdk';
 
-export default function Login({navigation}) {
+export default function Logout({navigation}) {
   const Login = async () => {
     try {
       await KakaoSDK.init('066f28139628e8b5440363889440f7be');
@@ -10,7 +10,6 @@ export default function Login({navigation}) {
       console.log(tokens);
       const profile = await KakaoSDK.getProfile();
       console.log(profile);
-      navigation.navigate('logout');
     } catch (e) {
       console.log(e);
     }
