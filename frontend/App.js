@@ -9,6 +9,7 @@ import MessageScreen from './screens/SendMessage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import ReceivedBox from './screens/ReceivedBox';
 
 const Tabs = createBottomTabNavigator();
 
@@ -38,7 +39,8 @@ function AlarmStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
+      {/* <AlarmStack.Screen name="Alarm" component={AlarmScreen} /> */}
+      <AlarmStack.Screen name="Alarm" component={ReceivedBox} />
     </AlarmStack.Navigator>
   );
 }
