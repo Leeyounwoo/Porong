@@ -15,21 +15,20 @@ import java.time.LocalDateTime;
 public class Message {
 
     @Id
-    @Column(name = "member_id")
+    @Column(name = "message_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long memberId;
+    private Long messageId;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     private MessageType type = MessageType.Normal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member; // sender_Id, member 추가 후 import 필요
+    @OneToOne(fetch = FetchType.LAZY) // ManyToOne
+    @JoinColumn(name = "member_id") // member_id
+    private Member sender; // sender_Id, member 추가 후 import 필요
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @OneToOne(fetch = FetchType.LAZY) // ManyToOne
+    @JoinColumn(name = "member_id") // member_id
+    private Member receiver;
 
     @Column(name = "latitude", nullable = false)
     private double latitude;
@@ -37,16 +36,14 @@ public class Message {
     @Column(name = "longitude", nullable = false)
     private double longitude;
 
-    @Column(name = "created_at")
+    @Column(name = "due_time")
     private LocalDateTime dueTime;
-
 
     @Column(name = "is_checked")
     private boolean isChecked;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
-
 
     @Column(length = 2200, nullable = false)
     private String title;
