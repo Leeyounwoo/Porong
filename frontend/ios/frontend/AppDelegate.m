@@ -1,3 +1,4 @@
+#import "WithKakaoSDK.h"
 #import "AppDelegate.h"
 
 #import <React/RCTBridge.h>
@@ -105,4 +106,9 @@
 
 #endif
 
+
+- (BOOL) application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  if ([WithKakaoSDK isKakaoTalkLoginUrl:url]) return [WithKakaoSDK handleOpenUrl:url];
+  return YES;
+}
 @end

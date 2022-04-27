@@ -23,9 +23,21 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
+
+        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity" android:exported="true">
+          <intent-filter>
+            <action android:name="android.intent.action.VIEW"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+            <category android:name="android.intent.category.BROWSABLE"/>
+            <data android:host="oauth" android:scheme="kakao066f28139628e8b5440363889440f7be"/>
+          </intent-filter>
+        </activity>
+      
       
       <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s"/>
+      <meta-data android:name="com.kakao.sdk.AppKey" android:value="066f28139628e8b5440363889440f7be" />
     </application>
 </manifest>
