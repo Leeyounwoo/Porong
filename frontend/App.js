@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {View, Image} from 'react-native';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
-import LogoutScreen from './screens/Logout';
+import SigninScreen from './screens/Signin';
 import AlarmScreen from './screens/Alarm';
 import MessageScreen from './screens/SendMessage';
 import {NavigationContainer} from '@react-navigation/native';
@@ -56,7 +56,7 @@ function AccountStackScreen() {
         headerTitleAlign: 'center',
       }}>
       <AccountStack.Screen name="login" component={LoginScreen} />
-      <AccountStack.Screen name="logout" component={LogoutScreen} />
+      <AccountStack.Screen name="signin" component={SigninScreen} />
     </AccountStack.Navigator>
   );
 }
