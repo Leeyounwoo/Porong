@@ -28,5 +28,4 @@ public class MemberController {
         return new ResponseEntity<>("회원가입이 완료되었습니다.", HttpStatus.OK);
     }
 
-
 }
