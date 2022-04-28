@@ -7,7 +7,7 @@ import MapTest from './Map';
 import Geolocation from '@react-native-community/geolocation';
 
 
-export default function SelectPosition() {
+export default function SelectPosition({ getAddress}) {
     const [totalpos, setTotalpos] = useState({lat: 0, lng: 0});
     const [address, setAddress] = useState('');
     Geocoder.init("AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s");
@@ -33,31 +33,70 @@ export default function SelectPosition() {
         }
     }, [totalpos]);
 
-    const pressTest = (lat, lng) => {
+    useEffect(() => {
+        console.log("최종 address ", address);
+        // getAddress(address);
+    },[address])
+
+    const mark = (lat, lng) => {
         setTotalpos({ ...totalpos, lat: lat, lng: lng });
     }
 
-    const checkAddress = () => {
+    const searchAddress = () => {
         Geocoder.from(address).then(json => {
             setTotalpos({...totalpos, lat: json.results[0].geometry.location.lat, lng: json.results[0].geometry.location.lng });
         })
     }
     return (
-        <View>
-            <Text>상대가 메세지를 확인할 수 있는 장소를 선택해주세요!</Text>
-            <Text>선택한 장소에서 메세지 열람이 가능해요!</Text>
-            <MapTest totalpos={totalpos} pressTest={pressTest } />
-            <TextInput id='test' onChangeText={text => setAddress(text)} value={address}></TextInput>
-            <Button title="test" onPress={checkAddress}></Button>
+        <View style={styles.selectPositionContainer}>
+            <View style={styles.textContainer }>
+                <Text>상대가 메세지를 확인할 수 있는 장소를 선택해주세요!</Text>
+            </View>
+            <View style={styles.textContainer}>
+                <Text>선택한 장소에서 메세지 열람이 가능해요!</Text>
+            </View>
+
+            <MapTest totalpos={totalpos} mark={mark} />
+            
+            <View style={styles.searchboxContainer}>
+                <TextInput onChangeText={text => setAddress(text)} value={address}></TextInput>
+            </View>
+            <View style={styles.searchbtnContainer}>
+                <Button  title="검색" onPress={searchAddress}></Button>
+            </View>
         </View>
     )
 
 }
 
 const styles = StyleSheet.create({
+    selectPositionContainer: {
+        marginTop: 40,
+    },
+    textContainer: {
+      alignSelf:'center'  
+    },
     inputbox: {
         position: 'absolute',
         bottom: 400,
         right: 50
+    },
+    searchboxContainer: {
+        position: 'absolute',
+        left: 30,
+        bottom: 300,
+        borderColor: 'grey',
+        borderWidth: 1,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        overflow: 'hidden',
+        width: 280,
+        height: 40
+    },
+    searchbtnContainer: {
+        position: 'absolute',
+        right: 30,
+        bottom: 305
     }
+
 })

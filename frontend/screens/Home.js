@@ -35,7 +35,7 @@ const Home = () => {
     );
   }, []);
 
-  const btnclicktest = () => {
+  const sendMessage = () => {
     console.log('check');
   };
 
@@ -49,7 +49,7 @@ const Home = () => {
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          initialRegion={{
+          region={{
             latitude: lat,
             longitude: lng,
             latitudeDelta: 0.015,
@@ -57,11 +57,10 @@ const Home = () => {
           }}
           showUserLocation={true}></MapView>
       </View>
-      <View style={styles.btncontainer}>
+      <View style={styles.btnContainer}>
         <Button
-          style={styles.btntest}
           title="메세지 보내러 가기"
-          onPress={btnclicktest}
+          onPress={sendMessage}
         />
       </View>
     </View>
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  btncontainer: {
+  btnContainer: {
     marginTop: 30,
   },
   headcontainer: {
