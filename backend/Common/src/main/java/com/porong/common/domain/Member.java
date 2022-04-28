@@ -26,6 +26,9 @@ public class Member {
     @Column(name = "member_phonenumber")
     private String phoneNumber;
 
+    @Column(name = "member_profile")
+    private String profileUrl;
+
     @OneToMany
     @Column(name = "member_following_list")
     private List<Follow> followingList = new ArrayList<>();
