@@ -66,8 +66,12 @@ public class AuthController {
         result.put("result", SUCCESS);
         result.put("kakaoId", loginResultInfo.getMember().getKakaoId());
         result.put("memberId", loginResultInfo.getMember().getMemberId());
-        result.put("AccessToken", loginResultInfo.getMember().getAccessToken());
-        result.put("first_check", loginResultInfo.isFirstCheck());
+        result.put("accessToken", loginResultInfo.getMember().getAccessToken());
+        result.put("firstCheck", loginResultInfo.isFirstCheck());
+        // 2022-04-28 추가
+        result.put("imageUrl", loginResultInfo.getMember().getImageUrl());
+        result.put("email", loginResultInfo.getMember().getEmail());
+        result.put("nickName", loginResultInfo.getMember().getNickName());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

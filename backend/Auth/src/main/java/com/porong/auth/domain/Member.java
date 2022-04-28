@@ -18,7 +18,7 @@ public class Member {
 
     private String accessToken;
 
-//    private String refreshToken;
+    private String refreshToken;
 
     private String nickName;
 
