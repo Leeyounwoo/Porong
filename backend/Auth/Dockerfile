@@ -4,11 +4,7 @@ RUN mkdir /home/spring
 
 WORKDIR /home/spring
 
-RUN ls
-
 COPY ./build/libs/*.jar /home/spring/
-
-RUN ls
 
 EXPOSE 8082
 
