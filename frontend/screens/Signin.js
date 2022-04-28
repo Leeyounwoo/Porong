@@ -10,7 +10,6 @@ import {
   ScrollView,
   Button,
 } from 'react-native';
-import KakaoSDK from '@actbase/react-kakaosdk';
 
 export default function Signin({navigation, route}) {
   const {properties} = route.params;
