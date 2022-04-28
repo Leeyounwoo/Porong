@@ -23,6 +23,9 @@ public class Member {
     @Column(name = "member_name") // 본명
     private String name;
 
+    @Column(name = "member_email")
+    private String email;
+
     @Column(name = "member_phonenumber") // format : 010 - xxxx - xxxx
     private String phoneNumber;
 
