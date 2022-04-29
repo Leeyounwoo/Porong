@@ -1,5 +1,6 @@
 package com.porong.common.service;
 
+import com.porong.common.domain.Follow;
 import com.porong.common.domain.Member;
 import com.porong.common.dto.SignupDto;
 import com.porong.common.dto.authenticateDto;
@@ -8,6 +9,8 @@ import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -27,6 +30,8 @@ public class MemberServiceImpl implements MemberService {
                         .email(signupDto.getEmail())
                         .phoneNumber(signupDto.getPhoneNumber())
                         .profileUrl(signupDto.getProfileUrl())
+                        .followingList(new ArrayList<Follow>())
+                        .followerList(new ArrayList<Follow>())
                         .build();
 
                 MEMBER_REPOSITORY.save(member);
