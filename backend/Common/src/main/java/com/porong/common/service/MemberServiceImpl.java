@@ -24,15 +24,12 @@ public class MemberServiceImpl implements MemberService {
     public void signup(SignupDto signupDto) throws Exception {
         if(!MEMBER_REPOSITORY.existsByPhoneNumber(signupDto.getPhoneNumber())) {
             try {
-                Member member = new Member().builder()
-                        .kakaoId(signupDto.getKakaoId())
-                        .name(signupDto.getName())
-                        .email(signupDto.getEmail())
-                        .phoneNumber(signupDto.getPhoneNumber())
-                        .profileUrl(signupDto.getProfileUrl())
-                        .followingList(new ArrayList<Follow>())
-                        .followerList(new ArrayList<Follow>())
-                        .build();
+                Member member = new Member();
+                member.setKakaoId(signupDto.getKakaoId());
+                member.setName(signupDto.getName());
+                member.setEmail(signupDto.getEmail());
+                member.setPhoneNumber(signupDto.getPhoneNumber());
+                member.setProfileUrl(signupDto.getProfileUrl());
 
                 MEMBER_REPOSITORY.save(member);
             }
