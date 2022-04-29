@@ -1,4 +1,7 @@
 package com.porong.common.service;
 
-public class MemberService {
+import com.porong.common.dto.SignupDto;
+
+public interface MemberService {
+    public void signup(SignupDto signupDto) throws Exception;
 }
