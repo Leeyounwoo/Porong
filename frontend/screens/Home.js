@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,18 +6,26 @@ import {
   View,
   Button,
   Image,
+  Platform,
 } from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker, Animated} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
-const imgsrc = require('../imgtest.jpg');
 
+const secret = require('../assets/icons/question.png');
 const Home = () => {
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
+  const [markers, setMarkers] = useState([]);
+  const [temp, setTemp] = useState(null);
+  const markerRef = useRef();
+  
+  const [user, setUser] = useState({
+    name: "yunseol"
+  });
+
+
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -33,18 +41,59 @@ const Home = () => {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
+
+    setMarkers([
+      {
+        messageID: 1231123,
+        type: 1,
+        due_time: 1231231,
+        lat: 37.231,
+        lng: 126.33434,
+        sender: 3,
+      },
+      {
+        messageID: 22133,
+        type: 0,
+        due_time: 1231231,
+        lat: 37.231,
+        lng: 127.33434,
+        sender: 3,
+      },
+      {
+        messageID: 3144123,
+        type: 0,
+        due_time: 1231231,
+        lat: 37.231,
+        lng: 128.33434,
+        sender: 3,
+      },
+      {
+        messageID: 11115,
+        type: 0,
+        due_time: 1231231,
+        lat: 37.231,
+        lng: 129.33434,
+        sender: 3,
+      }
+    ]);
+    console.log(user.name);
   }, []);
 
-  const sendMessage = () => {
-    console.log('check');
-  };
+  useEffect(() => {
+    //마커 확인용.
+    markers.map((single, idx) => {
+      console.log("idx : ",idx," ",single.lat," ", single.lng);
+    })
+  }, [markers])
+  
 
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
         <Image style={styles.imgstyle} source={require('../imgtest.jpg')} />
+        <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user.name }</Text>
       </View>
-      <Text>text message</Text>
+  
       <View style={styles.mapcontainer}>
         <MapView
           provider={PROVIDER_GOOGLE}
@@ -55,13 +104,14 @@ const Home = () => {
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}
-          showUserLocation={true}></MapView>
+          showUserLocation={true}>
+          {markers.map((single, idx) => {
+            return <Marker ref={markerRef} key={idx} title='test'  icon={single.type == 0 ? secret :null}  coordinate={{ latitude: single.lat, longitude: single.lng }} ></Marker>
+          })}
+          </MapView>
       </View>
-      <View style={styles.btnContainer}>
-        <Button
-          title="메세지 보내러 가기"
-          onPress={sendMessage}
-        />
+      <View style={styles.messageContainer}>
+        {markers.length != 0 ? <Text style={{alignSelf:'center', marginTop:5}}>확인 안한 메세지가 {markers.length }개 있습니다</Text> : <Text style={{alignSelf:'center', marginTop:5}}>메세지를 기다리는 중이에요</Text> }
       </View>
     </View>
   );
@@ -74,10 +124,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mapcontainer: {
-    height: 350,
-    width: 400,
+    height: 300,
+    width: 350,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    marginTop: 30
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -86,21 +137,27 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   headcontainer: {
-    backgroundColor: 'red',
     alignSelf: 'center',
     marginTop: 30,
     marginBottom: 30,
   },
-  headcontainer2: {
-    backgroundColor: 'blue',
-    alignSelf: 'center',
-    marginTop: 30,
-    marginBottom: 30,
+  messageContainer: {
+    position:'absolute',
+    borderRadius: 20,
+    width: 220,
+    height: 30,
+    top: 150,
+    backgroundColor: '#FDE1E3'
   },
   imgstyle: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+    borderRadius: 100,
   },
+  newmessage: {
+    position: 'absolute',
+    bottom: 300,
+  }
 });
 
 export default Home;
