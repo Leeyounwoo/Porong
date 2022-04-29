@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class authenticateDto {
+    private Long kakaoId;
     private String phoneNumber;
 }
