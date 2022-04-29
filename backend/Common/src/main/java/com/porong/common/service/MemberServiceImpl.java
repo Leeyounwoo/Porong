@@ -65,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
             }
 
             Message message = new Message();
-            message.setFrom("01041084206");
+            message.setFrom(authenticateDto.getPhoneNumber());
             message.setTo(authenticateDto.getPhoneNumber());
             message.setText("마음 사서함 인증번호는 " + randomNum + " 입니다.");
 
