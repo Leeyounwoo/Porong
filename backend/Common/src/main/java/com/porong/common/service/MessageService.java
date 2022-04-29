@@ -1,5 +1,6 @@
 package com.porong.common.service;
 
+import com.porong.common.dto.RequestBetweenMessagesDto;
 import com.porong.common.dto.RequestCreateMessageDto;
 import com.porong.common.dto.RequestMessageDto;
 import com.porong.common.dto.ResponseMessageDto;
@@ -75,7 +76,7 @@ public class MessageService {
         return messageId;
     }
 
-    public List<ResponseMessageDto> fetchMessagesByMember(RequestMessageDto requestMessageDto) {
+    public List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
         Optional<Member> optionalMember = memberRepository.findById(memberId); // 멤버 두개 확인
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();

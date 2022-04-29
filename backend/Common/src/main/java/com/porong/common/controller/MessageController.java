@@ -1,8 +1,10 @@
 package com.porong.common.controller;
 
 
+import com.porong.common.dto.RequestBetweenMessagesDto;
 import com.porong.common.dto.RequestCreateMessageDto;
 import com.porong.common.dto.RequestMessageDto;
+import com.porong.common.dto.RequestBetweenMessagesDto;
 import com.porong.common.dto.ResponseMessageDto;
 import com.porong.common.service.MemberService;
 import com.porong.common.service.MessageService;
@@ -70,8 +72,8 @@ public class MessageController {
     // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/fetchmessagesbymember")
-    List<ResponseMessageDto> fetchMessagesByMember(RequestMessageDto requestMessageDto) {
-        return messageService.fetchMessagesByMember(requestMessageDto);
+    List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
+        return messageService.fetchMessagesByMember(RequestBetweenMessagesDto);
 
     }
 
