@@ -1,5 +1,6 @@
 package com.porong.common.service;
 
+import com.porong.common.domain.Follow;
 import com.porong.common.domain.Member;
 import com.porong.common.dto.SignupDto;
 import com.porong.common.dto.authenticateDto;
@@ -8,6 +9,8 @@ import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -21,13 +24,12 @@ public class MemberServiceImpl implements MemberService {
     public void signup(SignupDto signupDto) throws Exception {
         if(!MEMBER_REPOSITORY.existsByPhoneNumber(signupDto.getPhoneNumber())) {
             try {
-                Member member = new Member().builder()
-                        .kakaoId(signupDto.getKakaoId())
-                        .name(signupDto.getName())
-                        .email(signupDto.getEmail())
-                        .phoneNumber(signupDto.getPhoneNumber())
-                        .profileUrl(signupDto.getProfileUrl())
-                        .build();
+                Member member = new Member();
+                member.setKakaoId(signupDto.getKakaoId());
+                member.setName(signupDto.getName());
+                member.setEmail(signupDto.getEmail());
+                member.setPhoneNumber(signupDto.getPhoneNumber());
+                member.setProfileUrl(signupDto.getProfileUrl());
 
                 MEMBER_REPOSITORY.save(member);
             }
