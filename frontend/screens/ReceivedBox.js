@@ -30,7 +30,7 @@ export default function ReceivedBox() {
   });
   const [transPos, setTransPos] = useState('ee');
 
-  const [label, setLabel] = useState('지도로 보기');
+  const [label, setLabel] = useState('목록으로 보기');
 
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
 
@@ -71,7 +71,7 @@ export default function ReceivedBox() {
             width: 100,
             fontWeight: 'bold',
           }}
-          defaultValue="지도로 보기"
+          defaultValue="목록으로 보기"
           options={['지도로 보기', '목록으로 보기']}
           dropdownStyle={{
             height: 70,
@@ -96,7 +96,6 @@ export default function ReceivedBox() {
             }}>
             <Marker
               title="test"
-              icon={require('../letter.png')}
               coordinate={{latitude: singlePos.lat, longitude: singlePos.lng}}
             />
           </MapView>
