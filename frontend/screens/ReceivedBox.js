@@ -96,7 +96,7 @@ export default function ReceivedBox() {
             }}>
             <Marker
               title="test"
-              icon={require('../letter.png')}
+              icon={require('../assets/icons/letter.png')}
               coordinate={{latitude: singlePos.lat, longitude: singlePos.lng}}
             />
           </MapView>
