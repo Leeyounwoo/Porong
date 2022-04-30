@@ -15,6 +15,6 @@ public class RequestCreateMessageDto implements Serializable {
     private LocalDateTime dueTime;
     private String title;
     private String contentText;
-//    private String contentUrl;
+//    private String contentUrl; // 이미지, 영상 등 추후에 추가
 
 }

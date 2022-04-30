@@ -4,8 +4,7 @@ package com.porong.common.controller;
 import com.porong.common.dto.RequestBetweenMessagesDto;
 import com.porong.common.dto.RequestCreateMessageDto;
 import com.porong.common.dto.RequestMessageDto;
-import com.porong.common.dto.RequestBetweenMessagesDto;
-import com.porong.common.dto.ResponseMessageDto;
+import com.porong.common.dto.ResponseCheckedMessageDto;
 import com.porong.common.service.MemberService;
 import com.porong.common.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +42,14 @@ public class MessageController {
     // 확인 안한 메세지 모두 조회
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/fetchcheckedmessages")
-    List<ResponseMessageDto> fetchCheckedMessages(@PathVariable("memberId") Long memberId) {
+    List<ResponseCheckedMessageDto> fetchCheckedMessages(@PathVariable("memberId") Long memberId) {
         return messageService.fetchCheckedMessages(memberId);
     }
 
     // 단일 메세지 조회
     @ResponseStatus(HttpStatus.OK) // 여기서 위경도, 시간 검증 추가?
     @PostMapping("/getmessage")
-    ResponseMessageDto getMessage(RequestMessageDto requestMessageDto) {
+    ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
         return messageService.getMessage(requestMessageDto);
 
     }
@@ -58,7 +57,7 @@ public class MessageController {
     // 전체 메세지 조회(보낸 메세지, 받은 메세지)
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/fetchallmessages")
-    List<ResponseMessageDto> fetchAllMessages(@PathVariable("memberId") Long memberId) {
+    List<ResponseCheckedMessageDto> fetchAllMessages(@PathVariable("memberId") Long memberId) {
         return messageService.fetchAllMessages(memberId);
     }
 
@@ -72,7 +71,7 @@ public class MessageController {
     // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/fetchmessagesbymember")
-    List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
+    List<ResponseCheckedMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
         return messageService.fetchMessagesByMember(RequestBetweenMessagesDto);
 
     }

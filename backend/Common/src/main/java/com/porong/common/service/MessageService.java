@@ -1,9 +1,11 @@
 package com.porong.common.service;
 
+import com.porong.common.domain.Member;
 import com.porong.common.dto.RequestBetweenMessagesDto;
 import com.porong.common.dto.RequestCreateMessageDto;
 import com.porong.common.dto.RequestMessageDto;
-import com.porong.common.dto.ResponseMessageDto;
+import com.porong.common.dto.ResponseCheckedMessageDto;
+import com.porong.common.exception.MemberNotFoundException;
 import com.porong.common.repository.MemberRepository;
 import com.porong.common.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,7 @@ public class MessageService {
 //        return messageId;
     }
 
-    public List<ResponseMessageDto> fetchCheckedMessages(Long memberId) {
+    public List<ResponseCheckedMessageDto> fetchCheckedMessages(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();
@@ -46,7 +48,15 @@ public class MessageService {
         return messageId;
     }
 
-    public ResponseMessageDto getMessage(RequestMessageDto requestMessageDto) {
+    public ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
+        // 분기 처리
+        // 받는 사람 중 봤던 거라면, 즉 isChecked = 1 이라면, 제약 없이 바로 확인 가능
+        // 아직 확인을 안했다면, 제약조건(거리와 시간)을 확인해서 response 후 isCheked = 0 -> isChecked = 1
+
+        // 보낸 사람은 아무 제약 조건에 상관없이 확인이 가능함
+
+
+
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();
@@ -56,7 +66,7 @@ public class MessageService {
         return messageId;
     }
 
-    public List<ResponseMessageDto> fetchAllMessages(Long memberId) {
+    public List<ResponseCheckedMessageDto> fetchAllMessages(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();
@@ -76,7 +86,7 @@ public class MessageService {
         return messageId;
     }
 
-    public List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
+    public List<ResponseCheckedMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
         Optional<Member> optionalMember = memberRepository.findById(memberId); // 멤버 두개 확인
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();

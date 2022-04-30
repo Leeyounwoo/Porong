@@ -10,4 +10,8 @@ public class RequestBetweenMessagesDto implements Serializable {
     private Long myMemberId;
     private Long friendMemberId;
 
+    public RequestBetweenMessagesDto() {
+
+    }
+
 }

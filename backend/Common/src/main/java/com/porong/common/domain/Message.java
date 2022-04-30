@@ -19,8 +19,8 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long messageId;
 
-    @Enumerated(EnumType.STRING)
-    private MessageType type = MessageType.Normal;
+//    @Enumerated(EnumType.STRING)
+//    private MessageType type = MessageType.Normal; // 추후에 사진, 영상 등 추가
 
     @OneToOne(fetch = FetchType.LAZY) // ManyToOne
     @JoinColumn(name = "member_id") // member_id
@@ -51,8 +51,8 @@ public class Message {
     @Column(length = 2200)
     private String contentText;
 
-    @Column(length = 2200)
-    private String contentUrl;
+//    @Column(length = 2200)
+//    private String contentUrl; // 추후에 사진, 영상 등 추가
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

@@ -9,8 +9,13 @@ import java.time.LocalDateTime;
 public class RequestMessageDto implements Serializable {
 
     private Long memberId;
-    private double latitude;
-    private double longitude;
+    private Long messageId;
+    private double latitude; // 현재 위치
+    private double longitude; // 현재 위치
     private LocalDateTime timeNow; // 현재시간
+
+    public RequestMessageDto() {
+
+    }
 
 }
