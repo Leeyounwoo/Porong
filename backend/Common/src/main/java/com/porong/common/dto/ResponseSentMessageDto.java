@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class ResponseSendMessageDto implements Serializable {
+public class ResponseSentMessageDto implements Serializable {
 
     private Long messageId;
     private Long receiverId; // 받는 사람
@@ -18,8 +18,7 @@ public class ResponseSendMessageDto implements Serializable {
     private LocalDateTime createdAt;
     private String title;
 
-
-    public ResponseSendMessageDto() {
+    public ResponseSentMessageDto() {
 
     }
 

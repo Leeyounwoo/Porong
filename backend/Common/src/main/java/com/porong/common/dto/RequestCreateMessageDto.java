@@ -17,4 +17,10 @@ public class RequestCreateMessageDto implements Serializable {
     private String contentText;
 //    private String contentUrl; // 이미지, 영상 등 추후에 추가
 
+    public RequestCreateMessageDto() {
+
+
+
+    }
+
 }

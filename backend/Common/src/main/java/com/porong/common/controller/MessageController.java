@@ -1,10 +1,7 @@
 package com.porong.common.controller;
 
 
-import com.porong.common.dto.RequestBetweenMessagesDto;
-import com.porong.common.dto.RequestCreateMessageDto;
-import com.porong.common.dto.RequestMessageDto;
-import com.porong.common.dto.ResponseCheckedMessageDto;
+import com.porong.common.dto.*;
 import com.porong.common.service.MemberService;
 import com.porong.common.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -32,18 +29,11 @@ public class MessageController {
         return MessageId;
     }
 
-    // 메세지 삭제
+    // 메세지 취소
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{messageId}")
     void deleteMessage(@PathVariable("messageId") Long messageId) {
         messageService.deleteMessage(messageId);
-    }
-
-    // 확인 안한 메세지 모두 조회
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{memberId}/fetchcheckedmessages")
-    List<ResponseCheckedMessageDto> fetchCheckedMessages(@PathVariable("memberId") Long memberId) {
-        return messageService.fetchCheckedMessages(memberId);
     }
 
     // 단일 메세지 조회
@@ -54,11 +44,25 @@ public class MessageController {
 
     }
 
-    // 전체 메세지 조회(보낸 메세지, 받은 메세지)
+    // 확인 안한 메세지 모두 조회
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{memberId}/fetchallmessages")
-    List<ResponseCheckedMessageDto> fetchAllMessages(@PathVariable("memberId") Long memberId) {
-        return messageService.fetchAllMessages(memberId);
+    @GetMapping("/{memberId}/fetchUncheckedMesaages")
+    List<ResponseUnCheckedMessageDto> fetchUnCheckedMessages(@PathVariable("memberId") Long memberId) {
+        return messageService.fetchUnCheckedMessages(memberId);
+    }
+
+    // 받은 메세지 전체 조회
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{memberId}/getrecievedmessages")
+    List<ResponseReceivedMessageDto> getRecievedMessages(@PathVariable("memberId") Long memberId) {
+        return messageService.getRecievedMessages(memberId);
+    }
+
+    // 보낸 메세지 전체 조회
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{memberId}/getsentmessages")
+    List<ResponseSentMessageDto> getSentMessages(@PathVariable("memberId") Long memberId) {
+        return messageService.getSentMessages(memberId);
     }
 
     // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회
@@ -71,11 +75,9 @@ public class MessageController {
     // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/fetchmessagesbymember")
-    List<ResponseCheckedMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
+    List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
         return messageService.fetchMessagesByMember(RequestBetweenMessagesDto);
 
     }
-
-
 
 }
