@@ -25,18 +25,18 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
     Long postMessage(RequestCreateMessageDto requestCreateMessageDto) {
-        messageService.postMessage(requestCreateMessageDto);
-        return MessageId;
+        return messageService.postMessage(requestCreateMessageDto);
+        // 해당 messageId 반환
     }
 
-    // 메세지 취소
+    // 메세지 취소 // 분기 처리 추가?
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{messageId}")
     void deleteMessage(@PathVariable("messageId") Long messageId) {
         messageService.deleteMessage(messageId);
     }
 
-    // 단일 메세지 조회
+    // 단일 메세지 조회 // 아직 시간, 공간 조건 확인 안함
     @ResponseStatus(HttpStatus.OK) // 여기서 위경도, 시간 검증 추가?
     @PostMapping("/getmessage")
     ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
@@ -51,19 +51,22 @@ public class MessageController {
         return messageService.fetchUnCheckedMessages(memberId);
     }
 
-    // 받은 메세지 전체 조회
+    // 받은 메세지 전체 조회 // 정렬 기능 추가 필요
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{memberId}/getrecievedmessages")
-    List<ResponseReceivedMessageDto> getRecievedMessages(@PathVariable("memberId") Long memberId) {
-        return messageService.getRecievedMessages(memberId);
+    @GetMapping("/{memberId}/getreceivedmessages")
+    List<ResponseReceivedMessageDto> getReceivedMessages(@PathVariable("memberId") Long memberId) {
+        return messageService.getReceivedMessages(memberId);
     }
 
-    // 보낸 메세지 전체 조회
+    // 보낸 메세지 전체 조회 // 정렬 기능 추가 필요
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/getsentmessages")
     List<ResponseSentMessageDto> getSentMessages(@PathVariable("memberId") Long memberId) {
         return messageService.getSentMessages(memberId);
     }
+
+    /* 구현 예정
+
 
     // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회
     @ResponseStatus(HttpStatus.OK)
@@ -80,4 +83,7 @@ public class MessageController {
 
     }
 
+
+
+     */
 }

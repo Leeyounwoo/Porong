@@ -1,6 +1,7 @@
 package com.porong.common.domain;
 
 
+import com.porong.common.dto.RequestCreateMessageDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -57,5 +58,32 @@ public class Message {
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public Message() {
+
+    }
+
+    public void deleteMessage(){
+        this.isDeleted = true;
+    }
+
+    public void checkMessage(){
+        this.isChecked = true;
+    }
+
+    public Message (RequestCreateMessageDto requestCreateMessageDto, Member sender, Member receiver){
+        this.sender = sender;
+        this.receiver = receiver;
+        this.latitude = requestCreateMessageDto.getLatitude();
+        this.longitude = requestCreateMessageDto.getLongitude();
+        this.dueTime = requestCreateMessageDto.getDueTime();
+        this.title = requestCreateMessageDto.getTitle();
+        this.contentText = requestCreateMessageDto.getTitle();
+//        this.contentUrl = requestCreateMessageDto.getContentUrl(); // 추후 추가
+        this.createdAt = LocalDateTime.now();
+        this.isChecked = false;
+        this.isDeleted = false;
+
+    }
 
 }

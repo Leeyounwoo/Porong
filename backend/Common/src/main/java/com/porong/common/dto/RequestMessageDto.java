@@ -14,8 +14,4 @@ public class RequestMessageDto implements Serializable {
     private double longitude; // 현재 위치
     private LocalDateTime timeNow; // 현재시간
 
-    public RequestMessageDto() {
-
-    }
-
 }

@@ -21,6 +21,16 @@ public class ResponseCheckedMessageDto implements Serializable {
     private String contentText;
 
     public ResponseCheckedMessageDto(Message message){
+        this.messageId = message.getMessageId();
+        this.senderId = message.getSender().getMemberId();
+        this.senderProfileUrl = message.getSender().getProfileUrl();
+        this.latitude = message.getLatitude();
+        this.longitude = message.getLongitude();
+        this.dueTime = message.getDueTime();
+        this.isChecked = true;
+        this.createdAt = message.getCreatedAt();
+        this.title = message.getTitle();
+        this.contentText = message.getContentText();
 
     }
 

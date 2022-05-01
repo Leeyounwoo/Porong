@@ -11,7 +11,7 @@ public class ResponseMessageDto implements Serializable {
     private Long messageId;
     private Long receiverId; // 보낸 사람
     private Long senderId; // 보낸 사람
-    private Long senderProfileUrl;
+    private String senderProfileUrl;
     private double latitude; // 제약 위치 조건
     private double longitude; // 제약 위치 조건
     private LocalDateTime dueTime; // 제약 시간
