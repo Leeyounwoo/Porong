@@ -1,7 +1,9 @@
 package com.porong.common.domain;
 
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter // 추후
-@Setter // 수정
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "member")
 public class Member {
     @Id
