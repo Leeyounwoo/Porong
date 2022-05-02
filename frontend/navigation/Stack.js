@@ -6,6 +6,8 @@ import LoginScreen from '../screens/Login';
 import SigninScreen from '../screens/Signin';
 import AlarmScreen from '../screens/Alarm';
 import SendScreen from '../screens/Message';
+import ContentScreen from '../screens/MessageContent';
+import TypeScreen from '../screens/MessageType';
 import MessageScreen from '../screens/SendMessage';
 import ReceivedBox from '../screens/ReceivedBox';
 
@@ -79,9 +81,9 @@ function SendStackScreen() {
     <SendStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: 'white',
+          backgroundColor: '#4385E0',
         },
-        headerTintColor: 'black',
+        headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
       <SendStack.Screen
@@ -89,6 +91,8 @@ function SendStackScreen() {
         component={SendScreen}
         options={{headerTitle: '메세지 보내기'}}
       />
+      <SendStack.Screen name="Content" component={ContentScreen} />
+      <SendStack.Screen name="Type" component={TypeScreen} />
     </SendStack.Navigator>
   );
 }
