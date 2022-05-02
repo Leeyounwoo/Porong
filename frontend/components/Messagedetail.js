@@ -7,7 +7,7 @@ const icon = require('../assets/icons/letter.png');
 
 
 //데이터의 위치를 
-export default function Messagedetail({ sender, receiver, time, position, messageText,istype }) {
+export default function Messagedetail({ sender, receiver, time, position, messageText, istype }) {
     
     const [senderName, setSenderName] = useState('sender');
     const [receiverName, setReceiverName] = useState('receiver');
@@ -34,8 +34,20 @@ export default function Messagedetail({ sender, receiver, time, position, messag
     return (
         <View style={ styles.allcontainer }>
             {type == 'resend' ?
-            <View style={styles.fromtoContainer}><Text style={{ color: 'blue', fontSize: 16 }}>{senderName}</Text><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 님이</Text><Text style={{ color: 'blue', fontSize: 16 }}>{receiverName}</Text><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 님에게</Text></View>
-                : <View style={styles.fromtoContainer}><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}>이 메세지는</Text><Text style={{ color: 'blue', fontSize: 16 }}>{receiverName}</Text><Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 님이</Text><Text style={{ color: 'blue', fontSize: 16 }}>{converttime}</Text></View>}
+                <View style={styles.fromtoContainer}>
+                    <Text style={styles.textContainer('blue')}>{senderName}</Text>
+                    <Text style={styles.textContainer('black')}> 님이</Text>
+                    <Text style={styles.textContainer('blue')}>{receiverName}</Text>
+                    <Text style={styles.textContainer('black')}> 님에게</Text>
+                </View>
+                :
+                <View style={styles.fromtoContainer}>
+                    <Text style={styles.textContainer('black')}>이 메세지는</Text>
+                    <Text style={styles.textContainer('blue')}>{receiverName}</Text>
+                    <Text style={styles.textContainer('black')}> 님이</Text>
+                    <Text style={styles.textContainer('blue')}>{converttime}</Text>
+                </View>
+            }
             <View>
                 <MapView
                     provider={PROVIDER_GOOGLE}
@@ -52,11 +64,15 @@ export default function Messagedetail({ sender, receiver, time, position, messag
                 </MapView>
             </View>
             <View style={styles.positionContainer}>
-                <Text style={{ color: 'blue', fontSize: 16 }}>{transPos}</Text>
-                {type == 'resend' ? <Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}> 에서 확인했습니다!</Text> : <Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}>에서 볼 수 있습니다!</Text> }
+                <Text style={styles.textContainer('blue')}>{transPos}</Text>
+                {type == 'resend' ?
+                        <Text style={styles.textContainer('black')}> 에서 확인했습니다!</Text> 
+                    : 
+                        <Text style={styles.textContainer('black')}>에서 볼 수 있습니다!</Text>
+                }
             </View>
             <View style={styles.messageTitle }>
-                <Text style={{fontWeight: 'bold',color:'Black', fontSize: 15 }}>메세지 내용</Text>
+                <Text style={styles.textContainer('black')}>메세지 내용</Text>
             </View>
             <View style={styles.messageContent }>
                 <Text>{ messageContent }</Text>
@@ -97,4 +113,11 @@ const styles = StyleSheet.create({
         marginTop:10,
         width: 100
     },
+    textContainer : (mycolor) =>  {
+        return{
+            fontWeight: 'bold',
+            color:mycolor, 
+            fontSize: 15
+        }
+     }
 });

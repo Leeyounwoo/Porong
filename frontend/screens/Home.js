@@ -11,8 +11,7 @@ import {
 
 import MapView, {PROVIDER_GOOGLE, Marker, Animated} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-
-
+import {useStore} from 'react-redux';
 const secret = require('../assets/icons/question.png');
 const Home = () => {
   const [lat, setLat] = useState(0);
@@ -24,8 +23,6 @@ const Home = () => {
   const [user, setUser] = useState({
     name: "yunseol"
   });
-
-
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
