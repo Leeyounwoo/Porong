@@ -1,7 +1,9 @@
 package com.porong.common.domain;
 
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter // 추후
-@Setter // 수정
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "member")
 public class Member {
     @Id
@@ -22,6 +25,9 @@ public class Member {
 
     @Column(name = "member_name") // 본명
     private String name;
+
+    @Column(name = "member_email")
+    private String email;
 
     @Column(name = "member_phonenumber") // format : 010 - xxxx - xxxx
     private String phoneNumber;
