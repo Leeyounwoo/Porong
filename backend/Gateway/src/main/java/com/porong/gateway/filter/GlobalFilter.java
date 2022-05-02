@@ -22,7 +22,9 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<Config> {
 
     @Override
     public GatewayFilter apply(Config config) {
-        
+
+        // for gateway test
+
         // exchange : 서비스 요청/응답값을 담고 있는 변수로, 요청/응답값을 출력하거나 변환할 때 사용한다
 
         // (exchange, chain) -> 구문 후에 요청값을 얻을 수 있으며
