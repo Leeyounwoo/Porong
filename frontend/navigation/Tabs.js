@@ -26,7 +26,7 @@ const SendButton = ({children, onPress}) => {
           width: 70,
           height: 70,
           borderRadius: 40,
-          backgroundColor: '#4385E0',
+          backgroundColor: '#C449C2',
         }}>
         {children}
       </View>
@@ -68,7 +68,7 @@ const Tabs = () => {
                 style={{
                   width: 30,
                   height: 30,
-                  tintColor: focused ? '#4385E0' : 'grey',
+                  tintColor: focused ? '#C449C2' : 'grey',
                 }}
                 source={require('../assets/icons/homepage.png')}
               />
@@ -90,7 +90,7 @@ const Tabs = () => {
                 style={{
                   width: 30,
                   height: 30,
-                  tintColor: focused ? '#4385E0' : 'grey',
+                  tintColor: focused ? '#C449C2' : 'grey',
                 }}
                 source={require('../assets/icons/bell.png')}
               />
@@ -132,7 +132,7 @@ const Tabs = () => {
                 style={{
                   width: 30,
                   height: 30,
-                  tintColor: focused ? '#4385E0' : 'grey',
+                  tintColor: focused ? '#C449C2' : 'grey',
                 }}
                 source={require('../assets/icons/email.png')}
               />
@@ -154,7 +154,7 @@ const Tabs = () => {
                 style={{
                   width: 30,
                   height: 30,
-                  tintColor: focused ? '#4385E0' : 'grey',
+                  tintColor: focused ? '#C449C2' : 'grey',
                 }}
                 source={require('../assets/icons/enter.png')}
               />
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 //             style={{
 //               width: 30,
 //               height: 30,
-//               tintColor: focused ? '#4385E0' : 'grey',
+//               tintColor: focused ? '#C449C2' : 'grey',
 //             }}
 //             source={require('./assets/icons/bell.png')}
 //           />
