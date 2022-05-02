@@ -30,6 +30,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	// 2022-03-29 소은 추가
+	implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 dependencyManagement {
