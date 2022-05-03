@@ -12,6 +12,10 @@ export default function MessageTime({navigation}) {
     navigation.navigate('Place');
   };
 
+  const setDateWithTime = time => {
+    setDate(new Date(Date.now() + 3600 * 1000 * 24 * time));
+  };
+
   return (
     <View
       style={{
@@ -28,7 +32,7 @@ export default function MessageTime({navigation}) {
           메세지 수신 시간을 설정해주세요!
         </Text>
         <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
-          선택한 시간에 메세지가 발송됩니다. 
+          선택한 시간에 메세지가 발송됩니다.
         </Text>
       </View>
       <View style={{flex: 0.1, margin: 10}}>
@@ -48,13 +52,19 @@ export default function MessageTime({navigation}) {
             justifyContent: 'space-around',
             marginTop: 30,
           }}>
-          <TouchableOpacity style={styles.dateBtn}>
+          <TouchableOpacity
+            style={styles.dateBtn}
+            onPress={() => setDateWithTime(1)}>
             <Text style={styles.dateText}>1일후</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.dateBtn}>
+          <TouchableOpacity
+            style={styles.dateBtn}
+            onPress={() => setDateWithTime(7)}>
             <Text style={styles.dateText}>일주일후</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.dateBtn}>
+          <TouchableOpacity
+            style={styles.dateBtn}
+            onPress={() => setDateWithTime(30)}>
             <Text style={styles.dateText}>한달후</Text>
           </TouchableOpacity>
         </View>
@@ -77,8 +87,11 @@ export default function MessageTime({navigation}) {
         </Text>
         <DatePicker
           date={date}
-          onDateChange={setDate}
+          onDateChange={date => {
+            setDate(date);
+          }}
           minimumDate={new Date()}
+          locale="ko"
         />
       </View>
       <View style={{flex: 0.1, alignItems: 'flex-end', marginHorizontal: 10}}>
