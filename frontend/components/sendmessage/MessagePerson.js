@@ -6,12 +6,18 @@ import {
   Text,
   Platform,
   PermissionsAndroid,
+  Button,
 } from 'react-native';
 import Contacts from 'react-native-contacts';
+import { useStore } from 'react-redux';
+import {personContain} from '../../reducer';
 
-export default function ContractList() {
+
+export default function MessagePerson({navigation}) {
   const [contacts, setContacts] = useState(null);
 
+  const store = useStore();
+  
   useEffect(() => {
     if (Platform.OS === 'android') {
       PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
@@ -36,6 +42,11 @@ export default function ContractList() {
       });
   }
 
+  const next = () => {
+    store.dispatch(personContain(contacts));
+    navigation.navigate('Time');
+  };
+
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <Text style={styles.contactName}>
@@ -50,13 +61,18 @@ export default function ContractList() {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={contacts}
-        renderItem={renderItem}
-        numColumns={1}
-        keyExtractor={(item, index) => index}
-      />
+    <View>
+      <View style={styles.container}>
+        <FlatList
+          data={contacts}
+          renderItem={renderItem}
+          numColumns={1}
+          keyExtractor={(item, index) => index}
+        />
+      </View>
+      <View>
+        <Button title="다음" onPress={next}><Text>다음</Text></Button>
+      </View>
     </View>
   )
 }

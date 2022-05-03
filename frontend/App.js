@@ -4,11 +4,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
-import {root} from './reducer';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
+import {reducer} from './reducer';
 
-const store = createStore(root);
 messaging().onMessage(async remoteMessage => {
   // Get the message body
   let message_body = remoteMessage.notification.body;
@@ -22,6 +21,8 @@ messaging().onMessage(async remoteMessage => {
   // Show an alert to the user
   Alert.alert(message_title, message_body);
 });
+
+const store = createStore(reducer);
 
 const App = () => {
   return (

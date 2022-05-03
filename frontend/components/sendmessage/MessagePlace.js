@@ -3,13 +3,16 @@ import {StyleSheet,Dimensions, View, Text,Button } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import { TextInput } from 'react-native-gesture-handler';
-import MapTest from './Map';
+import MapTest from '../Map';
 import Geolocation from '@react-native-community/geolocation';
+import { useStore } from 'react-redux';
+import { placeContain } from '../../reducer';
 
 
-export default function SelectPosition({ getAddress}) {
+export default function MessagePlace({ navigation}) {
     const [totalpos, setTotalpos] = useState({lat: 0, lng: 0});
     const [address, setAddress] = useState('');
+    const store = useStore();
     Geocoder.init("AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s");
 
     useEffect(() => {
@@ -33,11 +36,6 @@ export default function SelectPosition({ getAddress}) {
         }
     }, [totalpos]);
 
-    useEffect(() => {
-        console.log("최종 address ", address);
-        // getAddress(address);
-    },[address])
-
     const mark = (lat, lng) => {
         setTotalpos({ ...totalpos, lat: lat, lng: lng });
     }
@@ -46,6 +44,15 @@ export default function SelectPosition({ getAddress}) {
         Geocoder.from(address).then(json => {
             setTotalpos({...totalpos, lat: json.results[0].geometry.location.lat, lng: json.results[0].geometry.location.lng });
         })
+    }
+
+    const prev = () => {
+        store.dispatch(placeContain(''));
+        navigation.navigate('Time');
+    }
+    const next = () => {
+        store.dispatch(placeContain(address));
+        navigation.navigate('Content');
     }
     return (
         <View style={styles.selectPositionContainer}>
@@ -63,6 +70,12 @@ export default function SelectPosition({ getAddress}) {
             </View>
             <View style={styles.searchbtnContainer}>
                 <Button  title="검색" onPress={searchAddress}></Button>
+            </View>
+
+            <View>
+        <Button title="이전" onPress={prev}></Button>
+        <Button title="다음" onPress={next}></Button>
+
             </View>
         </View>
     )

@@ -12,6 +12,11 @@ export default function PhoneForm() {
   const [three, setThree] = useState('');
   const [four, setFour] = useState('');
 
+  const checkPhone = () => {
+    const code = one + two + three + four;
+    console.log(code);
+  };
+
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <View style={{flex: 0.3, justifyContent: 'center', alignItems: 'center'}}>
@@ -113,7 +118,8 @@ export default function PhoneForm() {
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={checkPhone}>
           <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
             인증번호 확인하기
           </Text>
