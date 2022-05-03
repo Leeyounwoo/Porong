@@ -5,6 +5,7 @@ import com.porong.common.dto.RequestCreateMessageDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,11 +25,11 @@ public class Message {
 //    private MessageType type = MessageType.Normal; // 추후에 사진, 영상 등 추가
 
     @OneToOne(fetch = FetchType.LAZY) // ManyToOne
-    @JoinColumn(name = "member_id") // member_id
+    @JoinColumn(name = "sender_id") // member_id
     private Member sender; // sender_Id, member 추가 후 import 필요
 
     @OneToOne(fetch = FetchType.LAZY) // ManyToOne
-    @JoinColumn(name = "member_id") // member_id
+    @JoinColumn(name = "receiver_id") // member_id
     private Member receiver;
 
     @Column(name = "latitude", nullable = false)
@@ -37,6 +38,7 @@ public class Message {
     @Column(name = "longitude", nullable = false)
     private double longitude;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "due_time")
     private LocalDateTime dueTime;
 
