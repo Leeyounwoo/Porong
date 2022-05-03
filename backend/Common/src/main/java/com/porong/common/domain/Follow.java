@@ -6,8 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter // 추후
-@Setter // 수정
+@Getter
+@Setter
 @Table(name = "follow")
 public class Follow {
     @Id

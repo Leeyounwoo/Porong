@@ -1,13 +1,14 @@
 package com.porong.common.controller;
 
-import com.porong.common.dto.authenticateDto;
-import com.porong.common.dto.SignupDto;
-import com.porong.common.dto.verifyDto;
+import com.porong.common.dto.*;
 import com.porong.common.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/member")
@@ -28,7 +29,7 @@ public class MemberController {
     }
 
     @PostMapping("/authentication") // 전화번호 인증번호 발신요청
-    public ResponseEntity<String> authenticate(@RequestBody authenticateDto authenticateDto) {
+    public ResponseEntity<String> authenticate(@RequestBody AuthenticateDto authenticateDto) {
         try {
             memberService.authenticate(authenticateDto);
         }
@@ -39,7 +40,7 @@ public class MemberController {
     }
 
     @PostMapping("/verify") // 인증번호 검증요청
-    public ResponseEntity<String> verify(@RequestBody verifyDto verifyDto) {
+    public ResponseEntity<String> verify(@RequestBody VerifyDto verifyDto) {
         try {
             memberService.verify(verifyDto);
         }
@@ -48,5 +49,29 @@ public class MemberController {
         }
         return new ResponseEntity<>("인증번호가 같습니다. 가입진행", HttpStatus.OK);
     }
+
+    @PostMapping("/follow") // 팔로우 하기
+    public ResponseEntity<String> follow(@RequestBody FollowDto followDto) {
+        try {
+            memberService.follow(followDto);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("팔로우 요청실패", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("팔로우 성공", HttpStatus.OK);
+    }
+
+    @PostMapping("/fetchContact") // 팔로우 목록 불러오기 (핸드폰과 일치하는 명단만)
+    public ResponseEntity<List<PhoneBookDto>> fetchContact(@RequestBody List<String> phoneList) {
+        List<PhoneBookDto> resultList = new ArrayList<>();
+        try {
+            resultList =  memberService.fetchContact(phoneList);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+
 
 }
