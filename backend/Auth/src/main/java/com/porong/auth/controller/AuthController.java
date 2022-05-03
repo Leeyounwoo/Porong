@@ -1,12 +1,14 @@
 package com.porong.auth.controller;
 
 import com.porong.auth.domain.Member;
+import com.porong.auth.dto.LoginResponseInfo;
 import com.porong.auth.dto.LoginResultInfo;
 import com.porong.auth.dto.SignUpInfo;
 import com.porong.auth.dto.TokenInfo;
 import com.porong.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,38 +69,47 @@ public class AuthController {
      */
     @GetMapping("/login/response")
     @ApiOperation(value = "카카오 로그인에 후 받은 response code 로 사용자 정보를 받아온다")
-    public ResponseEntity<Map<String, Object>> loginResponse(@RequestParam String code) throws IOException {
+    public ResponseEntity<LoginResponseInfo> loginResponse(@RequestParam String code) throws IOException {
 
         // code 잘 받아오나 테스트
         // System.out.println("controller get code : " + code);
         // token 잘 받아오나 테스트
         // System.out.println("controller get token : " + authService.getAccessToken(code).getMember().getAccessToken());
 
-        Map<String, Object> result = new HashMap<>();
+//        Map<String, Object> result = new HashMap<>();
         LoginResultInfo loginResultInfo = null;
+        LoginResponseInfo loginResponseInfo = new LoginResponseInfo();
 
         if(code == null){
-            result.put("result",FAIL);
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+//            result.put("result",FAIL);
+            loginResponseInfo.setResult(FAIL);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
         }
         else { // code != null : 로그인에 성공했다면 토큰을 발급 받아 해당 사용자 조회
             loginResultInfo = authService.getAccessToken(code);
             if (loginResultInfo == null){
-                result.put("result",FAIL);
-                return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+//                result.put("result",FAIL);
+                loginResponseInfo.setResult(FAIL);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
             }
             System.out.println(loginResultInfo.toString());
         }
-        result.put("result", SUCCESS);
-        result.put("kakaoId", loginResultInfo.getMember().getKakaoId());
-        result.put("memberId", loginResultInfo.getMember().getMemberId());
-        result.put("accessToken", loginResultInfo.getMember().getAccessToken());
-        result.put("firstCheck", loginResultInfo.isFirstCheck());
-        // 2022-04-28 추가
-        result.put("imageUrl", loginResultInfo.getMember().getImageUrl());
-        result.put("email", loginResultInfo.getMember().getEmail());
-        result.put("nickName", loginResultInfo.getMember().getNickName());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+//        result.put("result", SUCCESS);
+//        result.put("kakaoId", loginResultInfo.getMember().getKakaoId());
+//        result.put("memberId", loginResultInfo.getMember().getMemberId());
+//        result.put("accessToken", loginResultInfo.getMember().getAccessToken());
+//        result.put("firstCheck", loginResultInfo.isFirstCheck());
+//        // 2022-04-28 추가
+//        result.put("imageUrl", loginResultInfo.getMember().getImageUrl());
+//        result.put("email", loginResultInfo.getMember().getEmail());
+//        result.put("nickName", loginResultInfo.getMember().getNickName());
+
+        loginResponseInfo.setResult(SUCCESS);
+        loginResponseInfo.setFirstCheck(loginResultInfo.isFirstCheck());
+//        loginResponseInfo.setMemberId(loginResultInfo.getMember().getMemberId());
+        loginResponseInfo.setMember(loginResultInfo.getMember());
+
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponseInfo);
     }
 
     /**
@@ -126,7 +137,7 @@ public class AuthController {
         return status;
     }
 
-    /** 
+    /**
      * 최조 로그인 한 사용자 인지 아닌지 확인
      * @param tokenInfo
      * @return
