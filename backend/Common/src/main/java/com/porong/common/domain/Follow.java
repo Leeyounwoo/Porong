@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class Follow {
     @Id
     @Column(name = "follow_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long followId;
 
     @ManyToOne
