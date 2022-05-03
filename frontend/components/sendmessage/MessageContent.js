@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import { useStore } from 'react-redux';
-import { messageContain } from '../../reducer/index';
-
+import {useStore} from 'react-redux';
+import {messageContain} from '../../reducer/index';
 
 export default function MessageContent({navigation}) {
   const [title, setTitle] = useState('');
@@ -23,7 +24,8 @@ export default function MessageContent({navigation}) {
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior="height"
       style={{
         flex: 1,
         backgroundColor: 'white',
@@ -43,12 +45,19 @@ export default function MessageContent({navigation}) {
         <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
           메세지 내용
         </Text>
-        <TextInput style={{borderWidth: 1, borderRadius: 10, marginTop: 10}} />
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderRadius: 10,
+            marginTop: 10,
+            height: '70%',
+          }}
+        />
       </View>
 
       <View
         style={{
-          flex: 1,
+          flex: 1.1,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
@@ -62,11 +71,11 @@ export default function MessageContent({navigation}) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{...styles.dateBtn, backgroundColor: '#4385E0'}}
-          onPress={next }>
+          onPress={next}>
           <Text style={styles.dateText}>다음</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

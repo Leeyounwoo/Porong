@@ -57,9 +57,9 @@ function AccountStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <AccountStack.Screen name="phone" component={PhoneScreen} />
       <AccountStack.Screen name="login" component={LoginScreen} />
       <AccountStack.Screen name="signin" component={SigninScreen} />
+      <AccountStack.Screen name="phone" component={PhoneScreen} />
     </AccountStack.Navigator>
   );
 }
@@ -90,13 +90,14 @@ function SendStackScreen() {
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
+        headerTitle: '메세지 보내기',
       }}>
-      <SendStack.Screen name="Person" component={PersonScreen} options={{headerTitle: '메세지 보내기'}}/>
-      <SendStack.Screen name="Time" component={TimeScreen} options={{headerTitle: '메세지 보내기'}}/>
-      <SendStack.Screen name="Place" component={PlaceScreen} options={{headerTitle: '메세지 보내기'}}/>
-      <SendStack.Screen name="Content" component={ContentScreen} options={{headerTitle: '메세지 보내기'}}/>
-      <SendStack.Screen name="Type" component={TypeScreen} options={{headerTitle: '메세지 보내기'}}/>
-      <SendStack.Screen name="Total" component={TotalScreen} options={{headerTitle: '메세지 보내기'}}/>
+      <SendStack.Screen name="Person" component={PersonScreen} />
+      <SendStack.Screen name="Time" component={TimeScreen} />
+      <SendStack.Screen name="Place" component={PlaceScreen} />
+      <SendStack.Screen name="Content" component={ContentScreen} />
+      <SendStack.Screen name="Type" component={TypeScreen} />
+      <SendStack.Screen name="Total" component={TotalScreen} />
     </SendStack.Navigator>
   );
 }
