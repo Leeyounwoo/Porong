@@ -5,6 +5,8 @@ import com.porong.auth.dto.LoginResultInfo;
 import com.porong.auth.dto.SignUpInfo;
 import com.porong.auth.dto.TokenInfo;
 import com.porong.auth.service.AuthService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +27,36 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+//    /**
+//     * 카카오 로그인 테스트를 위한 홈 화면
+//     * @return
+//     */
+//    @GetMapping("/")
+//    public String oauthTest(){
+//        return "index";
+//    }
+
+    // redirect_uri=http://localhost:8080
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8080/oauth/login/response&response_type=code
+
+    // redirect_uri=http://localhost:8082
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8082/oauth/login/response&response_type=code
+
+    // redirect_uri=http://k6C102.p.ssafy.io:8082
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8082/oauth/login/response&response_type=code
+
+    // redirect_uri 바꾸려면
+    // 1. AuthService 체크
+    // 2. application-oauth.yml 체크
+    // 3. kakao developers 에는 다 등록
+
     /**
-     * 카카오 로그인 테스트를 위한 홈 화면
+     * gateway test
      * @return
      */
-    @GetMapping("/")
+    @GetMapping("/gateway/test")
     public String oauthTest(){
-        return "index";
+        return "gateway test!!!";
     }
 
     /**
@@ -41,6 +66,7 @@ public class AuthController {
      * @throws IOException
      */
     @GetMapping("/login/response")
+    @ApiOperation(value = "카카오 로그인에 후 받은 response code 로 사용자 정보를 받아온다")
     public ResponseEntity<Map<String, Object>> loginResponse(@RequestParam String code) throws IOException {
 
         // code 잘 받아오나 테스트
@@ -81,6 +107,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/signup")
+    @ApiOperation(value = "gateway 에서 common server 로 접근하여 회원가입을 하기 전에 auth database 에 저장한다")
     public HttpStatus signUp(@RequestBody SignUpInfo signUpInfo){
 
         System.out.println("start signUp Controller : " + signUpInfo.toString());
@@ -105,6 +132,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/access/check")
+    @ApiOperation(value = "gateway 에서 common server 로 접근하기 전에 access token 을 가진 사용자인지 아닌지를 판별한다")
     public ResponseEntity<Map<String, Object>> accessTokenCheck (@RequestBody TokenInfo tokenInfo){
 
         System.out.println("start accessTokenCheck Controller : " + tokenInfo.toString());

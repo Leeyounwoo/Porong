@@ -33,7 +33,7 @@ import java.net.URL;
 public class MemberFilter extends AbstractGatewayFilterFactory<MemberFilter.Config> {
 
     private static final Logger logger = LogManager.getLogger(MemberFilter.class);
-    private static final String reqURL = "http://k6C102.p.ssafy.io:8082/oauth/signup";
+    private static final String reqURL = "http://localhost:8082/oauth/signup";
 
     // "http://localhost:8082/oauth/signup";
     // "http://k6C102.p.ssafy.io:8082/oauth/signup";

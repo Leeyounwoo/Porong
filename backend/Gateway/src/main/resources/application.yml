@@ -1,4 +1,4 @@
-# Spring Cloud Gateway ? ???? port ??
+# Spring Cloud Gateway port
 server:
   port: 8888
 
@@ -35,6 +35,18 @@ spring:
       # routing microservice
       routes:
 
+        # gateway test
+#        - id: gateway-test
+#          uri: http://localhost:8082 # http://k6C102.p.ssafy.io:8082
+#          predicates:
+#            - Path=/oauth/gateway/test
+#          filters:
+#            - name: GlobalFilter
+#              args:
+#                baseMessage: Global Filter
+#                preLogger: true
+#                postLogger: true
+
         # auth service filter
         - id: auth-service
           uri: http://localhost:8082 # http://k6C102.p.ssafy.io:8082
@@ -59,7 +71,7 @@ spring:
           predicates:
             - Path=/member/**  # v1/member/{} (write all except v1/member/signup)
           filters:
-            - name: AuthFilter # Authorize Filter : ??? ????? ???? ??
+            - name: AuthFilter # Authorize Filter
               args:
                 baseMessage: Member Service
                 preLogger: true
@@ -71,7 +83,7 @@ spring:
           predicates:
             - Path=/v1/message/**
           filters:
-            - name: AuthFilter # Authorize Filter : ??? ????? ???? ??
+            - name: AuthFilter # Authorize Filter
               args:
                 baseMessage: Message Service
                 preLogger: true

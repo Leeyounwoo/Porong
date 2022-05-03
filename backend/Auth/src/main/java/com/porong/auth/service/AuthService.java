@@ -37,7 +37,7 @@ public class AuthService {
         String refresh_token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
 
-        String redirect_uri = "http://localhost:8080/oauth/login/response";
+        String redirect_uri = "http://localhost:8082/oauth/login/response"; // http://k6C102.p.ssafy.io:8082/login/response
         String client_id = "d69493d9641df7cfe7ad6140fdd75a5a";
         String client_secret = "5cjtbcma1P2ntCwMBnbkC1J3E9TrVfZU";
 

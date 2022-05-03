@@ -18,6 +18,7 @@ import java.util.Set;
 public class SwaggerConfig {
 
     // http://localhost:8082/swagger-ui/index.html
+    // http://k6C102.p.ssafy.io:8082/swagger-ui/index.html
 
     private ApiInfo swaggerInfo() {
         return new ApiInfoBuilder().title("Porong Auth API")
