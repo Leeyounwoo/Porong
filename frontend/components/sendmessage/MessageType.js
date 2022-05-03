@@ -8,35 +8,44 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+import { useSelector, useStore } from 'react-redux';
+import {typeContain} from '../../reducer';
 
 export default function MessageType({navigation}) {
+  const store = useStore();
+  
   const normal = () => {
     Alert.alert('Alert', '일반 메시지로 보내시겠습니까?', [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
+        onPress: () => {
+          console.log('Cancel Pressed')
+        },
         style: 'cancel',
       },
       {
         text: 'Ok',
         onPress: () => {
           alert('전송 완료! \n메인 페이지로 이동합니다.');
+          store.dispatch(typeContain(false));
           navigation.navigate('Home');
         },
       },
     ]);
   };
+  
   const secret = () => {
     Alert.alert('Alert', '비밀 메시지로 보내시겠습니까?', [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
+        onPress: () => {console.log('Cancel Pressed')},
         style: 'cancel',
       },
       {
         text: 'Ok',
         onPress: () => {
           alert('전송 완료! \n메인 페이지로 이동합니다.');
+          store.dispatch(typeContain(true));
           navigation.navigate('Home');
         },
       },

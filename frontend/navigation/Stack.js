@@ -5,11 +5,14 @@ import HomeScreen from '../screens/Home';
 import LoginScreen from '../screens/Login';
 import SigninScreen from '../screens/Signin';
 import AlarmScreen from '../screens/Alarm';
-import SendScreen from '../screens/Message';
-import ContentScreen from '../screens/MessageContent';
-import TypeScreen from '../screens/MessageType';
-import MessageScreen from '../screens/SendMessage';
+import TimeScreen from '../components/sendmessage/MessageTime';
+import ContentScreen from '../components/sendmessage/MessageContent';
+import TypeScreen from '../components/sendmessage/MessageType';
+import MessageScreen from '../components/sendmessage/MessagePerson';
 import ReceivedBox from '../screens/ReceivedBox';
+import PersonScreen from '../components/sendmessage/MessagePerson';
+import PlaceScreen from '../components/sendmessage/MessagePlace';
+import TotalScreen from '../components/Messagedetail';
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
@@ -86,13 +89,12 @@ function SendStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <SendStack.Screen
-        name="send"
-        component={SendScreen}
-        options={{headerTitle: '메세지 보내기'}}
-      />
-      <SendStack.Screen name="Content" component={ContentScreen} />
-      <SendStack.Screen name="Type" component={TypeScreen} />
+      <SendStack.Screen name="Person" component={PersonScreen} options={{headerTitle: '메세지 보내기'}}/>
+      <SendStack.Screen name="Time" component={TimeScreen} options={{headerTitle: '메세지 보내기'}}/>
+      <SendStack.Screen name="Place" component={PlaceScreen} options={{headerTitle: '메세지 보내기'}}/>
+      <SendStack.Screen name="Content" component={ContentScreen} options={{headerTitle: '메세지 보내기'}}/>
+      <SendStack.Screen name="Type" component={TypeScreen} options={{headerTitle: '메세지 보내기'}}/>
+      <SendStack.Screen name="Total" component={TotalScreen} options={{headerTitle: '메세지 보내기'}}/>
     </SendStack.Navigator>
   );
 }

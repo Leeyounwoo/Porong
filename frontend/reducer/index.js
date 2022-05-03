@@ -1,29 +1,48 @@
 import { combineReducers } from "redux";
 
 const MESSAGE = "MESSAGE";
+const TIME = "TIME";
+const PLACE = "PLACE";
+const TYPE = "TYPE";
+const PERSON = "PERSON";
 
-export const timeContain = (data) => { type: MESSAGE, data };
-export const positionContain = (data) => { type: MESSAGE, data };
-export const typeContain = (data) => { type: MESSAGE, data };
-export const messageContain = (data) => { type: MESSAGE, data };
+
+//action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
+export const personContain = (data) => {return{ type: PERSON, data }};
+export const timeContain = (data) =>  {return{ type: TIME, data }};
+export const placeContain = (data) =>  {return{ type: PLACE, data }};
+export const typeContain = (data) =>  {return{ type: TYPE, data }};
+export const messageContain = (title, content) => {return{ type: MESSAGE, title, content }};
+
+
+//store
 const init = {
+    person: "",
     time: Date.now(),
-    position: "",
+    place: "",
     title: "",
     context : "",
     type: false,
 };
-export const root = (state=init, action) =>{
+
+
+//reducer
+function reducer(state=init, action){
     switch(action.type){
+        case "PERSON":
+            return{
+                ...state,
+                person: action.data,
+            }
         case "TIME":
             return {
                 ...state,
                 time: action.data,
             }
-        case "POSITION":
+        case "PLACE":
             return {
                 ...state,
-                position: action.data,
+                place: action.data,
             }
         case "MESSAGE":
         return {
@@ -40,3 +59,5 @@ export const root = (state=init, action) =>{
             return state
     }
 }
+
+export {reducer};
