@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-
-export default function Message({navigation}) {
+import {useStore} from 'react-redux';
+import {timeContain} from '../../reducer';
+export default function MessageTime({navigation}) {
   const [date, setDate] = useState(new Date());
+  const store = useStore();
+
   const next = () => {
-    navigation.navigate('Content');
+    store.dispatch(timeContain(date));
+    navigation.navigate('Place');
   };
 
   return (
@@ -24,7 +28,7 @@ export default function Message({navigation}) {
           메세지 수신 시간을 설정해주세요!
         </Text>
         <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
-          선택한 시간에 메세지가 발송됩니다. :)
+          선택한 시간에 메세지가 발송됩니다. 
         </Text>
       </View>
       <View style={{flex: 0.1, margin: 10}}>

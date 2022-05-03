@@ -8,10 +8,19 @@ import {
   TextInput,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import { useStore } from 'react-redux';
+import { messageContain } from '../../reducer/index';
+
 
 export default function MessageContent({navigation}) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const store = useStore();
+
+  const next = () => {
+    store.dispatch(messageContain(title, content));
+    navigation.navigate('Type');
+  };
 
   return (
     <View
@@ -53,7 +62,7 @@ export default function MessageContent({navigation}) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{...styles.dateBtn, backgroundColor: '#4385E0'}}
-          onPress={() => navigation.navigate('Type')}>
+          onPress={next }>
           <Text style={styles.dateText}>다음</Text>
         </TouchableOpacity>
       </View>

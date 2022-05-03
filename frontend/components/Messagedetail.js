@@ -10,15 +10,24 @@ const icon = require('../assets/icons/letter.png');
 export default function Messagedetail({ sender, receiver, time, position, messageText, istype }) {
     
     const [senderName, setSenderName] = useState('sender');
+    
     const [receiverName, setReceiverName] = useState('receiver');
+    
     const [singlePos, setSinglePos] = useState({
         lat: 37.5665,
         lng: 126.9780
     });
+
     const [transPos, setTransPos] = useState('ee');
+    
     const [messageContent, setMessageContent] = useState('찾아야지? 못찾겠지?');
+    
     const [type, setType] = useState('summary');
+    
     const [converttime, setConvertTime] = useState('13:10:22');
+
+
+    
 
     Geocoder.init("AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s");
 
@@ -79,7 +88,7 @@ export default function Messagedetail({ sender, receiver, time, position, messag
             </View>
             {type == 'resend'?<View style={styles.buttonContainer}>
                 <Button onPress={btnClick } title={'답장하기'}></Button>
-            </View> : <View></View>}
+            </View> : <View><Text>전송하기</Text></View>}
         </View>
     );
 }

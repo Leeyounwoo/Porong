@@ -4,9 +4,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { root } from './reducer';
+import { reducer } from './reducer';
 
-const store = createStore(root);
+const store = createStore(reducer);
 
 const App = () => {
   return (
