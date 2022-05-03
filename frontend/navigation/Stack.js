@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../screens/Home';
 import LoginScreen from '../screens/Login';
 import SigninScreen from '../screens/Signin';
+import PhoneScreen from '../screens/PhoneForm';
 import AlarmScreen from '../screens/Alarm';
 import TimeScreen from '../components/sendmessage/MessageTime';
 import ContentScreen from '../components/sendmessage/MessageContent';
@@ -20,7 +21,7 @@ function HomeStackScreen() {
     <HomeStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#4385E0',
+          backgroundColor: '#867AE9',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
@@ -35,7 +36,7 @@ function AlarmStackScreen() {
     <AlarmStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#4385E0',
+          backgroundColor: '#867AE9',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
@@ -51,11 +52,12 @@ function AccountStackScreen() {
     <AccountStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#4385E0',
+          backgroundColor: '#867AE9',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
+      <AccountStack.Screen name="phone" component={PhoneScreen} />
       <AccountStack.Screen name="login" component={LoginScreen} />
       <AccountStack.Screen name="signin" component={SigninScreen} />
     </AccountStack.Navigator>
@@ -68,7 +70,7 @@ function MessageStackScreen() {
     <MessageStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#4385E0',
+          backgroundColor: '#867AE9',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
@@ -84,7 +86,7 @@ function SendStackScreen() {
     <SendStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#4385E0',
+          backgroundColor: '#867AE9',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
