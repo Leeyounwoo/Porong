@@ -44,8 +44,8 @@ public class AuthController {
     // redirect_uri=http://localhost:8082
     // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8082/oauth/login/response&response_type=code
 
-    // redirect_uri=http://k6C102.p.ssafy.io:8082
-    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8082/oauth/login/response&response_type=code
+    // redirect_uri=http://k6c102.p.ssafy.io:8082   k6c102.p.ssafy.io
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://k6c102.p.ssafy.io:8082/oauth/login/response&response_type=code
 
     // redirect_uri 바꾸려면
     // 1. AuthService 체크

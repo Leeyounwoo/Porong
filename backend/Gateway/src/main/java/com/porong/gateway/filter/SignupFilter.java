@@ -1,8 +1,5 @@
 package com.porong.gateway.filter;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.porong.gateway.config.Config;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,15 +27,15 @@ import java.net.URL;
   */
 
 @Component
-public class MemberFilter extends AbstractGatewayFilterFactory<MemberFilter.Config> {
+public class SignupFilter extends AbstractGatewayFilterFactory<SignupFilter.Config> {
 
-    private static final Logger logger = LogManager.getLogger(MemberFilter.class);
+    private static final Logger logger = LogManager.getLogger(SignupFilter.class);
     private static final String reqURL = "http://localhost:8082/oauth/signup";
 
     // "http://localhost:8082/oauth/signup";
     // "http://k6C102.p.ssafy.io:8082/oauth/signup";
 
-    public MemberFilter() {
+    public SignupFilter() {
         super(Config.class);
     }
 
@@ -73,8 +70,8 @@ public class MemberFilter extends AbstractGatewayFilterFactory<MemberFilter.Conf
                     logger.info(exchange.getResponse().getCookies().get("memberId"));
 
                     // json 형식 데이터 선언
-                    String json = "{\"memberId\" : \"" + response.getHeaders().get("memberId").get(0)+"\","+
-                            "\"kakaoId\" : \"" + response.getHeaders().get("kakaoId").get(0) +"\","+
+                    String json = // "{\"memberId\" : \"" + response.getHeaders().get("memberId").get(0)+"\","+
+                            "{\"kakaoId\" : \"" + response.getHeaders().get("kakaoId").get(0) +"\","+
                             "\"accessToken\" : \"" + token+ "\""+
                             "}";
                     logger.info(json);

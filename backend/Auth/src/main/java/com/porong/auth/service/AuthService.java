@@ -37,7 +37,8 @@ public class AuthService {
         String refresh_token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
 
-        String redirect_uri = "http://localhost:8082/oauth/login/response"; // http://k6C102.p.ssafy.io:8082/login/response
+//        String redirect_uri = "http://localhost:8082/oauth/login/response";
+        String redirect_uri = "http://k6c102.p.ssafy.io:8082/oauth/login/response";
         String client_id = "d69493d9641df7cfe7ad6140fdd75a5a";
         String client_secret = "5cjtbcma1P2ntCwMBnbkC1J3E9TrVfZU";
 
@@ -175,7 +176,7 @@ public class AuthService {
             member.setNickName(nickName);
             member.setImageUrl(profileImage);
             member.setEmail(email);
-            member.setBirthday(birthday);
+//            member.setBirthday(birthday);
             member.setAccessToken(accessToken);
             // member.setRefreshToken(getAccessToken(accessToken).getMember().getRefreshToken());
             System.out.println("member : " + member.toString());
@@ -209,7 +210,7 @@ public class AuthService {
             return false;
         }
         // memberId 셋팅 및 DB 저장
-        member.setMemberId(signUpInfo.getMemberId());
+//        member.setMemberId(signUpInfo.getMemberId());
         memberRepository.save(member);
 
         // 데이터베이스 저장 여부 반환 (회원 정보가 존재하면 true, 존재하지 않으면 false)

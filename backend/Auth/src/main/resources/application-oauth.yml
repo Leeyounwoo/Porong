@@ -11,7 +11,8 @@ spring:
             # http://localhost:8080/login/oauth2/code/kakao
             # http://i6c107.p.ssafy.io:8752/oauth/login
             # '{baseUrl}/{action}/oauth2/code/{registrationId}'
-            redirect-uri: http://localhost:8082/oauth/login # http://k6C102.p.ssafy.io:8082/oauth/login
+            redirect-uri: http://k6c102.p.ssafy.io:8082/oauth/login
+#            redirect-uri: http://localhost:8082/oauth/login
             # 동의 항목에 있는 ID
             scope: profile_nickname, profile_image, account_email, friends
             authorization-grant-type: authorization_code

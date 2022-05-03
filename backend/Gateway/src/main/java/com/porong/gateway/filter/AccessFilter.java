@@ -2,7 +2,6 @@ package com.porong.gateway.filter;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.porong.gateway.config.Config;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,15 +29,15 @@ import java.net.URL;
   */
 
 @Component
-public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
+public class AccessFilter extends AbstractGatewayFilterFactory<AccessFilter.Config> {
 
-    private static final Logger logger = LogManager.getLogger(AuthFilter.class);
+    private static final Logger logger = LogManager.getLogger(AccessFilter.class);
     private static final String reqURL = "http://localhost:8082/oauth/signup";
 
     // "http://localhost:8082/oauth/signup";
     // "http://k6C102.p.ssafy.io:8082/oauth/access/check";
 
-    public AuthFilter() {
+    public AccessFilter() {
         super(Config.class);
     }
 
