@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignUpInfo {
     private String kakaoId;
-    private String memberId; // 사용자가 임의로 저장
+//    private String memberId;
     private String accessToken;
 }
