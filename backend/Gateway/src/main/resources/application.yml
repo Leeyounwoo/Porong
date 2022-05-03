@@ -43,7 +43,7 @@ spring:
 
         # member signup service filter
         - id: member-signup-service
-          uri: http://localhost:8080 # http://k6C102.p.ssafy.io:8080
+          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
           predicates:
             - Path=/member/signup # v1/member/signup
           filters:
@@ -55,7 +55,7 @@ spring:
 
         # member service filter
         - id: member-service
-          uri: http://localhost:8080 # http://k6C102.p.ssafy.io:8080
+          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
           predicates:
             - Path=/member/**  # v1/member/{} (write all except v1/member/signup)
           filters:
@@ -67,7 +67,7 @@ spring:
 
         # message service filter
         - id: message-service
-          uri: http://localhost:8080 # http://k6C102.p.ssafy.io:8080
+          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
           predicates:
             - Path=/v1/message/**
           filters:
@@ -79,4 +79,4 @@ spring:
 
 # gateway 8888
 # auth 8082
-# common 8080
+# common 8080 -> 8081
