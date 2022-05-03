@@ -47,47 +47,47 @@ spring:
 #                preLogger: true
 #                postLogger: true
 
-        # auth service filter
-        - id: auth-service
-          uri: http://localhost:8082 # http://k6C102.p.ssafy.io:8082
-          predicates:
-            - Path=/oauth/login/response
-
-        # member signup service filter
-        - id: member-signup-service
-          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
-          predicates:
-            - Path=/member/signup # v1/member/signup
-          filters:
-            - name: MemberFilter
-              args:
-                baseMessage: Member Signup Service
-                preLogger: true
-                postLogger: true
-
-        # member service filter
-        - id: member-service
-          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
-          predicates:
-            - Path=/member/**  # v1/member/{} (write all except v1/member/signup)
-          filters:
-            - name: AuthFilter # Authorize Filter
-              args:
-                baseMessage: Member Service
-                preLogger: true
-                postLogger: true
-
-        # message service filter
-        - id: message-service
-          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
-          predicates:
-            - Path=/v1/message/**
-          filters:
-            - name: AuthFilter # Authorize Filter
-              args:
-                baseMessage: Message Service
-                preLogger: true
-                postLogger: true
+#        # auth service filter
+#        - id: auth-service
+#          uri: http://localhost:8082 # http://k6C102.p.ssafy.io:8082
+#          predicates:
+#            - Path=/oauth/login/response
+#
+#        # member signup service filter
+#        - id: member-signup-service
+#          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
+#          predicates:
+#            - Path=/member/signup # v1/member/signup
+#          filters:
+#            - name: MemberFilter
+#              args:
+#                baseMessage: Member Signup Service
+#                preLogger: true
+#                postLogger: true
+#
+#        # member service filter
+#        - id: member-service
+#          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
+#          predicates:
+#            - Path=/member/**  # v1/member/{} (write all except v1/member/signup)
+#          filters:
+#            - name: AuthFilter # Authorize Filter
+#              args:
+#                baseMessage: Member Service
+#                preLogger: true
+#                postLogger: true
+#
+#        # message service filter
+#        - id: message-service
+#          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
+#          predicates:
+#            - Path=/v1/message/**
+#          filters:
+#            - name: AuthFilter # Authorize Filter
+#              args:
+#                baseMessage: Message Service
+#                preLogger: true
+#                postLogger: true
 
 # gateway 8888
 # auth 8082
