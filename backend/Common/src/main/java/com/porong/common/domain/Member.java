@@ -18,6 +18,7 @@ import java.util.List;
 public class Member {
     @Id
     @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long memberId;
 
     @Column(name = "member_kakao_id")
