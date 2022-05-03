@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "778867207838",
+    "project_id": "boreal-axiom-331600",
+    "storage_bucket": "boreal-axiom-331600.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778867207838:android:0aa4e3c2818436665e158f",
+        "android_client_info": {
+          "package_name": "com.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778867207838-4r9hshf5qni3h4eoug26504detlpsmjb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6gAD5hDDLkJslsAxjXXhdBRNKvqpCoX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778867207838-4r9hshf5qni3h4eoug26504detlpsmjb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
