@@ -1,6 +1,7 @@
 package com.porong.common.dto;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ public class RequestCreateMessageDto implements Serializable {
     private Long receiverId;
     private double latitude;
     private double longitude;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dueTime;
     private String title;
     private String contentText;

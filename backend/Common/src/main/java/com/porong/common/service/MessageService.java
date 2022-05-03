@@ -88,6 +88,7 @@ public class MessageService {
     }
 
     // 메세지 조회 -> 조건 처리
+    @Transactional
     public ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
         // 분기 처리
         // isDeleted = 0 인 것들 중에서
@@ -95,9 +96,9 @@ public class MessageService {
         // 받는 사람 중 봤던 거라면, 즉 isChecked = 1 이라면, 제약 없이 바로 확인 가능
         // 아직 확인을 안했다면, 제약조건(거리와 시간)을 확인해서 response 후 isCheked = 0 -> isChecked = 1
 
-        // 보낸 사람은 아무 제약 조건에 상관없이 확인이 가능함
+        // 보낸 사람은 아무 제약 조건에 상관없이 확인이 가능함  // 구현 전
         
-        // 메세지 위치 정보 파악은 프론트랑 협의 후 로직 구성
+        // 메세지 위치 정보 파악은 프론트랑 협의 후 로직 구성 // 구현 전
 
         Long memberId = requestMessageDto.getMemberId();
 
@@ -120,6 +121,8 @@ public class MessageService {
 //        if (requestMessageDto.getLatitude() == message.getLatitude()) {} // 위도 비교
 
 //        if (requestMessageDto.getLongitude() == message.getLongitude()) {} // 경도 비교
+
+//        멤버 비교 추가
 
         message.checkMessage(); // isChecked = 0 -> isChecked = 1
 
