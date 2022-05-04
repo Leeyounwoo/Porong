@@ -32,7 +32,7 @@ public class AuthServiceImpl {
         String request_url = "https://kauth.kakao.com/oauth/token";
 
 //        String redirect_uri = "http://localhost:8081/v1/oauth/login/response";
-        String redirect_uri = "http://http://k6c102.p.ssafy.io:8080/v1/oauth/login/response";
+        String redirect_uri = "http://k6c102.p.ssafy.io:8080/v1/oauth/login/response";
         String client_id = "b2ccc4b2aea13a0177528a9f3d9b97ce";
         String client_secret = "7iCyUW6VarCPsjAwQOTrYTJzeRCQ5LoA";
 
