@@ -4,6 +4,7 @@ import com.porong.common.domain.Member;
 import com.porong.common.domain.Message;
 import com.porong.common.dto.*;
 import com.porong.common.exception.MemberNotFoundException;
+import com.porong.common.exception.MessageCancelImpssibleException;
 import com.porong.common.exception.MessageNotFoundException;
 import com.porong.common.repository.MemberRepository;
 import com.porong.common.repository.MessageRepository;
@@ -12,9 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static jdk.jfr.internal.Utils.isBefore;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,7 +29,7 @@ public class MessageService {
     private final MemberRepository memberRepository;
     private final MessageRepository messageRepository;
 
-    // 메세지 보내기
+    // 메세지 보내기 // 완
     @Transactional
     public Long postMessage(RequestCreateMessageDto requestCreateMessageDto) {
 
@@ -53,9 +58,10 @@ public class MessageService {
         return messageId;
     }
 
-    // 메세지 취소
+    // 메세지 취소 // 완
     @Transactional
     public void deleteMessage(Long messageId) {
+
         // 확인을 안했고, 즉 isChecked 가 0 이면서 SenderId 가 신청을 헀을때 메세지 취소
 
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
@@ -68,11 +74,15 @@ public class MessageService {
             message.deleteMessage(); // isDeleted = 0 -> isDeleted = 1
         }
 
-        // 따로 분기 처리 할건지? 이미 삭제가 됐다던지 etc
+        // 이미 수신자가 읽었다면 에러 발생
+        if (message.isChecked() == true) {
+            throw new MessageCancelImpssibleException();
+        }
 
     }
 
-    // 확인 안한 메세지 모두 조회 -> 생성 시간 순? 제약 시간 조건 순?
+    // 구현 중 // test 필요
+    // 확인 안한 메세지 모두 조회 dueTime 빠른 순으로 정렬
     public List<ResponseUnCheckedMessageDto> fetchUnCheckedMessages(Long memberId) {
         // memberId로 멤버 불러온 뒤 receiver.memberId 및 isCheck = 0 , isDeleted = 0 인거 리스트로 불러오기
 
@@ -84,21 +94,21 @@ public class MessageService {
 
         List<Message> messages = messageRepository.findUnCheckedMessagesByMemberId(member.getMemberId());
 
+
+        // 빨리 확인할 수 있는 순으로 정렬 dueTime 이 빠른 순으로 정렬!
+        // test 필요
+        Collections.sort(messages, new MessageComparator());
+
         return messages.stream().map(ResponseUnCheckedMessageDto::new).collect(Collectors.toList());
     }
 
-    // 메세지 조회 -> 조건 처리
+    // 메세지 조회 // 완
     @Transactional
     public ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
-        // 분기 처리
         // isDeleted = 0 인 것들 중에서
 
         // 받는 사람 중 봤던 거라면, 즉 isChecked = 1 이라면, 제약 없이 바로 확인 가능
         // 아직 확인을 안했다면, 제약조건(거리와 시간)을 확인해서 response 후 isCheked = 0 -> isChecked = 1
-
-        // 보낸 사람은 아무 제약 조건에 상관없이 확인이 가능함  // 구현 전
-        
-        // 메세지 위치 정보 파악은 프론트랑 협의 후 로직 구성 // 구현 전
 
         Long memberId = requestMessageDto.getMemberId();
 
@@ -116,33 +126,59 @@ public class MessageService {
         }
         Message message = optionalMessage.get();
 
-//        if (requestMessageDto.getTimeNow() > message.getDueTime()) // 시간 비교
 
-//        if (requestMessageDto.getLatitude() == message.getLatitude()) {} // 위도 비교
+        // 이미 확인 했다면, 수신자 발신자 모두 제약없이 확인이 가능함
+        if (message.isChecked() == true) {
 
-//        if (requestMessageDto.getLongitude() == message.getLongitude()) {} // 경도 비교
+            ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
 
-//        멤버 비교 추가
+            return responseCheckedMessageDto;
 
-        message.checkMessage(); // isChecked = 0 -> isChecked = 1
+        }
 
-        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
+        // 보낸 사람은 아무 제약 없이 확인이 가능함
+        if (message.getSender() == member) {
 
-        return responseCheckedMessageDto;
+            message.checkMessage(); // isChecked = 0 -> isChecked = 1
+
+            ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
+
+            return responseCheckedMessageDto;
+
+        }
+
+        // member 가 수신자였을때 -> message.getReceiver() == member
+        // 메세지 위치 정보 파악은 프론트랑 협의 후 로직 구성
+        // 시간 비교, 실제 로직에서 시간 찍어보기
+
+       if (requestMessageDto.getTimeNow().isAfter(message.getDueTime())) {
+
+           message.checkMessage(); // isChecked = 0 -> isChecked = 1
+
+           ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
+
+           return responseCheckedMessageDto;
+       }
+
+        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto();
+
+       return responseCheckedMessageDto; // 해당 없으면 빈 값 반환
+
     }
 
+    // 구현 중
     // 받은 메세지 전체 조회 // 정렬 기능 추가 필요
     public List<ResponseReceivedMessageDto> getReceivedMessages(Long memberId) {
         // memberId 로 찾은 후
         // receiverId 로 가져오고, isDeleted = 0 인거 가져옴
 
-        // 우선 시간 조건 만족 안한거 timeNow 랑 dueTime 비교 한후 timeNow < dueTime들 가져오고
-        // dueTime 작은 순대로 정렬
+        // 우선 시간 조건 만족 안한거 timeNow 랑 dueTime 비교 한후 timeNow isafter dueTime들 가져오고 // check 필요
+        // dueTime 작은 순대로 정렬 -> comparator
 
-        // 시간 조건 만족한 메세지들 timeNow > dueTime 메세지들 가져오고
-        // dueTime 큰 순서대로 정렬
+        // 시간 조건 만족한 메세지들 timeNow isbefore dueTime 메세지들 가져오고 // check 필요
+        // dueTime 큰 순서대로 정렬 -> comparator
 
-        // 가져온 후 두개를 합 침
+        // 가져온 후 두개를 합 침 // 빈곳에 채워넣음
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isEmpty()) {
@@ -156,6 +192,7 @@ public class MessageService {
 
     }
 
+    // 구현 중
     // 보낸 메세지 전체 조회 // 정렬 기능 추가 필요
     public List<ResponseSentMessageDto> getSentMessages(Long memberId) {
         // memberId 로 찾은 후
@@ -176,7 +213,7 @@ public class MessageService {
 
     /* 구현 예정
 
-    // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회
+    // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회 // 구현 중
     public LocalDateTime getRecentMessageTime(Long memberId) {
         // memberId로 recieveId 메세지들 가져온 다음에
         // isChecked = 0 이랑, isDeleted = 0 들 적용 시키고,
@@ -191,7 +228,7 @@ public class MessageService {
         return messageId;
     }
 
-    // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회
+    // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회 // 체크 필요
     public List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
         // 두명의 member 가져온 후
         // 각각 sender, reciever 바꾸면서 메세지들 가져온 다음에 createdAt? dueTime 순으로 정렬
@@ -217,7 +254,14 @@ public class MessageService {
     }
 */
 
-
+    class MessageComparator implements Comparator<Message> {
+        @Override
+        public int compare(Message a, Message b) {
+            if (a.getDueTime().isBefore((b.getDueTime()))) return -1; // 오름차순 // 순서 확인
+            if (a.getDueTime().isBefore(b.getDueTime())) return 1;
+            return 0;
+        }
+    }
 
 
 

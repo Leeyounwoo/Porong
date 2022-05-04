@@ -11,6 +11,7 @@ public class ResponseUnCheckedMessageDto implements Serializable {
 
     private Long messageId;
     private Long senderId; // 보낸 사람
+    private String senderName;
     private String senderProfileUrl;
     private double latitude; // 제약 위치 조건
     private double longitude; // 제약 위치 조건
@@ -22,6 +23,7 @@ public class ResponseUnCheckedMessageDto implements Serializable {
     public ResponseUnCheckedMessageDto(Message message) {
         this.messageId = message.getMessageId();
         this.senderId = message.getSender().getMemberId();
+        this.senderName = message.getSender().getName();
         this.senderProfileUrl = message.getSender().getProfileUrl();
         this.latitude = message.getLatitude();
         this.longitude = message.getLongitude();

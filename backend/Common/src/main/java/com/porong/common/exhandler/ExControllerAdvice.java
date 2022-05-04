@@ -3,6 +3,7 @@ package com.porong.common.exhandler;
 import com.porong.common.controller.MemberController;
 import com.porong.common.controller.MessageController;
 import com.porong.common.exception.MemberNotFoundException;
+import com.porong.common.exception.MessageCancelImpssibleException;
 import com.porong.common.exception.MessageNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,13 @@ public class ExControllerAdvice {
     public ResponseEntity<ErrorResponse> RamenNotFoundExHandler(MessageNotFoundException e) {
         log.error("[exceptionHandler] ex", e);
         ErrorResponse errorResponse = ErrorResponse.builder().message("메세지를 찾을 수 없습니다").build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(MessageNotFoundException.class)
+    public ResponseEntity<ErrorResponse> RamenNotFoundExHandler(MessageCancelImpssibleException e) {
+        log.error("[exceptionHandler] ex", e);
+        ErrorResponse errorResponse = ErrorResponse.builder().message("메세지를 취소할 수 없습니다").build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }
