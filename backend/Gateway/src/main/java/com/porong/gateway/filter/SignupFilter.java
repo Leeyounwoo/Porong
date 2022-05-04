@@ -63,11 +63,11 @@ public class SignupFilter extends AbstractGatewayFilterFactory<SignupFilter.Conf
 
                     // sample code 에서 아래 추가
 
-                    response.getHeaders().forEach((k,v)->{
-                        logger.info(k+" : "+v);
-                    });
-                    logger.info(exchange.getAttributes().get("memberId"));
-                    logger.info(exchange.getResponse().getCookies().get("memberId"));
+//                    response.getHeaders().forEach((k,v)->{
+//                        logger.info(k+" : "+v);
+//                    });
+//                    logger.info(exchange.getAttributes().get("memberId"));
+//                    logger.info(exchange.getResponse().getCookies().get("memberId"));
 
                     // json 형식 데이터 선언
                     String json = // "{\"memberId\" : \"" + response.getHeaders().get("memberId").get(0)+"\","+

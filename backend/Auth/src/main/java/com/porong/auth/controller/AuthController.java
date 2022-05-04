@@ -86,7 +86,12 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
         }
         else { // code != null : 로그인에 성공했다면 토큰을 발급 받아 해당 사용자 조회
-            loginResultInfo = authService.getAccessToken(code);
+            try {
+                loginResultInfo = authService.getAccessToken(code);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
+            }
             if (loginResultInfo == null){
 //                result.put("result",FAIL);
                 loginResponseInfo.setResult(FAIL);
@@ -133,7 +138,6 @@ public class AuthController {
         else {
             status = HttpStatus.BAD_REQUEST; // 400 : 요청 부적절
         }
-
         return status;
     }
 
@@ -163,7 +167,7 @@ public class AuthController {
                 result.put("result", FAIL);
             }
         }
-        catch (IOException e){
+        catch (Exception e){
             result.put("result", "EXCEPTION");
         }
         return new ResponseEntity<>(result, HttpStatus.OK);

@@ -32,7 +32,7 @@ import java.net.URL;
 public class AccessFilter extends AbstractGatewayFilterFactory<AccessFilter.Config> {
 
     private static final Logger logger = LogManager.getLogger(AccessFilter.class);
-    private static final String reqURL = "http://localhost:8082/oauth/signup";
+    private static final String reqURL = "http://localhost:8082/oauth/access/check";
 
     // "http://localhost:8082/oauth/signup";
     // "http://k6C102.p.ssafy.io:8082/oauth/access/check";
