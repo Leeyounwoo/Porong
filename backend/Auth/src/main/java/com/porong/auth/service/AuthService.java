@@ -178,14 +178,16 @@ public class AuthService {
                 profileImage = kakao_account.get("profile").getAsJsonObject().get("profile_image_url").getAsString();
                 System.out.println("nickName : " + nickName);
                 System.out.println("profileImage : " + profileImage);
-            }else{
+            }
+            else{
                 throw new Exception();
             }
 
             if (email_agreement){
                 email = kakao_account.get("email").getAsString();
                 System.out.println("email : " + email);
-            }else{
+            }
+            else{
                 throw new Exception();
             }
 
