@@ -214,29 +214,29 @@ public class AuthService {
         return member;
     }
 
-    /**
-     * 최조 로그인 한 사용자에 대해서 SignUpInfo 를 입력 받아서 DB 저장
-     * @param signUpInfo
-     * @return
-     */
-    public boolean signUp(SignUpInfo signUpInfo){
-
-        Member member = null;
-
-        try {
-            // 입력받은 access_token 을 이용하여 사용자 정보 조회
-            member = getUserInfo(signUpInfo.getAccessToken());
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-        // memberId 셋팅 및 DB 저장
-//        member.setMemberId(signUpInfo.getMemberId());
-        memberRepository.save(member);
-
-        // 데이터베이스 저장 여부 반환 (회원 정보가 존재하면 true, 존재하지 않으면 false)
-        return memberRepository.existsById(member.getKakaoId());
-    }
+//    /**
+//     * 최조 로그인 한 사용자에 대해서 SignUpInfo 를 입력 받아서 DB 저장
+//     * @param signUpInfo
+//     * @return
+//     */
+//    public boolean signUp(SignUpInfo signUpInfo){
+//
+//        Member member = null;
+//
+//        try {
+//            // 입력받은 access_token 을 이용하여 사용자 정보 조회
+//            member = getUserInfo(signUpInfo.getAccessToken());
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return false;
+//        }
+//        // memberId 셋팅 및 DB 저장
+////        member.setMemberId(signUpInfo.getMemberId());
+//        memberRepository.save(member);
+//
+//        // 데이터베이스 저장 여부 반환 (회원 정보가 존재하면 true, 존재하지 않으면 false)
+//        return memberRepository.existsById(member.getKakaoId());
+//    }
 
     /**
      * 최조 로그인 한 사용자인지 아닌지 kakaoId 를 이용해 DB 조회
