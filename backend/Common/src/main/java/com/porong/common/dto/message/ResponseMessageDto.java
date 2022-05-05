@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 @Data
 public class ResponseMessageDto implements Serializable {
+    
+    // 예비
 
     private Long messageId;
     private Long receiverId; // 보낸 사람
