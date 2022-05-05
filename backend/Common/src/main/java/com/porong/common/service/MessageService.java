@@ -259,9 +259,6 @@ public class MessageService {
 
         List<ResponseUnCheckedMessageDto> responseUnCheckedMessageDtos = messages.stream().map(ResponseUnCheckedMessageDto::new).collect(Collectors.toList());
 
-        LocalDateTime timeNow = LocalDateTime.now();
-        System.out.println(timeNow);
-
         return responseUnCheckedMessageDtos.get(0).getDueTime();
 
     }
