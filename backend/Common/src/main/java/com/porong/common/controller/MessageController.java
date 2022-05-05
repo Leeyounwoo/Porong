@@ -57,7 +57,7 @@ public class MessageController {
         return messageService.fetchUnCheckedMessages(memberId);
     }
 
-    // 받은 메세지 전체 조회 // 정렬 기능 추가 필요
+    // 받은 메세지 전체 조회
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/getreceivedmessages")
     @ApiOperation(value = "받은 메세지 전체 조회 , 시간 조건 만족 못한 메세지 (시간 만족까지 시간이 적게 남은 순서) + 시간 만족한 메세지(최근에 시간 조건 만족한 순서)")
@@ -74,13 +74,20 @@ public class MessageController {
     }
 
 
-    // 구현 중
     // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/getrecentmessagetime")
     @ApiOperation(value = "확인 안한 메세지들 중 가장 빠른 시간 조건 조회")
     LocalDateTime getRecentMessageTime(@PathVariable("memberId") Long memberId) {
         return messageService.getRecentMessageTime(memberId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/TESTdatetime")
+    @ApiOperation(value = "확인 안한 메세지들 중 가장 빠른 시간 조건 조회")
+    LocalDateTime test() {
+    LocalDateTime timeNow = LocalDateTime.now();
+    return timeNow;
     }
 
     // 보류
