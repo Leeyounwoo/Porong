@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
 import {
   HomeStackScreen,
   AlarmStackScreen,
@@ -9,6 +8,8 @@ import {
   MessageStackScreen,
   SendStackScreen,
 } from './Stack';
+import {useNavigation} from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 
 const SendButton = ({children, onPress}) => {
   return (
@@ -37,8 +38,24 @@ const SendButton = ({children, onPress}) => {
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigation.navigate(remoteMessage.data.type);
+    });
+  }, []);
+
   return (
     <Tab.Navigator
+      // 첫 화면 Route 설정
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,

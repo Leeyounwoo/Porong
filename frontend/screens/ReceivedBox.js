@@ -105,7 +105,7 @@ export default function ReceivedBox() {
       {label === '목록으로 보기' &&
         messagesKeys.map((key, keyidx) => {
           return (
-            <View style={styles.alarmcontainer}>
+            <View style={styles.alarmcontainer} key={keyidx}>
               <View style={styles.profilebox}>
                 <Image
                   source={{uri: messages[messagesKeys[keyidx]].profileImgUrl}}
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   profileimage: {
     width: '100%',
     height: '100%',
-    'object-fit': 'cover',
+    // 'object-fit': 'cover',
   },
   textbox: {
     marginLeft: 20,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
@@ -26,31 +26,6 @@ messaging().onMessage(async remoteMessage => {
 const store = createStore(reducer);
 
 const App = () => {
-  // Request permissions on iOS, refresh token on Android
-  Notifications.registerRemoteNotifications();
-
-  Notifications.events().registerRemoteNotificationsRegistered(
-    (event: Registered) => {
-      // TO-DO: Send the token to my server so it could send back push notifications...
-      console.log('Device Token Received', event.deviceToken);
-    },
-  );
-  Notifications.events().registerRemoteNotificationsRegistrationFailed(
-    (event: RegistrationError) => {
-      console.error(event);
-    },
-  );
-  Notifications.events().registerNotificationReceivedForeground(
-    (
-      notification: Notification,
-      completion: (response: NotificationCompletion) => void,
-    ) => {
-      console.log('Notification Received - Foreground', notification.payload);
-
-      // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
-      completion({alert: true, sound: true, badge: false});
-    },
-  );
   return (
     <Provider store={store}>
       <NavigationContainer>

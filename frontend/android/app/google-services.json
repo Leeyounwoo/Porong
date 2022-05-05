@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "167734110447",
-    "project_id": "ssafyfcm",
-    "storage_bucket": "ssafyfcm.appspot.com"
+    "project_number": "378828539207",
+    "project_id": "fcm-test-19855",
+    "storage_bucket": "fcm-test-19855.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:167734110447:android:f3c3a8b694d30f903f531a",
+        "mobilesdk_app_id": "1:378828539207:android:4efb6ffdb7d6940ebd7862",
         "android_client_info": {
           "package_name": "com.frontend"
         }
       },
       "oauth_client": [
         {
-          "client_id": "167734110447-qe6ukock657m2u9j7cubfhct6a03uth8.apps.googleusercontent.com",
+          "client_id": "378828539207-1o9umrkiibc3q7ka33bvooofuce1ken7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgE1WguMXxMpVUZUN9jrF9s71wSavRBlc"
+          "current_key": "AIzaSyDiL-ES_uLV96E3rzHFbCYUypAyIGtv3KI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "167734110447-qe6ukock657m2u9j7cubfhct6a03uth8.apps.googleusercontent.com",
+              "client_id": "378828539207-1o9umrkiibc3q7ka33bvooofuce1ken7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
