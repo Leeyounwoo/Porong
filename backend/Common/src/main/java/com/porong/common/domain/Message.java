@@ -1,7 +1,7 @@
 package com.porong.common.domain;
 
 
-import com.porong.common.dto.RequestCreateMessageDto;
+import com.porong.common.dto.message.RequestCreateMessageDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;

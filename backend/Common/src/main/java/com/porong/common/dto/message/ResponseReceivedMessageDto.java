@@ -1,4 +1,4 @@
-package com.porong.common.dto;
+package com.porong.common.dto.message;
 
 import com.porong.common.domain.Message;
 import lombok.Data;
@@ -11,6 +11,7 @@ public class ResponseReceivedMessageDto implements Serializable {
 
     private Long messageId;
     private Long senderId; // 받는 사람
+    private String senderName;
     private String senderProfileUrl;
     private double latitude; // 제약 위치 조건
     private double longitude; // 제약 위치 조건
@@ -19,8 +20,11 @@ public class ResponseReceivedMessageDto implements Serializable {
     private LocalDateTime createdAt;
     private String title;
 
-    public ResponseReceivedMessageDto(Message message) {        this.messageId = message.getMessageId();
+    public ResponseReceivedMessageDto(Message message) {
+
+        this.messageId = message.getMessageId();
         this.senderId = message.getSender().getMemberId();
+        this.senderName = message.getSender().getName();
         this.senderProfileUrl = message.getSender().getProfileUrl();
         this.latitude = message.getLatitude();
         this.longitude = message.getLongitude();
@@ -28,7 +32,6 @@ public class ResponseReceivedMessageDto implements Serializable {
         this.isChecked = message.isChecked();
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
-
 
     }
 
