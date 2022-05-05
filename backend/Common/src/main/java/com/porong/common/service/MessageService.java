@@ -262,7 +262,7 @@ public class MessageService {
         List<ResponseUnCheckedMessageDto> responseUnCheckedMessageDtos = messages.stream().map(ResponseUnCheckedMessageDto::new).collect(Collectors.toList());
 
         return responseUnCheckedMessageDtos.get(0).getDueTime();
-        
+
     }
 
     // 보류

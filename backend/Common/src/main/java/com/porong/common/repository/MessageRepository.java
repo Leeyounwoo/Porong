@@ -2,6 +2,7 @@ package com.porong.common.repository;
 
 import com.porong.common.domain.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,5 +21,10 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     // 보낸 메세지들 목록
     @Query("SELECT m from Message m join fetch m.sender where m.sender.memberId=:memberId and m.isDeleted = false")
     List<Message> findSentMessagesByMemberId(@Param("memberId") Long memberId);
+
+    // 메세지 일괄 삭제
+    @Modifying
+    @Query("delete from Message where isDeleted = true")
+    int deleteAllByIs_deletedIsTrue();
 
 }
