@@ -16,7 +16,7 @@ export default function ReceivedBox() {
     messageID02: {
       lat: 37.5665,
       lng: 126.978,
-      title: '메세지 제목2',
+      title: '메세지 제목22',
       sender: '보낸 사람2',
       profileImgUrl: 'https://reactjs.org/logo-og.png',
     },
