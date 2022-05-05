@@ -18,8 +18,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findReceivedMessagesByMemberId(@Param("memberId") Long memberId);
 
     // 보낸 메세지들 목록
-    @Query("SELECT m from Message m join fetch m.sender where m.sender.memberId=:memberId and m.isChecked = false and m.isDeleted = false")
+    @Query("SELECT m from Message m join fetch m.sender where m.sender.memberId=:memberId and m.isDeleted = false")
     List<Message> findSentMessagesByMemberId(@Param("memberId") Long memberId);
-
 
 }

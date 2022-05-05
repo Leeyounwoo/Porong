@@ -1,4 +1,4 @@
-package com.porong.common.dto;
+package com.porong.common.dto.message;
 
 import com.porong.common.domain.Message;
 import lombok.Data;

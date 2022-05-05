@@ -2,7 +2,8 @@ package com.porong.common.controller;
 
 
 import com.porong.common.dto.*;
-import com.porong.common.service.MemberService;
+import com.porong.common.dto.message.*;
+import com.porong.common.service.MemberServiceImpl;
 import com.porong.common.service.MessageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MessageController {
 
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final MessageService messageService;
 
 
@@ -42,7 +43,7 @@ public class MessageController {
     // 단일 메세지 조회 // -> 시간 조건 추가
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/getmessage")
-    @ApiOperation(value = "단일 메세지 조회, 보낸 사람은 제약없이 읽을 수 있고, 받은 사람은 시간 제약 조건만 검증")
+    @ApiOperation(value = "단일 메세지 조회, 보낸 사람이나 이미 읽힌 메세지는 제약없이 읽을 수 있고, 받은 사람은 시간 제약 조건만 검증, 시간 검증 안되면 null 값 반환")
     ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
         return messageService.getMessage(requestMessageDto);
 
@@ -64,7 +65,7 @@ public class MessageController {
         return messageService.getReceivedMessages(memberId);
     }
 
-    // 보낸 메세지 전체 조회 // 정렬 기능 추가 필요
+    // 보낸 메세지 전체 조회
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/getsentmessages")
     @ApiOperation(value = "보낸 메세지 전체 조회 , 최근에 보낸 메세지가 제일 앞으로 오게 정렬")
@@ -72,8 +73,8 @@ public class MessageController {
         return messageService.getSentMessages(memberId);
     }
 
-    /* 구현 예정
 
+    // 구현 중
     // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberId}/getrecentmessagetime")
@@ -82,14 +83,15 @@ public class MessageController {
         return messageService.getRecentMessageTime(memberId);
     }
 
+    // 보류
     // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/fetchmessagesbymember")
-    @ApiOperation(value = "확인 안한 메세지들 중 가장 빠른 시간 조건 조회")
-    List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
-        return messageService.fetchMessagesByMember(RequestBetweenMessagesDto);
+//    @ResponseStatus(HttpStatus.OK)
+//    @PostMapping("/fetchmessagesbymember")
+//    @ApiOperation(value = "확인 안한 메세지들 중 가장 빠른 시간 조건 조회")
+//    List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
+//        return messageService.fetchMessagesByMember(RequestBetweenMessagesDto);
+//
+//    }
 
-    }
 
-     */
 }
