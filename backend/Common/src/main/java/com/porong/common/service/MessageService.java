@@ -204,7 +204,6 @@ public class MessageService {
 
 
         Collections.sort(timeUnValidMessages, new MessageComparator()); // 과거 -> 미래 순
-
         Collections.sort(timeValidMessages, new TimeValidMessageComparator()); // 미래 -> 과거 순
 
 

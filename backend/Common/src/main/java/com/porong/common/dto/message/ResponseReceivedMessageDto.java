@@ -19,6 +19,7 @@ public class ResponseReceivedMessageDto implements Serializable {
     private boolean isChecked; // 상대의 확인 여부 추가
     private LocalDateTime createdAt;
     private String title;
+    private boolean valid;
 
     public ResponseReceivedMessageDto(Message message) {
 
@@ -33,6 +34,14 @@ public class ResponseReceivedMessageDto implements Serializable {
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
 
+        LocalDateTime timeNow = LocalDateTime.now();
+
+        if (timeNow.isBefore(message.getDueTime())) { // 시간 조건 만족 X
+            this.valid = false;
+        }
+        else { // 시간 조건 만족 O
+            this.valid = true;
+        }
     }
 
 }
