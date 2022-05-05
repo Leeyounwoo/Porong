@@ -24,7 +24,7 @@ public class MessageService {
     private final MemberRepository memberRepository;
     private final MessageRepository messageRepository;
 
-    // 완
+
     // 메세지 보내기
     @Transactional
     public Long postMessage(RequestCreateMessageDto requestCreateMessageDto) {
@@ -54,7 +54,7 @@ public class MessageService {
         return messageId;
     }
 
-    // 완
+
     // 메세지 취소
     @Transactional
     public void deleteMessage(Long messageId) {
@@ -78,7 +78,7 @@ public class MessageService {
 
     }
 
-    // 완
+
     // 확인 안한 메세지 모두 조회 dueTime 빠른 순으로 정렬
     public List<ResponseUnCheckedMessageDto> fetchUnCheckedMessages(Long memberId) {
         // memberId로 멤버 불러온 뒤 receiver.memberId 및 isCheck = 0 , isDeleted = 0 인거 리스트로 불러오기
@@ -100,7 +100,7 @@ public class MessageService {
         return responseUnCheckedMessageDtos;
     }
 
-    // 완
+
     // 메세지 조회
     @Transactional
     public ResponseCheckedMessageDto getMessage(RequestMessageDto requestMessageDto) {
@@ -163,7 +163,7 @@ public class MessageService {
 
     }
 
-    // 구현 중
+
     // 받은 메세지 전체 조회 // 정렬 기능 추가 필요
     public List<ResponseReceivedMessageDto> getReceivedMessages(Long memberId) {
         // memberId 로 찾은 후
@@ -217,7 +217,7 @@ public class MessageService {
 
     }
 
-    // 완
+
     // 보낸 메세지 전체 조회 
     public List<ResponseSentMessageDto> getSentMessages(Long memberId) {
         // memberId 로 찾은 후
@@ -239,7 +239,6 @@ public class MessageService {
     }
 
 
-    // 구현 중
     // 확인 안한 메세지들 중 가장 빠른 시간 조건 조회
     public LocalDateTime getRecentMessageTime(Long memberId) {
         // memberId로 recieveId 메세지들 가져온 다음에
@@ -259,6 +258,9 @@ public class MessageService {
         Collections.sort(messages, new MessageComparator());
 
         List<ResponseUnCheckedMessageDto> responseUnCheckedMessageDtos = messages.stream().map(ResponseUnCheckedMessageDto::new).collect(Collectors.toList());
+
+        LocalDateTime timeNow = LocalDateTime.now();
+        System.out.println(timeNow);
 
         return responseUnCheckedMessageDtos.get(0).getDueTime();
 
