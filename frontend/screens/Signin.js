@@ -10,9 +10,10 @@ import {
   ScrollView,
   Button,
 } from 'react-native';
+import axios from 'axios';
 
 export default function Signin({navigation, route}) {
-  const {properties} = route.params;
+  const {properties, id} = route.params;
 
   const [first, setFirst] = useState('');
   const [second, setSecond] = useState('');
@@ -23,7 +24,20 @@ export default function Signin({navigation, route}) {
   const thirdRef = useRef(null);
 
   const signin = () => {
-    console.log(first + second + third);
+    axios
+      .post('http://k6c102.p.ssafy.io:8080/v1/member/authentication', {
+        kakaoId: id,
+        phoneNumber: first + second + third,
+      })
+      .then(res => {
+        if (res.status == 200) {
+          alert('인증번호 발송 성공!');
+          navigation.navigate('phone', {id});
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
@@ -158,6 +172,7 @@ export default function Signin({navigation, route}) {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
+          marginBottom: 120,
         }}>
         <TouchableOpacity
           style={{
@@ -167,7 +182,8 @@ export default function Signin({navigation, route}) {
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={signin}>
           <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
             회원가입
           </Text>
