@@ -186,7 +186,7 @@ public class AuthService {
         member.setPhoneNumber(loginSignupDto.getPhoneNumber());
 
         memberRepository.save(member);
-        System.out.println("저장완료!!! - 서비스");
+        System.out.println("저장완료!!! - 서비스!!!");
         return member;
     }
 
