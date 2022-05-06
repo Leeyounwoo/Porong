@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+
 	// 2022-04-24 initial
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -37,6 +38,11 @@ dependencies {
 	// 2022-04-26 프론트 테스트를 위해 추가 (thymeleaf)
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+	// 2022-05-03 swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
 
 }
 

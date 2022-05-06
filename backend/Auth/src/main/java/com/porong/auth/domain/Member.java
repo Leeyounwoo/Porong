@@ -14,11 +14,11 @@ public class Member {
     @Id
     private String kakaoId;
 
-    private String memberId;
+//    private String memberId;
 
     private String accessToken;
 
-    private String refreshToken;
+//    private String refreshToken;
 
     private String nickName;
 
@@ -26,6 +26,6 @@ public class Member {
 
     private String email;
 
-    private String birthday;
+//    private String birthday;
 
 }

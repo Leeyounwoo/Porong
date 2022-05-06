@@ -29,7 +29,7 @@ public class AuthService {
      * @return
      * @throws IOException
      */
-    public LoginResultInfo getAccessToken(String authorizeCode) throws IOException {
+    public LoginResultInfo getAccessToken(String authorizeCode) throws Exception {
 
         System.out.println("==================== start getAccessToken");
 
@@ -37,7 +37,8 @@ public class AuthService {
         String refresh_token = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
 
-        String redirect_uri = "http://localhost:8080/oauth/login/response";
+//        String redirect_uri = "http://localhost:8082/oauth/login/response";
+        String redirect_uri = "http://k6c102.p.ssafy.io:8082/oauth/login/response";
         String client_id = "d69493d9641df7cfe7ad6140fdd75a5a";
         String client_secret = "5cjtbcma1P2ntCwMBnbkC1J3E9TrVfZU";
 
@@ -118,7 +119,7 @@ public class AuthService {
      * @return
      * @throws IOException
      */
-    public Member getUserInfo(String accessToken) throws IOException{
+    public Member getUserInfo(String accessToken) throws Exception{
 
         System.out.println("==================== start getUserInfo");
 
@@ -158,16 +159,39 @@ public class AuthService {
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
+            // for nickname, image agreement check
+            boolean profile_agreement = kakao_account.get("profile_needs_agreement").getAsBoolean();
+            String nickName = "";
+            String profileImage = "";
+
+            // for email agreement check
+            boolean email_agreement = kakao_account.get("email_needs_agreement").getAsBoolean();
+            String email = "";
+
+            // parsing id
             Long id = element.getAsJsonObject().get("id").getAsLong();
-            String nickName = properties.get("nickname").getAsString();
-            String email = kakao_account.get("email").getAsString();
-            String birthday = kakao_account.get("birthday").getAsString();
-            String profileImage = kakao_account.get("profile").getAsJsonObject().get("profile_image_url").getAsString();
             System.out.println("id : " + id);
-            System.out.println("nickName : " + nickName);
-            System.out.println("email : " + email);
-            System.out.println("birthday : " + birthday);
-            System.out.println("profileImage : " + profileImage);
+
+            // parsing nickName, profileImage
+            if (profile_agreement){
+                nickName = properties.get("nickname").getAsString();
+                profileImage = kakao_account.get("profile").getAsJsonObject().get("profile_image_url").getAsString();
+                System.out.println("nickName : " + nickName);
+                System.out.println("profileImage : " + profileImage);
+            }
+            else{
+                throw new Exception();
+            }
+
+            if (email_agreement){
+                email = kakao_account.get("email").getAsString();
+                System.out.println("email : " + email);
+            }
+            else{
+                throw new Exception();
+            }
+
+            // parsing 완료
             System.out.println("parsing 완료");
 
             // member 객체 셋팅
@@ -175,14 +199,14 @@ public class AuthService {
             member.setNickName(nickName);
             member.setImageUrl(profileImage);
             member.setEmail(email);
-            member.setBirthday(birthday);
             member.setAccessToken(accessToken);
-            // member.setRefreshToken(getAccessToken(accessToken).getMember().getRefreshToken());
+//            member.setBirthday(birthday);
+//            member.setRefreshToken(getAccessToken(accessToken).getMember().getRefreshToken());
             System.out.println("member : " + member.toString());
             System.out.println("member setting 완료");
 
-//            memberRepository.save(member);
-//            System.out.println("member DB 저장 완료");
+            memberRepository.save(member);
+            System.out.println("member DB 저장 완료");
 
             br.close();
 
@@ -204,12 +228,12 @@ public class AuthService {
         try {
             // 입력받은 access_token 을 이용하여 사용자 정보 조회
             member = getUserInfo(signUpInfo.getAccessToken());
-        } catch (IOException e){
+        } catch (Exception e){
             e.printStackTrace();
             return false;
         }
         // memberId 셋팅 및 DB 저장
-        member.setMemberId(signUpInfo.getMemberId());
+//        member.setMemberId(signUpInfo.getMemberId());
         memberRepository.save(member);
 
         // 데이터베이스 저장 여부 반환 (회원 정보가 존재하면 true, 존재하지 않으면 false)

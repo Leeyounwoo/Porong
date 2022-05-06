@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResultInfo {
-    private Member member;
+public class LoginResponseInfo {
     private boolean firstCheck;
+    private String result;
+    private Member member;
 }

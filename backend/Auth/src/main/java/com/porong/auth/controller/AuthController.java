@@ -1,10 +1,14 @@
 package com.porong.auth.controller;
 
 import com.porong.auth.domain.Member;
+import com.porong.auth.dto.LoginResponseInfo;
 import com.porong.auth.dto.LoginResultInfo;
 import com.porong.auth.dto.SignUpInfo;
 import com.porong.auth.dto.TokenInfo;
 import com.porong.auth.service.AuthService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +29,36 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+//    /**
+//     * 카카오 로그인 테스트를 위한 홈 화면
+//     * @return
+//     */
+//    @GetMapping("/")
+//    public String oauthTest(){
+//        return "index";
+//    }
+
+    // redirect_uri=http://localhost:8080
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8080/oauth/login/response&response_type=code
+
+    // redirect_uri=http://localhost:8082
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://localhost:8082/oauth/login/response&response_type=code
+
+    // redirect_uri=http://k6c102.p.ssafy.io:8082   k6c102.p.ssafy.io
+    // https://kauth.kakao.com/oauth/authorize?client_id=d69493d9641df7cfe7ad6140fdd75a5a&redirect_uri=http://k6c102.p.ssafy.io:8082/oauth/login/response&response_type=code
+
+    // redirect_uri 바꾸려면
+    // 1. AuthService 체크
+    // 2. application-oauth.yml 체크
+    // 3. kakao developers 에는 다 등록
+
     /**
-     * 카카오 로그인 테스트를 위한 홈 화면
+     * gateway test
      * @return
      */
-    @GetMapping("/")
+    @GetMapping("/gateway/test")
     public String oauthTest(){
-        return "index";
+        return "gateway test!!!";
     }
 
     /**
@@ -41,38 +68,53 @@ public class AuthController {
      * @throws IOException
      */
     @GetMapping("/login/response")
-    public ResponseEntity<Map<String, Object>> loginResponse(@RequestParam String code) throws IOException {
+    @ApiOperation(value = "카카오 로그인에 후 받은 response code 로 사용자 정보를 받아온다")
+    public ResponseEntity<LoginResponseInfo> loginResponse(@RequestParam String code) throws IOException {
 
         // code 잘 받아오나 테스트
         // System.out.println("controller get code : " + code);
         // token 잘 받아오나 테스트
         // System.out.println("controller get token : " + authService.getAccessToken(code).getMember().getAccessToken());
 
-        Map<String, Object> result = new HashMap<>();
+//        Map<String, Object> result = new HashMap<>();
         LoginResultInfo loginResultInfo = null;
+        LoginResponseInfo loginResponseInfo = new LoginResponseInfo();
 
         if(code == null){
-            result.put("result",FAIL);
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+//            result.put("result",FAIL);
+            loginResponseInfo.setResult(FAIL);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
         }
         else { // code != null : 로그인에 성공했다면 토큰을 발급 받아 해당 사용자 조회
-            loginResultInfo = authService.getAccessToken(code);
+            try {
+                loginResultInfo = authService.getAccessToken(code);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
+            }
             if (loginResultInfo == null){
-                result.put("result",FAIL);
-                return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+//                result.put("result",FAIL);
+                loginResponseInfo.setResult(FAIL);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponseInfo);
             }
             System.out.println(loginResultInfo.toString());
         }
-        result.put("result", SUCCESS);
-        result.put("kakaoId", loginResultInfo.getMember().getKakaoId());
-        result.put("memberId", loginResultInfo.getMember().getMemberId());
-        result.put("accessToken", loginResultInfo.getMember().getAccessToken());
-        result.put("firstCheck", loginResultInfo.isFirstCheck());
-        // 2022-04-28 추가
-        result.put("imageUrl", loginResultInfo.getMember().getImageUrl());
-        result.put("email", loginResultInfo.getMember().getEmail());
-        result.put("nickName", loginResultInfo.getMember().getNickName());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+//        result.put("result", SUCCESS);
+//        result.put("kakaoId", loginResultInfo.getMember().getKakaoId());
+//        result.put("memberId", loginResultInfo.getMember().getMemberId());
+//        result.put("accessToken", loginResultInfo.getMember().getAccessToken());
+//        result.put("firstCheck", loginResultInfo.isFirstCheck());
+//        // 2022-04-28 추가
+//        result.put("imageUrl", loginResultInfo.getMember().getImageUrl());
+//        result.put("email", loginResultInfo.getMember().getEmail());
+//        result.put("nickName", loginResultInfo.getMember().getNickName());
+
+        loginResponseInfo.setResult(SUCCESS);
+        loginResponseInfo.setFirstCheck(loginResultInfo.isFirstCheck());
+//        loginResponseInfo.setMemberId(loginResultInfo.getMember().getMemberId());
+        loginResponseInfo.setMember(loginResultInfo.getMember());
+
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponseInfo);
     }
 
     /**
@@ -81,6 +123,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/signup")
+    @ApiOperation(value = "gateway 에서 common server 로 접근하여 회원가입을 하기 전에 auth database 에 저장한다")
     public HttpStatus signUp(@RequestBody SignUpInfo signUpInfo){
 
         System.out.println("start signUp Controller : " + signUpInfo.toString());
@@ -95,16 +138,16 @@ public class AuthController {
         else {
             status = HttpStatus.BAD_REQUEST; // 400 : 요청 부적절
         }
-
         return status;
     }
 
-    /** 
+    /**
      * 최조 로그인 한 사용자 인지 아닌지 확인
      * @param tokenInfo
      * @return
      */
     @PostMapping("/access/check")
+    @ApiOperation(value = "gateway 에서 common server 로 접근하기 전에 access token 을 가진 사용자인지 아닌지를 판별한다")
     public ResponseEntity<Map<String, Object>> accessTokenCheck (@RequestBody TokenInfo tokenInfo){
 
         System.out.println("start accessTokenCheck Controller : " + tokenInfo.toString());
@@ -124,7 +167,7 @@ public class AuthController {
                 result.put("result", FAIL);
             }
         }
-        catch (IOException e){
+        catch (Exception e){
             result.put("result", "EXCEPTION");
         }
         return new ResponseEntity<>(result, HttpStatus.OK);

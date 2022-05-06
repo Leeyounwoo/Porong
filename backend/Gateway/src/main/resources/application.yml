@@ -1,0 +1,86 @@
+# Spring Cloud Gateway port
+server:
+  port: 8888
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: http://localhost:3000, http://k6C102.p.ssafy.io:3000
+            allowedHeaders:
+              - x-requested-with
+              - authorization
+              - content-type
+              - credential
+              - X-AUTH-TOKEN
+              - X-CSRF-TOKEN
+              - AccessToken
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
+
+      # routing microservice
+      routes:
+
+        # gateway test
+        - id: gateway-test
+          uri: http://localhost:8082 # http://k6C102.p.ssafy.io:8082
+          predicates:
+            - Path=/oauth/gateway/test
+          filters:
+            - name: GlobalFilter
+              args:
+                baseMessage: Global Filter
+                preLogger: true
+                postLogger: true
+
+        # auth service filter
+        - id: auth-service
+          uri: http://localhost:8082 # http://k6C102.p.ssafy.io:8082
+          predicates:
+            - Path=/oauth/login/response
+
+        # member signup service filter
+        - id: signup-service
+          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
+          predicates:
+            - Path=/member/signup # v1/member/signup
+          filters:
+            - name: SignupFilter
+              args:
+                baseMessage: Signup Service Filter
+                preLogger: true
+                postLogger: true
+
+        # member service filter
+        - id: member-service
+          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
+          predicates:
+            - Path=/member/**  # v1/member/{} (write all except v1/member/signup)
+          filters:
+            - name: AccessFilter
+              args:
+                baseMessage: Member Service Filter
+                preLogger: true
+                postLogger: true
+
+        # message service filter
+        - id: message-service
+          uri: http://localhost:8081 # http://k6C102.p.ssafy.io:8080
+          predicates:
+            - Path=/v1/message/**
+          filters:
+            - name: AccessFilter
+              args:
+                baseMessage: Message Service Filter
+                preLogger: true
+                postLogger: true
+
+# gateway 8888
+# auth 8082
+# common 8080 -> 8081

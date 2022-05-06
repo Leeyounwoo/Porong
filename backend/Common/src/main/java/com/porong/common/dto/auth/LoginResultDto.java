@@ -1,6 +1,6 @@
-package com.porong.auth.dto;
+package com.porong.common.dto.auth;
 
-import com.porong.auth.domain.Member;
+import com.porong.common.domain.AuthMember;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResultInfo {
-    private Member member;
+public class LoginResultDto {
     private boolean firstCheck;
+    private AuthMember authMember;
 }
