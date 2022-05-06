@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 
 export default function PhoneForm({navigation, route}) {
-  const {id} = route.params;
+  const {id, phoneNumber, properties} = route.params;
   const first = useRef(null);
   const second = useRef(null);
   const third = useRef(null);
@@ -37,8 +37,25 @@ export default function PhoneForm({navigation, route}) {
       .then(res => {
         console.log(res);
         if (res.status == 200) {
-          alert('회원가입 성공!');
-          navigation.navigate('Home');
+          axios({
+            url: 'http://k6c102.p.ssafy.io:8080/v1/oauth/signup',
+            method: 'post',
+            data: {
+              kakaoId: id,
+              phoneNumber,
+              imageUrl: properties.profile_image,
+              nickName: properties.nickname,
+              firstCheck: true,
+            },
+          })
+            .then(res => {
+              console.log(res);
+              alert('회원가입 성공!');
+              navigation.navigate('Home');
+            })
+            .catch(err => {
+              console.log(err);
+            });
         }
       })
       .catch(err => {
