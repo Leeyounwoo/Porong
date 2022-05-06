@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import KakaoSDK from '@actbase/react-kakaosdk';
+import axios from 'axios';
 
 export default function Login({navigation}) {
   const Login = async () => {
@@ -10,8 +11,40 @@ export default function Login({navigation}) {
       console.log(tokens);
       const profile = await KakaoSDK.getProfile();
       console.log(profile);
-      alert('회원가입을 위해 새로운 페이지로 이동합니다.');
-      navigation.navigate('signin', {properties: profile.properties});
+      console.log(
+        `http://k6c102.p.ssafy.io:8080/v1/oauth/login?token=${tokens.access_token}`,
+      );
+      // axios
+      //   .post(
+      //     'http://k6c102.p.ssafy.io:8080/v1/member/v1/member/authentication',
+      //     {
+      //       accessToken: tokens.access_token,
+      //       kakaoId: profile.id,
+      //     },
+      //   )
+      //   .then(res => {
+      //     console.log(res);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
+      axios
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/oauth/login?token=${tokens.access_token}`,
+        )
+        .then(res => {
+          console.log(res);
+          if (res.data.firstCheck) {
+            alert('회원가입을 위해 새로운 페이지로 이동합니다.');
+            navigation.navigate('signin', {
+              properties: profile.properties,
+              id: res.data.authMember.kakaoId,
+            });
+          }
+        })
+        .catch(err => console.log(err));
+      // alert('회원가입을 위해 새로운 페이지로 이동합니다.');
+      // navigation.navigate('signin', {properties: profile.properties});
     } catch (e) {
       console.log(e);
     }
