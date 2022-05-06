@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class AuthMember {
     @Id
     private Long kakaoId;
-    private String accessToken;
+//    private String accessToken;
 //    private String refreshToken;
     private String nickName;
     private String imageUrl;
