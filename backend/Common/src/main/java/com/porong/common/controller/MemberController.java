@@ -74,5 +74,4 @@ public class MemberController {
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
-
 }
