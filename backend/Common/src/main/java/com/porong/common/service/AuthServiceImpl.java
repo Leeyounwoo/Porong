@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.porong.common.domain.AuthMember;
 import com.porong.common.domain.Member;
-import com.porong.common.dto.auth.LoginResultDto;
 import com.porong.common.dto.auth.LoginSignupDto;
 import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import java.net.URL;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl {
 
     @Autowired
     private MemberRepository memberRepository;
