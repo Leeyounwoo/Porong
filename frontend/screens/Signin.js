@@ -32,7 +32,11 @@ export default function Signin({navigation, route}) {
       .then(res => {
         if (res.status == 200) {
           alert('인증번호 발송 성공!');
-          navigation.navigate('phone', {id});
+          navigation.navigate('phone', {
+            id,
+            phoneNumber: first + second + third,
+            properties,
+          });
         }
       })
       .catch(err => {
