@@ -180,19 +180,17 @@ public class AuthServiceImpl {
     public boolean firstCheck(Long kakaoId){
         Member member = memberRepository.findByKakaoId(kakaoId);
         if (member == null){
+            System.out.println("db에 저장된 멤버정보가 없습니다 --> true - service");
             return true;
         }else {
+            System.out.println("있습니다 --> false - service");
             return false;
         }
     }
 
-    public boolean memberExist(Long kakaoId){
-        Member member = memberRepository.findByMemberId(kakaoId);
-        if (member == null){
-            return true;
-        }else {
-            return false;
-        }
+    public Long convertKakaoId(Long kakaoId){
+        Member member = memberRepository.findByKakaoId(kakaoId);
+        return member.getMemberId();
     }
 
     public Member signup(LoginSignupDto loginSignupDto) throws Exception {

@@ -21,8 +21,7 @@ public class AuthController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
-    @Autowired
-    private AuthServiceImpl authService;
+    private final AuthServiceImpl authService;
 
     @GetMapping("/login")
     @ApiOperation(value = "카카오 소셜 로그인")
@@ -45,7 +44,12 @@ public class AuthController {
         loginResponseDto.setResult(SUCCESS);
         loginResponseDto.setAuthMember(authMember);
         loginResponseDto.setFirstCheck(authService.firstCheck(authMember.getKakaoId()));
-
+        if (!authService.firstCheck(authMember.getKakaoId())){
+            loginResponseDto.setMemberId(authService.convertKakaoId(authMember.getKakaoId()));
+        }
+        else {
+            loginResponseDto.setMemberId(null);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
     }
 
@@ -61,6 +65,13 @@ public class AuthController {
             System.out.println("진짜 저장완료!!! - 컨트롤러");
             return ResponseEntity.status(HttpStatus.OK).body(member);
         }
+    }
+
+    @GetMapping("/convert/kakaoId/{kakaoId}")
+    @ApiOperation(value = "카카오 아이디를 멤버 아이디로 바꾸기")
+    public ResponseEntity<Long> convertKakaoId(@PathVariable Long kakaoId) {
+        Long memberId = authService.convertKakaoId(kakaoId);
+        return ResponseEntity.status(HttpStatus.OK).body(memberId);
     }
 
 //    @PostMapping("/signup")
