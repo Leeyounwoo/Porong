@@ -195,11 +195,12 @@ public class AuthServiceImpl {
         }
     }
 
-    public Member signup(LoginSignupDto loginSignupDto) {
+    public Member signup(LoginSignupDto loginSignupDto) throws Exception {
 
         Member member = new Member();
 
         if (!memberRepository.existsByPhoneNumber(loginSignupDto.getPhoneNumber())) {
+
             try {
                 member.setKakaoId(loginSignupDto.getKakaoId());
                 member.setName(loginSignupDto.getNickName());
@@ -208,6 +209,7 @@ public class AuthServiceImpl {
 
                 memberRepository.save(member);
                 System.out.println("저장완료!!! - 서비스");
+
             } catch (Exception e) {
                 throw e;
             }

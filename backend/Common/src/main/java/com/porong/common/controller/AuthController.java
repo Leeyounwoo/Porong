@@ -51,7 +51,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<Member> loginSignup(@RequestBody LoginSignupDto loginSignupDto){
+    public ResponseEntity<Member> loginSignup(@RequestBody LoginSignupDto loginSignupDto) throws Exception {
 
         if (!loginSignupDto.isFirstCheck()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
