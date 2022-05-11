@@ -4,9 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.porong.common.domain.AuthMember;
+import com.porong.common.domain.Follow;
 import com.porong.common.domain.Member;
+import com.porong.common.domain.Message;
 import com.porong.common.dto.auth.LoginSignupDto;
+import com.porong.common.exception.MemberNotFoundException;
+import com.porong.common.repository.FollowRepository;
 import com.porong.common.repository.MemberRepository;
+import com.porong.common.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final MessageRepository messageRepository;
+    private final FollowRepository followRepository;
 
 //    public LoginResultDto getAccessToken(String code){
 //
@@ -176,17 +186,72 @@ public class AuthServiceImpl {
         }
     }
 
-    public Member signup(LoginSignupDto loginSignupDto){
+    public boolean memberExist(Long kakaoId){
+        Member member = memberRepository.findByMemberId(kakaoId);
+        if (member == null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public Member signup(LoginSignupDto loginSignupDto) throws Exception {
 
         Member member = new Member();
-        member.setKakaoId(loginSignupDto.getKakaoId());
-        member.setName(loginSignupDto.getNickName());
-        member.setProfileUrl(loginSignupDto.getImageUrl());
-        member.setPhoneNumber(loginSignupDto.getPhoneNumber());
 
-        memberRepository.save(member);
-        System.out.println("저장완료!!! - 서비스!!!");
+        if (!memberRepository.existsByPhoneNumber(loginSignupDto.getPhoneNumber())) {
+
+            try {
+                member.setKakaoId(loginSignupDto.getKakaoId());
+                member.setName(loginSignupDto.getNickName());
+                member.setProfileUrl(loginSignupDto.getImageUrl());
+                member.setPhoneNumber(loginSignupDto.getPhoneNumber());
+
+                memberRepository.save(member);
+                System.out.println("저장완료!!! - 서비스");
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
         return member;
     }
+
+//    public void withdrawal(Long memberId){
+////        messageRepository.deleteByReceiverId(targetId);
+//
+//        // foreign key constraint
+//        System.out.println("memberId : " + memberId);
+//
+//        Optional<Member> optionalMember = memberRepository.findById(memberId);
+//        if (optionalMember.isEmpty()) {
+//            throw new MemberNotFoundException();
+//        }
+//        Member member = optionalMember.get();
+//
+////        List<Message> messages = messageRepository.findReceivedMessagesByMemberId(member.getMemberId());
+////        for (Message m : messages) {
+////            System.out.println(m.getMessageId());
+////            messageRepository.deleteById(m.getMessageId());
+////        }
+//
+////       List<Message> messages = messageRepository.findSentMessagesByMemberId(member.getMemberId());
+////        for (Message m : messages) {
+////            System.out.println(m.getMessageId());
+////            messageRepository.deleteById(m.getMessageId());
+////        }
+//
+//        List<Follow> follows = followRepository.findFollowingListByMemberId(member.getMemberId());
+//        for (Follow f : follows) {
+//            System.out.println("followId : " + f.getFollowId());
+//            followRepository.deleteById(f.getFollowId());
+//        }
+//
+////        Follow follow = followRepository.findFollow(memberId);
+////        System.out.println(follow.getFollowId());
+//
+//        memberRepository.deleteById(memberId);
+//        System.out.println("탈퇴완료!!! - 서비스");
+//    }
 
 }

@@ -51,7 +51,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<Member> loginSignup(@RequestBody LoginSignupDto loginSignupDto){
+    public ResponseEntity<Member> loginSignup(@RequestBody LoginSignupDto loginSignupDto) throws Exception {
 
         if (!loginSignupDto.isFirstCheck()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -62,5 +62,28 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.OK).body(member);
         }
     }
+
+//    @PostMapping("/signup")
+//    @ApiOperation(value = "회원가입")
+//    public ResponseEntity<String> loginSignup(@RequestBody LoginSignupDto loginSignupDto){
+//
+//        Long kakaoId = loginSignupDto.getKakaoId();
+//
+//        if (!loginSignupDto.isFirstCheck()){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("kakaoId(" + kakaoId + ") already signup");
+//        }
+//        else{
+//            Member member = authService.signup(loginSignupDto);
+//            System.out.println("진짜 저장완료!!! - 컨트롤러");
+//            return ResponseEntity.status(HttpStatus.OK).body("kakaoId(" + kakaoId + ") complete signup");
+//        }
+//    }
+
+//    @DeleteMapping("withdrawal/{memberId}")
+//    @ApiOperation(value = "회원탈퇴")
+//    public ResponseEntity<String> loginWithdrawal (@PathVariable(name = "memberId") Long memberId){
+//        authService.withdrawal(memberId);
+//        return ResponseEntity.status(HttpStatus.OK).body("진짜 탈퇴완료!!! - 컨트롤러");
+//    }
 
 }

@@ -1,7 +1,9 @@
 package com.porong.common.domain;
 
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.porong.common.domain.capsule.MemberHasCapsule;
+import com.porong.common.domain.capsule.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,4 +45,14 @@ public class Member {
     @OneToMany
     @Column(name = "member_follower_list") // 차단 기능을 위해
     private List<Follow> followerList = new ArrayList<>();
+
+    // 2022-05-11 소은 추가 (타임캡슐 추가 기능 구현을 위해)
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberHasCapsule> memberHasCapsuleList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Post> postList = new ArrayList<>();
+
 }
