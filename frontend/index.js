@@ -37,10 +37,15 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 //   return Number(dist * 1000).toFixed(2);
 // }
 
-const watchID = Geolocation.watchPosition(position => {
-  const latitude = position.coords.latitude; // 위도
-  const longitude = position.coords.longitude; // 경도
-  console.log(`위도: ${latitude}, 경도: ${longitude}`);
-});
+const watchID = Geolocation.watchPosition(
+  position => {
+    const latitude = position.coords.latitude; // 위도
+    const longitude = position.coords.longitude; // 경도
+    console.log(`위도: ${latitude}, 경도: ${longitude}`);
+    alert(`위도: ${latitude}, 경도: ${longitude}`);
+  },
+  err => console.warn(err),
+  {distanceFilter: 0.5},
+);
 
 AppRegistry.registerComponent(appName, () => App);
