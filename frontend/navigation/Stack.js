@@ -41,8 +41,7 @@ function AlarmStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      {/* <AlarmStack.Screen name="Alarm" component={AlarmScreen} /> */}
-      <AlarmStack.Screen name="Alarm" component={ReceivedBox} />
+      <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
     </AlarmStack.Navigator>
   );
 }
@@ -75,7 +74,7 @@ function MessageStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <MessageStack.Screen name="Messege" component={MessageScreen} />
+      <MessageStack.Screen name="Messege" component={ReceivedBox} />
     </MessageStack.Navigator>
   );
 }

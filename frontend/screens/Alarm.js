@@ -1,57 +1,87 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Button, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {AsyncStorage} from 'react-native';
+import TimeSatisfactionAlert from '../components/alert/TimeSatisfactionAlert';
+import MessageReceiveAlert from '../components/alert/MessageReceiveAlert';
+import MessageConditionAlert from '../components/alert/MessageConditionAlert';
 
 export default function Alarm(navigation) {
-  const [alarms, setAlarms] = useState({
-    alarmcode1: {
-      alarmType: 'condition',
-      profileImageUrl:
-        'https://namu.wiki/jump/7A3wXEd3D%2BOBAt7GFPJVY5shxo%2BU9y9ogf9dpQppCeVy4zJ3lJHgTnsemMUmSYJ8Sjsssa5DlhRPfupGdkgzCS%2B%2FYhREcen24GMFTIWLUZI%3D',
-      time: '2022년 04월 30일',
-      place: '장덕동 1333',
-      username: '윤설',
-      check: false,
-    },
-    alarmcode2: {
-      alarmType: 'condition',
-      profileImageUrl:
-        'https://namu.wiki/jump/7A3wXEd3D%2BOBAt7GFPJVY5shxo%2BU9y9ogf9dpQppCeVy4zJ3lJHgTnsemMUmSYJ8Sjsssa5DlhRPfupGdkgzCS%2B%2FYhREcen24GMFTIWLUZI%3D',
-      time: '2022년 04월 30일',
-      place: '장덕동 1333',
-      username: '윤설',
-      check: false,
-    },
-  });
+  const [keys, setKeys] = useState([]);
+  const [alertLocations, setAlertLocations] = useState({});
 
-  const alarmsKeys = Object.keys(alarms);
+  const [ready, setReady] = useState(false);
+
+  const deleteAll = () => {
+    const a = ['A202205091951001'];
+    console.log(keys);
+    AsyncStorage.multiRemove(keys)
+      .then(res => {
+        AsyncStorage.getAllKeys((err, keys) => {
+          console.log('삭제 후', keys);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const updateAlertLocations = (keys, stores) => {
+    stores.map((store, idx) => {
+      const key = store[0];
+      const value = JSON.parse(store[1]);
+      setAlertLocations(prevAlertLocations => {
+        return {...prevAlertLocations, [key]: value};
+      });
+    });
+  };
+
+  useEffect(() => {
+    AsyncStorage.getAllKeys((err, keys) => {
+      AsyncStorage.multiGet(keys, async (err, stores) => {
+        await updateAlertLocations(keys, stores);
+        setKeys(keys);
+      });
+    });
+  }, []);
 
   return (
     <View style={styles.allcontainer}>
-      {alarmsKeys.map((key, keyidx) => {
-        return (
-          <View style={styles.alarmcontainer}>
-            <View style={styles.profilebox}>
-              <Image
-                source={{uri: 'https://reactjs.org/logo-og.png'}}
-                style={styles.profileimage}
-              />
-            </View>
-            <View style={styles.textbox}>
-              <Text>{alarms[alarmsKeys[keyidx]].alarmType}</Text>
-              <Text>{`${alarms[alarmsKeys[keyidx]].username}님이 [${
-                alarms[alarmsKeys[keyidx]].time
-              }] [${alarms[alarmsKeys[keyidx]].place}] 에서`}</Text>
-              <Text>볼 수 있는 메세지를 보냈습니다.</Text>
-            </View>
-            <View style={styles.circle}></View>
-          </View>
-        );
+      <Button onPress={deleteAll} title={'지우기'}></Button>
+
+      {keys.map((key, idx) => {
+        if (alertLocations[keys[idx]]['alertType'] === 'message_condition') {
+          return (
+            <MessageReceiveAlert
+              senderNickname={alertLocations[keys[idx]]['senderNickname']}
+              time={alertLocations[keys[idx]]['time']}
+              place={alertLocations[keys[idx]]['place']}
+              isChecked={alertLocations[keys[idx]]['isChecked']}
+            />
+          );
+        } else if (
+          alertLocations[keys[idx]]['alertType'] === 'time_satisfaction'
+        ) {
+          return (
+            <TimeSatisfactionAlert
+              senderNickname={alertLocations[keys[idx]]['senderNickname']}
+              place={alertLocations[keys[idx]]['place']}
+              isChecked={alertLocations[keys[idx]]['isChecked']}
+            />
+          );
+        } else if (
+          alertLocations[keys[idx]]['alertType'] === 'message_receive'
+        ) {
+          return (
+            <MessageConditionAlert
+              senderNickname={alertLocations[keys[idx]]['senderNickname']}
+              place={alertLocations[keys[idx]]['place']}
+              isChecked={alertLocations[keys[idx]]['isChecked']}
+            />
+          );
+        }
       })}
-      <Button
-        title="메세지 보내기"
-        onPress={() => navigation.navigate('Messege')}></Button>
     </View>
   );
 }
@@ -61,17 +91,24 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  alarmcompletion: {
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
   alarmcontainer: {
+    paddingLeft: 8,
+    paddingRight: 20,
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    // backgroundColor: 'red',
   },
   profilebox: {
     width: 70,
+    backgroundColor: 'blue',
     height: 70,
     borderRadius: 70,
+    marginLeft: 12,
     overflow: 'hidden',
   },
   profileimage: {
@@ -80,13 +117,22 @@ const styles = StyleSheet.create({
     'object-fit': 'cover',
   },
   textbox: {
-    marginHorizontal: 10,
+    width: '80%',
+    padding: 20,
+    marginHorizontal: 20,
+  },
+  text: {
+    whiteSpace: 'norap',
+  },
+  textbold: {
+    fontWeight: 'bold',
+    color: '#FF9292',
   },
   circle: {
     width: 10,
     height: 10,
     borderRadius: 50,
-    backgroundColor: '#4385E0',
+    backgroundColor: '#FF9292',
     alignItems: 'center',
   },
 });

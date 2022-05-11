@@ -198,26 +198,3 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 });
-
-//   <Tabs.Screen
-//     name="alarm"
-//     component={AlarmStackScreen}
-//     options={{
-//       tabBarIcon: ({focused}) => (
-//         <View
-//           style={{
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           }}>
-//           <Image
-//             style={{
-//               width: 30,
-//               height: 30,
-//               tintColor: focused ? '#C449C2' : 'grey',
-//             }}
-//             source={require('./assets/icons/bell.png')}
-//           />
-//         </View>
-//       ),
-//     }}
-//   />
