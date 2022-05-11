@@ -186,15 +186,32 @@ public class AuthServiceImpl {
         }
     }
 
-    public Member signup(LoginSignupDto loginSignupDto){
-        Member member = new Member();
-        member.setKakaoId(loginSignupDto.getKakaoId());
-        member.setName(loginSignupDto.getNickName());
-        member.setProfileUrl(loginSignupDto.getImageUrl());
-        member.setPhoneNumber(loginSignupDto.getPhoneNumber());
+    public boolean memberExist(Long kakaoId){
+        Member member = memberRepository.findByMemberId(kakaoId);
+        if (member == null){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
-        memberRepository.save(member);
-        System.out.println("저장완료!!! - 서비스");
+    public Member signup(LoginSignupDto loginSignupDto) {
+
+        Member member = new Member();
+
+        if (!memberRepository.existsByPhoneNumber(loginSignupDto.getPhoneNumber())) {
+            try {
+                member.setKakaoId(loginSignupDto.getKakaoId());
+                member.setName(loginSignupDto.getNickName());
+                member.setProfileUrl(loginSignupDto.getImageUrl());
+                member.setPhoneNumber(loginSignupDto.getPhoneNumber());
+
+                memberRepository.save(member);
+                System.out.println("저장완료!!! - 서비스");
+            } catch (Exception e) {
+                throw e;
+            }
+        }
         return member;
     }
 
