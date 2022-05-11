@@ -10,22 +10,7 @@ import {AsyncStorage} from 'react-native';
 import {reducer} from './reducer';
 import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
-
-messaging().onMessage(async remoteMessage => {
-  // Get the message body
-  let message_body = remoteMessage.notification.body;
-
-  // Get the message title
-  let message_title = remoteMessage.notification.title;
-
-  // Get message image
-  let avatar = remoteMessage.notification.android.imageUrl;
-
-  // getAlert(remoteMessage);
-
-  // Show an alert to the user
-  Alert.alert(message_title, message_body);
-});
+import Geolocation from '@react-native-community/geolocation';
 
 const store = createStore(reducer);
 
@@ -34,45 +19,207 @@ async function saveTokenToDatabase(token) {
 }
 
 const App = () => {
+  const [messageIdList, setMessageIdList] = useState([]);
+  const [messageLocations, setMessageLocations] = useState({});
+  const [flag, setFlag] = useState(false);
+  const [updateCnt, setUpdateCnt] = useState(0);
+
+  function calcDistance(lat1, lon1, lat2, lon2) {
+    if (lat1 == lat2 && lon1 == lon2) return 0;
+
+    const radLat1 = (Math.PI * lat1) / 180;
+    const radLat2 = (Math.PI * lat2) / 180;
+    const theta = lon1 - lon2;
+    const radTheta = (Math.PI * theta) / 180;
+    let distance =
+      Math.sin(radLat1) * Math.sin(radLat2) +
+      Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+    if (distance > 1) distance = 1;
+
+    distance = Math.acos(distance);
+    distance = (distance * 180) / Math.PI;
+    distance = distance * 60 * 1.1515 * 1.609344 * 1000;
+    if (distance < 100) distance = Math.round(distance / 10) * 10;
+    else distance = Math.round(distance / 100) * 100;
+
+    return distance;
+  }
+
   useEffect(() => {
-    const tempRemoteMessage1 = {
-      data: {
-        alertId: 'A202205091951001',
-        messageId: 'M202205091951001',
-        alertType: 'message_condition',
-        senderNickname: '윤설',
-        place: '장덕동 1333',
-        time: '2022년 4월 20일 00시 01분',
+    const watchID = Geolocation.watchPosition(
+      position => {
+        const messageDistances = {};
+        const userLatitude = position.coords.latitude; // 위도
+        const userLongitude = position.coords.longitude; // 경도
+        messageIdList.map((messageId, idx) => {
+          if (messageLocations[messageIdList[idx]]) {
+            if (
+              flag &&
+              messageLocations[messageIdList[idx]]['latitude'] !== undefined &&
+              messageLocations[messageIdList[idx]]['longitude'] !== undefined
+            ) {
+              const tempMessageId = messageIdList[idx];
+              const distance = calcDistance(
+                userLatitude,
+                userLongitude,
+                messageLocations[messageIdList[idx]]['latitude'],
+                messageLocations[messageIdList[idx]]['longitude'],
+              );
+              console.log('거리', distance);
+              if (messageDistances[distance] === undefined) {
+                messageDistances[distance] = [tempMessageId];
+              } else {
+                messageDistances[distance].push(tempMessageId);
+              }
+            }
+          }
+        });
+        console.log('거리들', messageDistances);
+        const minDistance = Math.min(Object.keys(messageDistances));
+        console.log('가장 짧은 거리', minDistance);
+        if (minDistance <= 50) {
+          console.log('50m 이내에 있습니다.');
+        }
       },
-    };
+      err => console.warn(err),
+      {distanceFilter: 0.5},
+    );
+  }, [flag]);
 
-    const tempRemoteMessage2 = {
-      data: {
-        alertId: 'A202205091951002',
-        messageId: 'M202205091951001',
-        alertType: 'time_satisfaction',
-        senderNickname: '윤설',
-        place: '장덕동 1333',
-        latitude: '37.439801',
-        longitude: '127.127730',
-      },
-    };
+  // 이미 Async Storage에 존재하는 데이터 가져올 때 비동기문제 해결하기 위한 함수
+  const updateMessageLocations = (keys, stores) => {
+    stores.map((store, idx) => {
+      const key = store[0];
+      const value = JSON.parse(store[1]);
+      setMessageLocations(prevMessageLocations => {
+        return {...prevMessageLocations, [key]: value};
+      });
+    });
+  };
 
-    const tempRemoteMessage3 = {
-      data: {
-        alertId: 'A202205091951003',
-        messageId: 'M202205091951001',
-        alertType: 'message_receive',
-        senderNickname: '윤설',
-        place: '장덕동 1333',
-      },
-    };
-
-    // getAlert(tempRemoteMessage1);
-    getAlert(tempRemoteMessage2);
-    // getAlert(tempRemoteMessage3);
+  // 메세지 상태 관리 (Async Storage)
+  useEffect(() => {
+    AsyncStorage.getAllKeys((err, keys) => {
+      AsyncStorage.multiGet(keys, async (err, stores) => {
+        await updateMessageLocations(keys, stores);
+        await setMessageIdList(keys);
+        await setUpdateCnt(prev => prev + 1);
+        await setFlag(true);
+      });
+    });
   }, []);
 
+  // 메세지 상태 관리 (새로운 알림)
+  const manageMessageState = async remoteMessage => {
+    const alertType = remoteMessage.data.alertType;
+    const messageId = remoteMessage.data.messageId;
+    switch (alertType) {
+      case 'time_satisfaction':
+        console.log('time_satisfaction Alert');
+        const latitude = remoteMessage.data.latitude;
+        const longitude = remoteMessage.data.longitude;
+        await setMessageLocations(prevMessageLocations => {
+          return {
+            ...prevMessageLocations,
+            [messageId]: {latitude: latitude, longitude: longitude},
+          };
+        });
+        await setMessageIdList(prevMessageIdList => [
+          ...prevMessageIdList,
+          messageId,
+        ]);
+        setUpdateCnt(prev => prev + 1);
+        break;
+
+      case 'message_receive':
+        console.log('message_receive Alert');
+
+        const tempMessageLocations = messageLocations;
+        await delete tempMessageLocations[messageId];
+        await setMessageLocations(tempMessageLocations);
+        setMessageIdList(
+          messageIdList.filter(tempMessageId => tempMessageId !== messageId),
+        );
+        break;
+    }
+  };
+
+  // 새로운 알림 왔을 때
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      await getAlert(remoteMessage);
+      manageMessageState(remoteMessage);
+
+      // Show an alert to the user
+      Alert.alert(
+        remoteMessage.notification.title,
+        remoteMessage.notification.body,
+      );
+    });
+    return unsubscribe;
+  }, []);
+
+  // 임의로 메세지 보내는 코드
+  // useEffect(async () => {
+  //   const tempRemoteMessage1 = {
+  //     data: {
+  //       alertId: 'A202205091951001',
+  //       messageId: 'M202205091951001',
+  //       alertType: 'message_condition',
+  //       senderNickname: '윤설',
+  //       place: '장덕동 1333',
+  //       time: '2022년 4월 20일 00시 01분',
+  //     },
+  //   };
+
+  //   const tempRemoteMessage2 = {
+  //     data: {
+  //       alertId: 'A202205091951004',
+  //       messageId: 'M202205091951002',
+  //       alertType: 'time_satisfaction',
+  //       senderNickname: '윤설',
+  //       place: '장덕동 1333',
+  //       latitude: 38.190589347561485,
+  //       longitude: 129.81490193851873,
+  //     },
+  //   };
+
+  //   const tempRemoteMessage3 = {
+  //     data: {
+  //       alertId: 'A202205091951003',
+  //       messageId: 'M202205091951001',
+  //       alertType: 'message_receive',
+  //       senderNickname: '윤설',
+  //       place: '장덕동 1333',
+  //     },
+  //   };
+
+  //   // getAlert(tempRemoteMessage1);
+  //   await getAlert(tempRemoteMessage2);
+  //   manageMessageState(tempRemoteMessage2);
+  //   // getAlert(tempRemoteMessage3);
+  // }, []);
+
+  // 메세지 상태가 잘 바뀌는지 확인할 수 있는 코드
+  useEffect(() => {
+    console.log('메세지 수', messageIdList.length);
+    messageIdList.map((messageId, idx) => {
+      if (messageLocations[messageIdList[idx]]) {
+        console.log('1messageId: ', messageIdList[idx]);
+        console.log('total: ', messageLocations[messageIdList[idx]]);
+        console.log(
+          '1latitude: ',
+          messageLocations[messageIdList[idx]]['latitude'],
+        );
+        console.log(
+          '1longitude: ',
+          messageLocations[messageIdList[idx]]['longitude'],
+        );
+      }
+    });
+  }, [updateCnt]);
+
+  // 토큰을 생성하는 코드
   useEffect(() => {
     messaging()
       .getToken()

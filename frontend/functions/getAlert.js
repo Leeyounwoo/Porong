@@ -35,7 +35,7 @@ export function getAlert(remoteMessage) {
     // 알림 저장, 메세지 저장
     case 'time_satisfaction':
       const latitude = remoteMessage.data.latitude;
-      const longtitude = remoteMessage.data.longtitude;
+      const longitude = remoteMessage.data.longitude;
       // 알림 저장
       AsyncStorage.setItem(
         alertId,
@@ -58,7 +58,7 @@ export function getAlert(remoteMessage) {
         messageId,
         JSON.stringify({
           latitude: latitude,
-          longtitude: longtitude,
+          longitude: longitude,
         }),
       )
         .then(() => {

@@ -19,9 +19,9 @@ const Home = () => {
   const [markers, setMarkers] = useState([]);
   const [temp, setTemp] = useState(null);
   const markerRef = useRef();
-  
+
   const [user, setUser] = useState({
-    name: "yunseol"
+    name: 'yunseol',
   });
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const Home = () => {
         lat: 37.231,
         lng: 129.33434,
         sender: 3,
-      }
+      },
     ]);
     console.log(user.name);
   }, []);
@@ -79,18 +79,17 @@ const Home = () => {
   useEffect(() => {
     //마커 확인용.
     markers.map((single, idx) => {
-      console.log("idx : ",idx," ",single.lat," ", single.lng);
-    })
-  }, [markers])
-  
+      console.log('idx : ', idx, ' ', single.lat, ' ', single.lng);
+    });
+  }, [markers]);
 
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
         <Image style={styles.imgstyle} source={require('../imgtest.jpg')} />
-        <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user.name }</Text>
+        <Text style={{marginTop: 5, alignSelf: 'center'}}>{user.name}</Text>
       </View>
-  
+
       <View style={styles.mapcontainer}>
         <MapView
           provider={PROVIDER_GOOGLE}
@@ -103,12 +102,30 @@ const Home = () => {
           }}
           showUserLocation={true}>
           {markers.map((single, idx) => {
-            return <Marker ref={markerRef} key={idx} title='test'  icon={single.type == 0 ? secret :null}  coordinate={{ latitude: single.lat, longitude: single.lng }} ></Marker>
+            return (
+              <Marker
+                ref={markerRef}
+                key={idx}
+                title="test"
+                icon={single.type == 0 ? secret : null}
+                coordinate={{
+                  latitude: single.lat,
+                  longitude: single.lng,
+                }}></Marker>
+            );
           })}
-          </MapView>
+        </MapView>
       </View>
       <View style={styles.messageContainer}>
-        {markers.length != 0 ? <Text style={{alignSelf:'center', marginTop:5}}>확인 안한 메세지가 {markers.length }개 있습니다</Text> : <Text style={{alignSelf:'center', marginTop:5}}>메세지를 기다리는 중이에요</Text> }
+        {markers.length != 0 ? (
+          <Text style={{alignSelf: 'center', marginTop: 5}}>
+            확인 안한 메세지가 {markers.length}개 있습니다
+          </Text>
+        ) : (
+          <Text style={{alignSelf: 'center', marginTop: 5}}>
+            메세지를 기다리는 중이에요
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -125,7 +142,7 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 30
+    marginTop: 30,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -139,12 +156,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   messageContainer: {
-    position:'absolute',
+    position: 'absolute',
     borderRadius: 20,
     width: 220,
     height: 30,
     top: 150,
-    backgroundColor: '#FDE1E3'
+    backgroundColor: '#FDE1E3',
   },
   imgstyle: {
     width: 80,
@@ -154,7 +171,7 @@ const styles = StyleSheet.create({
   newmessage: {
     position: 'absolute',
     bottom: 300,
-  }
+  },
 });
 
 export default Home;
