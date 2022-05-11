@@ -52,21 +52,21 @@ export function getAlert(remoteMessage) {
         })
         .catch(err => {
           console.log('time_satisfaction 알림 저장 실패', err);
+        });
+      // 메세지 저장
+      AsyncStorage.setItem(
+        messageId,
+        JSON.stringify({
+          latitude: latitude,
+          longtitude: longtitude,
         }),
-        // 메세지 저장
-        AsyncStorage.setItem(
-          messageId,
-          JSON.stringify({
-            latitude: latitude,
-            longtitude: longtitude,
-          }),
-        )
-          .then(() => {
-            console.log('time_satisfaction 메세지 저장 성공');
-          })
-          .catch(err => {
-            console.log('time_satisfaction 메세지 저장 실패', err);
-          });
+      )
+        .then(() => {
+          console.log('time_satisfaction 메세지 저장 성공');
+        })
+        .catch(err => {
+          console.log('time_satisfaction 메세지 저장 실패', err);
+        });
       break;
 
     // 알림 저장, 메세지 삭제
@@ -86,14 +86,15 @@ export function getAlert(remoteMessage) {
         })
         .catch(err => {
           console.log('message_receive 알림 저장 실패', err);
-        }),
-        AsyncStorage.removeItem(messageId)
-          .then(() => {
-            console.log('message_receive 메세지 삭제 성공');
-          })
-          .catch(err => {
-            console.log('message_receive 메세지 삭제 실패', err);
-          });
+        });
+      // 메세지 삭제
+      AsyncStorage.removeItem(messageId)
+        .then(() => {
+          console.log('message_receive 메세지 삭제 성공');
+        })
+        .catch(err => {
+          console.log('message_receive 메세지 삭제 실패', err);
+        });
       break;
   }
 }

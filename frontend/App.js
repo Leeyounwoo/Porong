@@ -68,10 +68,11 @@ const App = () => {
       },
     };
 
-    getAlert(tempRemoteMessage1);
+    // getAlert(tempRemoteMessage1);
     getAlert(tempRemoteMessage2);
-    getAlert(tempRemoteMessage3);
+    // getAlert(tempRemoteMessage3);
   }, []);
+
   useEffect(() => {
     messaging()
       .getToken()
