@@ -73,5 +73,16 @@ public class MemberController {
         }
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
+    
+    @PostMapping("/updateFCMToken")
+    public ResponseEntity<String> updateFCMToken(@RequestBody UpdateFCMTokenDto updateFCMTokenDto) {
+        try {
+            memberService.updateFCMToken(updateFCMTokenDto);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("FCM APP 토큰이 저장 실패 재발급필요", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("FCM APP 토큰 저장 성공", HttpStatus.OK);
+    }
 
 }

@@ -36,6 +36,9 @@ public class Member {
     @Column(name = "member_profile") // 카카오톡 프로필 사진 url
     private String profileUrl;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @OneToMany
     @Column(name = "member_following_list") // 현재 내가 추가한 친구 목록
     private List<Follow> followingList = new ArrayList<>();
