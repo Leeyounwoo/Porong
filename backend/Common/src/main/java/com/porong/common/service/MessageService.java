@@ -1,5 +1,6 @@
 package com.porong.common.service;
 
+import com.porong.common.config.FirebaseFCMConfig;
 import com.porong.common.domain.Member;
 import com.porong.common.domain.Message;
 import com.porong.common.dto.message.*;
@@ -23,7 +24,7 @@ public class MessageService {
 
     private final MemberRepository memberRepository;
     private final MessageRepository messageRepository;
-
+    private final FirebaseFCMConfig firebaseFCMConfig;
 
     // 메세지 보내기
     @Transactional
@@ -48,6 +49,15 @@ public class MessageService {
         Message message = new Message(requestCreateMessageDto, sender, receiver);
 
         messageRepository.save(message);
+
+        // FCM 알림 로직 시작
+        try {
+            firebaseFCMConfig.postNormalMessage(senderId, receiverId);
+        }
+        catch (Exception e) {
+            new MemberNotFoundException();
+        }
+        // FCM 알림 로직 끝
 
         Long messageId = message.getMessageId();
 
