@@ -12,4 +12,5 @@ public class LoginResponseDto {
     private String result;
     private boolean firstCheck;
     private AuthMember authMember;
+    private Long memberId;
 }
