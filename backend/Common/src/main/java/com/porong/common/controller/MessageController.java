@@ -19,7 +19,6 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MessageController {
 
-    private final MemberServiceImpl memberService;
     private final MessageService messageService;
 
 
