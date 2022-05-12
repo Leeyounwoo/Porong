@@ -1,4 +1,3 @@
-import { ColorPropType } from 'react-native';
 import { combineReducers } from "redux";
 
 const MESSAGE = "MESSAGE";
@@ -7,55 +6,59 @@ const PLACE = "PLACE";
 const TYPE = "TYPE";
 const PERSON = "PERSON";
 const POSITION = "POSITION";
-
+const LOGIN = "LOGIN";
 //action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
-export const personContain = (data) => {return{ type: PERSON, data }};
+export const personContain = (sender, receiver) => {return{ type: PERSON, sender,receiver }};
 export const timeContain = (data) =>  {return{ type: TIME, data }};
-export const placeContain = (data) =>  {return{ type: PLACE, data }};
+export const placeContain = (lat, lng) =>  {return{ type: PLACE, lat, lng }};
 export const typeContain = (data) =>  {return{ type: TYPE, data }};
 export const messageContain = (title, content) => {return{ type: MESSAGE, title, content }};
 export const positionContain = (lat, lng) => { return {type: POSITION, lat, lng}};
-
+export const userContain = (memberid, img, kakaoid, nickname) => { return { type: LOGIN, memberid, img, kakaoid, nickname } };
 //store
 const init = {
-    person: "",
-    time: Date.now(),
-    place: "",
+    dueTime: Date.now(),
+    latitude: '',
+    longitude: '',
+    senderId: -1,
+    receiverId: -1,
     title: "",
-    context : "",
-    type: false,
+    contentText : "",
+    // type: false,
 };
 
 
 //reducer
-function reducer(state=init, action){
+const reducer = (state=init, action) => {
     switch(action.type){
         case "PERSON":
             return{
                 ...state,
-                person: action.data,
+                receiverId: action.receiver,
+                senderId: action.sender,
             }
         case "TIME":
             return {
                 ...state,
-                time: action.data,
+                dueTime: action.data,
             }
         case "PLACE":
             return {
                 ...state,
-                place: action.data,
+                latitude: action.lat,
+                longitude: action.lng,
             }
         case "MESSAGE":
         return {
             ...state,
             title: action.title,
-            context: action.context,
+            contentText: action.content,
         }
-        case "TYPE":
-            return {
-                ...state,
-                type : action.data,
-            }
+        // case "TYPE":
+        //     return {
+        //         ...state,
+        //         type : action.data,
+        //     }
         default:
             return state
     }
@@ -66,7 +69,7 @@ const position = {
     lng: 0,
 };
 
-function posreducer(state = position, action) {
+const posreducer = (state = position, action) => {
     if (action.type == POSITION) {
         return {
             ...state,
@@ -78,5 +81,30 @@ function posreducer(state = position, action) {
     }
 }
 
+const userinfo = {
+    memberId :'',
+    kakaoId: '',
+    profileUrl: '',
+    nickname:''
+};
 
-export default combineReducers({reducer,posreducer});
+const userreducer = (state = userinfo, action) => {
+    switch (action.type) {
+        case LOGIN:
+            return {
+                ...state,
+                memberId: action.memberid,
+                kakaoId: action.kakaoid,
+                profileUrl: action.img,
+                nickname: action.nickname
+            }
+        default:
+            return state;
+    }
+}
+
+
+
+const rootReducer = combineReducers({ userreducer, reducer, posreducer });
+
+export default rootReducer;

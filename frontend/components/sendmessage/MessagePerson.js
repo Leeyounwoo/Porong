@@ -9,6 +9,7 @@ import {
   Button,
 } from 'react-native';
 import Contacts from 'react-native-contacts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useStore } from 'react-redux';
 import {personContain} from '../../reducer';
 
@@ -43,7 +44,8 @@ export default function MessagePerson({navigation}) {
   }
 
   const next = () => {
-    store.dispatch(personContain(contacts));
+    AsyncStorage.getItem('user').then(res => { console.log(JSON.parse(res)); }).catch(err => { console.log(err)});
+    store.dispatch(personContain(21,11));
     navigation.navigate('Time');
   };
 
@@ -59,7 +61,7 @@ export default function MessagePerson({navigation}) {
       ))}
     </View>
   );
-
+  
   return (
     <View>
       <View style={styles.container}>
