@@ -122,12 +122,10 @@ export default function MessagePerson({navigation}) {
   };
 
   function fetch() {
-    setIsFetch(true);
     Contacts.getAll()
       .then(res => {
-        console.log('최초 리스트', typeof Array.prototype.slice.call(res));
-        const temp = Array.prototype.slice.call(res);
-        setContacts(temp);
+        console.log('최초 리스트', res);
+        setContacts(res);
         let d = [];
         Array.from(res).map(c => {
           let num = c.phoneNumbers[0].number;
@@ -136,31 +134,30 @@ export default function MessagePerson({navigation}) {
           console.log(num);
           d.push(num);
         });
-        console.log(d);
-        setPhoneNum(d);
         axios({
           url: 'http://k6c102.p.ssafy.io:8080/v1/member/fetchContact',
           method: 'post',
           data: d,
         })
-          .then(res => {
-            console.log('서버 리스트', res.data);
+          .then(result => {
+            console.log('서버 리스트', result.data);
             const k = [];
-            res.data.map((dt, idx) => {
+            result.data.map((dt, idx) => {
               if (dt.signup) {
                 k.push({
                   ...dt,
-                  name: contacts[idx].displayName,
-                  phoneNumber: contacts[idx].phoneNumbers[0].number,
+                  name: res[idx].displayName,
+                  phoneNumber: res[idx].phoneNumbers[0].number,
                 });
               } else {
                 k.push({
                   signup: false,
-                  name: contacts[idx].displayName,
-                  phoneNumber: contacts[idx].phoneNumbers[0].number,
+                  name: res[idx].displayName,
+                  phoneNumber: res[idx].phoneNumbers[0].number,
                 });
               }
             });
+            setIsFetch(true);
             setFetchedItem(k);
             console.log(k);
           })
@@ -181,10 +178,15 @@ export default function MessagePerson({navigation}) {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
+            borderRadius: 100,
           }}>
           <Image
-            source={require('../../assets/icons/user.png')}
-            style={{height: 40, width: 40}}
+            source={
+              isFetch && item.signup
+                ? {uri: item.profileUrl}
+                : require('../../assets/icons/user.png')
+            }
+            style={{height: 40, width: 40, borderRadius: 100}}
           />
         </View>
         <View
@@ -192,8 +194,10 @@ export default function MessagePerson({navigation}) {
             flex: 2.5,
             justifyContent: 'center',
           }}>
-          <Text>{item.displayName}</Text>
-          <Text>{item.phoneNumbers[0].number}</Text>
+          <Text>{isFetch ? item.name : item.displayName}</Text>
+          <Text>
+            {isFetch ? item.phoneNumber : item.phoneNumbers[0].number}
+          </Text>
         </View>
         <View
           style={{
@@ -221,9 +225,9 @@ export default function MessagePerson({navigation}) {
     <View style={{flex: 1}}>
       <FlatList
         style={{flex: 1}}
-        data={contacts}
+        data={isFetch ? fetchedItem : contacts}
         renderItem={PhoneBook}
-        keyExtractor={item => item.phoneNumbers[0].number}
+        keyExtractor={item => item}
       />
       <View style={{flex: 0.2}}></View>
     </View>
