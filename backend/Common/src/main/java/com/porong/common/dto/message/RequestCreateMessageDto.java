@@ -13,7 +13,7 @@ public class RequestCreateMessageDto implements Serializable {
     private Long receiverId;
     private double latitude;
     private double longitude;
-    private boolean isScret;
+    private boolean isSecret;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dueTime;
