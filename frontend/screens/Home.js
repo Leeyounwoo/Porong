@@ -17,7 +17,9 @@ import axios from 'axios';
 const secret = require('../assets/icons/question.png');
 
 const Home = ({ navigation }) => {
-  const position = useSelector(state => state.posreducer );
+  const store = useStore();
+  console.log(store);
+  const position = useSelector((state) => state.posreducer );
   const [markers, setMarkers] = useState([]);
   const [temp, setTemp] = useState(null);
   const markerRef = useRef();
@@ -74,8 +76,8 @@ const Home = ({ navigation }) => {
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           region={{
-            latitude: position.lat,
-            longitude: position.lng,
+            latitude: 0,
+            longitude: 0,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}

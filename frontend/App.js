@@ -6,10 +6,10 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
-import reducer from './reducer/index';
+import rootReducer from './reducer/index';
 import Geolocation from '@react-native-community/geolocation';
 import { positionContain } from './reducer/index';
-const store = createStore(reducer);
+const store = createStore(rootReducer);
 
 // Geolocation.watchPosition(
 //   position => {
