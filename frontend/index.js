@@ -8,6 +8,7 @@ import messaging from '@react-native-firebase/messaging';
 import {name as appName} from './app.json';
 import {AsyncStorage} from 'react-native';
 import {getAlert} from './functions/getAlert';
+import MessageDetail from './screens/MessageDetail';
 
 // Register background handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {

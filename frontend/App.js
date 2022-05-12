@@ -14,9 +14,9 @@ import Geolocation from '@react-native-community/geolocation';
 
 const store = createStore(reducer);
 
-async function saveTokenToDatabase(token) {
-  console.log('토큰', token);
-}
+// async function saveTokenToDatabase(token) {
+//   console.log('토큰', token);
+// }
 
 const App = () => {
   const [messageIdList, setMessageIdList] = useState([]);
@@ -219,14 +219,14 @@ const App = () => {
     });
   }, [updateCnt]);
 
-  // 토큰을 생성하는 코드
-  useEffect(() => {
-    messaging()
-      .getToken()
-      .then(token => {
-        return saveTokenToDatabase(token);
-      });
-  });
+  // // 토큰을 생성하는 코드
+  // useEffect(() => {
+  //   messaging()
+  //     .getToken()
+  //     .then(token => {
+  //       return saveTokenToDatabase(token);
+  //     });
+  // });
   return (
     <Provider store={store}>
       <NavigationContainer>

@@ -6,6 +6,7 @@ import LoginScreen from '../screens/Login';
 import SigninScreen from '../screens/Signin';
 import PhoneScreen from '../screens/PhoneForm';
 import AlarmScreen from '../screens/Alarm';
+import TotalScreen from '../screens/MessageDetail';
 import TimeScreen from '../components/sendmessage/MessageTime';
 import ContentScreen from '../components/sendmessage/MessageContent';
 import TypeScreen from '../components/sendmessage/MessageType';
@@ -13,7 +14,6 @@ import MessageScreen from '../components/sendmessage/MessagePerson';
 import ReceivedBox from '../screens/ReceivedBox';
 import PersonScreen from '../components/sendmessage/MessagePerson';
 import PlaceScreen from '../components/sendmessage/MessagePlace';
-import TotalScreen from '../components/Messagedetail';
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
