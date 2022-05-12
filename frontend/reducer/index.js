@@ -66,18 +66,19 @@ const reducer = (state=init, action) => {
 
 const position = {
     lat: 0,
-    lng: 0,
+    lng: 0
 };
 
-const posreducer = (state = position, action) => {
-    if (action.type == POSITION) {
-        return {
-            ...state,
-            lat: action.lat,
-            lng: action.lng,
-        }
-    } else {
-        return state;
+const posreducer = (state=position, action) => {
+    switch (action.type) {
+        case "POSITION":
+            return{
+                ...state,
+                lat: action.lat,
+                lng: action.lng
+            }
+        default:
+            return state
     }
 }
 
@@ -88,7 +89,7 @@ const userinfo = {
     nickname:''
 };
 
-const userreducer = (state = userinfo, action) => {
+const userreducer = (state=userinfo, action) => {
     switch (action.type) {
         case LOGIN:
             return {

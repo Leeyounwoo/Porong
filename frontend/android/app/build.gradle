@@ -215,9 +215,6 @@ android {
             }
         }
     }
-    lintOptions {
-        abortOnError false
-    }
     splits {
         abi {
             reset()
