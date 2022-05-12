@@ -6,23 +6,37 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
-import {reducer} from './reducer';
+import rootReducer from './reducer/index';
+import Geolocation from '@react-native-community/geolocation';
+import { positionContain } from './reducer/index';
+const store = createStore(rootReducer);
 
-messaging().onMessage(async remoteMessage => {
-  // Get the message body
-  let message_body = remoteMessage.notification.body;
+// Geolocation.watchPosition(
+//   position => {
+//     store.dispatch(positionContain(position.coords.latitude, position.coords.longitude));
+//     console.log(store)
+//   },
+//   error => {
+//     // See error code charts below.
+//     console.log(error.code, error.message);
+//   },
+//   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+// );
 
-  // Get the message title
-  let message_title = remoteMessage.notification.title;
+// messaging().onMessage(async remoteMessage => {
+//   // Get the message body
+//   let message_body = remoteMessage.notification.body;
 
-  // Get message image
-  let avatar = remoteMessage.notification.android.imageUrl;
+//   // Get the message title
+//   let message_title = remoteMessage.notification.title;
 
-  // Show an alert to the user
-  Alert.alert(message_title, message_body);
-});
+//   // Get message image
+//   let avatar = remoteMessage.notification.android.imageUrl;
 
-const store = createStore(reducer);
+//   // Show an alert to the user
+//   Alert.alert(message_title, message_body);
+// });
+
 
 const App = () => {
   return (

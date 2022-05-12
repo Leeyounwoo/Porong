@@ -110,7 +110,14 @@ export default function MessagePerson({navigation}) {
   };
 
   const next = () => {
-    store.dispatch(personContain(contacts));
+    AsyncStorage.getItem('user')
+      .then(res => {
+        console.log(JSON.parse(res));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    store.dispatch(personContain(21, 11));
     navigation.navigate('Time');
   };
 
