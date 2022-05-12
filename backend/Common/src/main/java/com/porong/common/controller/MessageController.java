@@ -27,7 +27,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
     @ApiOperation(value = "메세지 생성해서 보내기")
-    Long postMessage(RequestCreateMessageDto requestCreateMessageDto) {
+    Long postMessage(@RequestBody RequestCreateMessageDto requestCreateMessageDto) {
         return messageService.postMessage(requestCreateMessageDto);
         // 해당 messageId 반환
     }
