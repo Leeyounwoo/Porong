@@ -3,7 +3,6 @@ package com.porong.common.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.porong.common.domain.Member;
 import com.porong.common.dto.firebase.FcmNormalNotifyMessage;
 import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +22,11 @@ public class FirebaseFCMConfig {
     private final ObjectMapper objectMapper;
 
     public void postNormalMessage(long fromMemberId, long toMemberId) throws Exception {
-        if(!MEMBER_REPOSITORY.existsByMemberId(fromMemberId)) throw new Exception();
+        if(!MEMBER_REPOSITORY.existsByMemberId(toMemberId)) throw new Exception();
 
-        String targetToken = MEMBER_REPOSITORY.findByMemberId(fromMemberId).getFcmToken();
+        String targetToken = MEMBER_REPOSITORY.findByMemberId(toMemberId).getFcmToken();
         String title = "새로운 메시지가 도착했습니다.";
-        String body = "";
+        String body = "테스트 입니다.";
 
         String message = makeMessage(targetToken, title, body);
 
@@ -47,6 +46,13 @@ public class FirebaseFCMConfig {
     public String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
                                                                               .validate_only(false)
+                                                                              .message(FcmNormalNotifyMessage.NormalMessage.builder()
+                                                                                                                           .targetToken(targetToken)
+                                                                                                                           .notification(FcmNormalNotifyMessage.Notification.builder()
+                                                                                                                                                                            .title(title)
+                                                                                                                                                                            .body(body)
+                                                                                                                                                                            .build())
+                                                                                                                           .build())
                                                                               .build(); // 메시지 내용 추가 구현필요
         return objectMapper.writeValueAsString(fcmNormalNotifyMessage);
     }
