@@ -12,4 +12,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 2022-05-04 소은 (카카오 아이디로 맴버 찾기 위해 추가)
     Member findByKakaoId(Long kakaoId);
+    boolean existsByMemberId(long memberId);
 }

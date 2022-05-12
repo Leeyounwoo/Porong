@@ -123,4 +123,14 @@ public class MemberServiceImpl implements MemberService {
         }
         return phoneBookList;
     }
+
+    @Override
+    public void updateFCMToken(UpdateFCMTokenDto updateFCMTokenDto) throws Exception {
+        if(!MEMBER_REPOSITORY.existsByMemberId(updateFCMTokenDto.getMemberId())) throw new Exception();
+
+        Member member = MEMBER_REPOSITORY.getById(updateFCMTokenDto.getMemberId());
+        member.setFcmToken(updateFCMTokenDto.getFcmToken());
+
+        MEMBER_REPOSITORY.save(member);
+    }
 }
