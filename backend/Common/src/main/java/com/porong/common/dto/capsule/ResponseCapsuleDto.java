@@ -1,5 +1,6 @@
 package com.porong.common.dto.capsule;
 
+import com.porong.common.domain.capsule.Capsule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,9 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestPositionDto {
-    private Long capsuleId;
-    private Long memberId;
-    private double latitude;
-    private double longitude;
+public class ResponseCapsuleDto {
+    private String result;
+    private Capsule capsule;
 }
