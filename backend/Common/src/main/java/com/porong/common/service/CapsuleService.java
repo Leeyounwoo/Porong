@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class CapsuleService {
 
@@ -34,11 +34,11 @@ public class CapsuleService {
     private final MemberRepository memberRepository;
 
     /**
-     * 캡슐 조회 위치 자격 판단
+     * 사용자와 캡슐 사이의 거리 계산
      * @param requestPositionDto
      * @return
      */
-    public String calcPosition(RequestPositionDto requestPositionDto){
+    public double calcPosition(RequestPositionDto requestPositionDto){
 
         Long capsuleId = requestPositionDto.getCapsuleId();
         Optional<Capsule> optionalCapsule = capsuleRepository.findById(capsuleId);
@@ -47,16 +47,34 @@ public class CapsuleService {
         }
         Capsule capsule = optionalCapsule.get();
 
-        if (capsule.getLatitude() == requestPositionDto.getLatitude()
-                && capsule.getLongitude() == requestPositionDto.getLongitude()){
-            return "fail";
-        }
-        return "success " + requestPositionDto.getMemberId();
+        double capsuleLat = capsule.getLatitude(); // 위도는 지구본 세로줄
+        double capsuleLon = capsule.getLongitude(); // 경도는 지구본 가로줄
+        double userLat = requestPositionDto.getLatitude();
+        double userLon = requestPositionDto.getLongitude();
+
+        System.out.println("capsuleLatitude : " + capsuleLat);
+        System.out.println("capsuleLongitude : " + capsuleLon);
+        System.out.println("userLatitude : " + userLat);
+        System.out.println("userLongitude : " + userLon);
+
+        double theta = capsuleLon - userLon;
+        double redTheta = Math.sin(theta * Math.PI / 180.0);
+        double redCapsuleLat = Math.sin(capsuleLat * Math.PI / 180.0);
+        double redUserLat = Math.sin(userLat * Math.PI / 180.0);
+
+        double distance = Math.sin(redUserLat) * Math.sin(redCapsuleLat)
+                + Math.cos(redUserLat) * Math.cos(redCapsuleLat) * Math.cos(redTheta);
+
+        distance = Math.acos(distance);
+        distance = distance * 180 / Math.PI;
+        distance = distance * 60 * 1.1515 * 1609.344;
+
+        return distance;
     }
 
     /**
      * 캡슐 생성
-     * (기능 테스트 후 초대 절차를 분리할지 고려)
+     * (기능 테스트 후 초대 절차를 분리할지 고려 --> 5/13 분리 안함)
      * @param createCapsuleDto
      * @return
      */
@@ -64,22 +82,34 @@ public class CapsuleService {
 
         Capsule capsule = new Capsule();
 
-        capsule.setName(createCapsuleDto.getCapsuleName());
+        capsule.setCapsuleName(createCapsuleDto.getCapsuleName());
         capsule.setDueTime(createCapsuleDto.getDueTime());
         capsule.setLatitude(createCapsuleDto.getLatitude());
         capsule.setLongitude(createCapsuleDto.getLongitude());
 
         capsuleRepository.save(capsule);
+        System.out.println(">>>>>>>>>> 먼저 캡슐 정보 save 완료");
 
-        List<Member> memberList = createCapsuleDto.getMemberList();
-        List<MemberHasCapsule> memberHasCapsuleList = new ArrayList<>();
+//        List<Member> memberList = createCapsuleDto.getMemberList();
+//        List<MemberHasCapsule> memberHasCapsuleList = new ArrayList<>();
+//
+//        for (int i = 0; i < memberList.size(); i++) {
+//            memberHasCapsuleList.get(i).setMember(memberList.get(i));
+//            memberHasCapsuleList.get(i).setCapsule(capsule);
+//            memberHasCapsuleRepository.save(memberHasCapsuleList.get(i));
+//        }
 
-        for (int i = 0; i < memberList.size(); i++) {
-            memberHasCapsuleList.get(i).setMember(memberList.get(i));
-            memberHasCapsuleList.get(i).setCapsule(capsule);
-            memberHasCapsuleRepository.save(memberHasCapsuleList.get(i));
+        List<Long> memberIdList = createCapsuleDto.getMemberIdList();
+
+        for (int i = 0; i < memberIdList.size(); i++) {
+            MemberHasCapsule target = new MemberHasCapsule();
+            System.out.println(">>>>>>>>>> memberIdList " + (i + 1) + "번째 사용자 저장 : " + memberIdList.get(i));
+            Member member = memberRepository.findByMemberId(memberIdList.get(i));
+            target.setMember(member);
+            target.setCapsule(capsule);
+            memberHasCapsuleRepository.save(target);
         }
-
+        System.out.println(">>>>>>>>>> 캡슐에 속한 사용자들까지 save 까지 완료");
         return capsule;
     }
 
@@ -102,8 +132,8 @@ public class CapsuleService {
 
         Post post = new Post();
 
-        post.setTitle(createPostDto.getTitle());
-        post.setContent(createPostDto.getContent());
+        post.setPostTitle(createPostDto.getPostTitle());
+        post.setPostContent(createPostDto.getPostContent());
         post.setDueTime(createPostDto.getDueTime());
         post.setLatitude(createPostDto.getLatitude());
         post.setLongitude(createPostDto.getLongitude());

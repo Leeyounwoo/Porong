@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class CreatePostDto {
     private Long capsuleId;
     private Long memberId;
-    private String title;
-    private String content;
+    private String postTitle;
+    private String postContent;
     private double latitude;
     private double longitude;
 

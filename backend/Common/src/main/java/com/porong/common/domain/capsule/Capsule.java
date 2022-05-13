@@ -21,10 +21,10 @@ public class Capsule {
     @Id
     @Column(name = "capsule_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long capsuleId;
 
     @Column(name = "capsule_name")
-    private String name;
+    private String capsuleName;
 
     @Column(name = "latitude")
     private double latitude;

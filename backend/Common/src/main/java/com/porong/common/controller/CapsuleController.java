@@ -25,9 +25,14 @@ public class CapsuleController {
     @GetMapping("/calc/position")
     @ApiOperation(value = "타임캡슐 조회 위치 자격 판단하기")
     public ResponseEntity<String> calcPosition(@RequestBody RequestPositionDto requestPositionDto){
-        String result = capsuleService.calcPosition(requestPositionDto);
-        if (Objects.equals(result, "fail")){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+//        String result = capsuleService.calcPosition(requestPositionDto);
+//        if (Objects.equals(result, "fail")){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+//        }
+        double distance = capsuleService.calcPosition(requestPositionDto);
+        System.out.println("distance : " + distance);
+        if (distance > 50){
+            return ResponseEntity.status(HttpStatus.OK).body("fail");
         }
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
@@ -36,7 +41,7 @@ public class CapsuleController {
     @ApiOperation(value = "타임캡술 (방) 만들기")
     public ResponseEntity<String> createCapsule(@RequestBody CreateCapsuleDto createCapsuleDto){
         Capsule capsule = capsuleService.createCapsule(createCapsuleDto);
-        Long capsuleId = capsule.getId();
+        Long capsuleId = capsule.getCapsuleId();
         return ResponseEntity.status(HttpStatus.OK).body("success " + capsuleId);
     }
 
@@ -44,7 +49,7 @@ public class CapsuleController {
     @ApiOperation(value = "해당 타임캡슐 장소에서 게시글 작성하기")
     public ResponseEntity<String> createPost(@RequestBody CreatePostDto createPostDto){
         Post post = capsuleService.createPost(createPostDto);
-        Long postId = post.getId();
+        Long postId = post.getPostId();
         return ResponseEntity.status(HttpStatus.OK).body("success " + postId);
     }
 

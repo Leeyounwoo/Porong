@@ -20,5 +20,5 @@ public class CreateCapsuleDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dueTime;
 
-    private List<Member> memberList;
+    private List<Long> memberIdList;
 }
