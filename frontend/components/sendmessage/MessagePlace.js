@@ -51,7 +51,7 @@ export default function MessagePlace({ navigation}) {
         navigation.navigate('Time');
     }
     const next = () => {
-        store.dispatch(placeContain(address));
+        store.dispatch(placeContain(totalpos.lat, totalpos.lng));
         navigation.navigate('Content');
     }
     return (

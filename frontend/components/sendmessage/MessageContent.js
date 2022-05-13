@@ -39,7 +39,7 @@ export default function MessageContent({navigation}) {
         <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
           메세지 제목
         </Text>
-        <TextInput style={{borderWidth: 1, borderRadius: 10, marginTop: 10}} />
+        <TextInput style={{borderWidth: 1, borderRadius: 10, marginTop: 10}} onChangeText={text=> { setTitle(text)}} />
       </View>
       <View style={{flex: 3, margin: 10}}>
         <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
@@ -52,6 +52,7 @@ export default function MessageContent({navigation}) {
             marginTop: 10,
             height: '70%',
           }}
+          onChangeText={text=> { setContent(text)}}
         />
       </View>
 

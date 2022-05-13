@@ -10,9 +10,10 @@ import {AsyncStorage} from 'react-native';
 import {reducer} from './reducer';
 import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
+import rootReducer from './reducer/index';
 import Geolocation from '@react-native-community/geolocation';
-
-const store = createStore(reducer);
+import {positionContain} from './reducer/index';
+const store = createStore(rootReducer);
 
 // async function saveTokenToDatabase(token) {
 //   console.log('토큰', token);
