@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Button, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage} from '@react-native-async-storage/async-storage';
 import TimeSatisfactionAlert from '../components/alert/TimeSatisfactionAlert';
 import MessageReceiveAlert from '../components/alert/MessageReceiveAlert';
 import MessageConditionAlert from '../components/alert/MessageConditionAlert';

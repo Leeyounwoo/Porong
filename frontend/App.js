@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage} from '@react-native-async-storage/async-storage';
 import {reducer} from './reducer';
 import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
