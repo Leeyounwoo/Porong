@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import KakaoSDK from '@actbase/react-kakaosdk';
+import { useStore } from 'react-redux';
 import axios from 'axios';
+import { userContain } from '../reducer';
 import messaging from '@react-native-firebase/messaging';
-
-export default function Login({navigation}) {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+export default function Login({navigation}) { 
   const [fcmToken, setFfcmToken] = useState('');
+  const store = useStore();
   useEffect(() => {
     // Get the device token
     messaging()

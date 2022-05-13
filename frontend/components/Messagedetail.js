@@ -2,9 +2,29 @@ import React, { useEffect, useState } from 'react';
 import {StyleSheet, View, Text,Button } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
+import { useStore } from 'react-redux';
 
 const icon = require('../assets/icons/letter.png');
 
+function calcDistance(lat1, lon1, lat2, lon2) {
+    if (lat1 == lat2 && lon1 == lon2) return 0;
+
+    const radLat1 = (Math.PI * lat1) / 180;
+    const radLat2 = (Math.PI * lat2) / 180;
+    const theta = lon1 - lon2;
+    const radTheta = (Math.PI * theta) / 180;
+    let distance =
+      Math.sin(radLat1) * Math.sin(radLat2) +
+      Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+    if (distance > 1) distance = 1;
+
+    distance = Math.acos(distance);
+    distance = (distance * 180) / Math.PI;
+    distance = distance * 60 * 1.1515 * 1.609344 * 1000;
+    if (distance < 100) distance = Math.round(distance / 10) * 10;
+    else distance = Math.round(distance / 100) * 100;
+    return distance;
+}
 
 //데이터의 위치를 
 export default function Messagedetail({ data }) {
@@ -16,16 +36,13 @@ export default function Messagedetail({ data }) {
     let transdate = new Date(2022, 4, 13, 10, 33, 0);
     let now = Date.now();
 
+    const currentCheck = useStore().getState().posreducer;
+    console.log(currentCheck);
+
+
     if (transdate > now) {
         console.log(displayedAt(transdate));
     }
-
-    
-
-
-
-
-
     //메세지 보내기시에
     const [data1, setData1] = useState({
         nickname: 'yunseol',

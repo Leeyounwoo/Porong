@@ -14,7 +14,6 @@ import MessageScreen from '../components/sendmessage/MessagePerson';
 import ReceivedBox from '../screens/ReceivedBox';
 import PersonScreen from '../components/sendmessage/MessagePerson';
 import PlaceScreen from '../components/sendmessage/MessagePlace';
-import TotalScreen from '../components/Messagedetail';
 import Setting from '../screens/Setting';
 const HomeStack = createStackNavigator();
 const AccountStack = createStackNavigator();
