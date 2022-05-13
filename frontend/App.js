@@ -28,6 +28,7 @@ async function requestCameraPermission() {
     }
   );
 }
+
 requestCameraPermission();
 Geolocation.watchPosition(
   position => {

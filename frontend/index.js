@@ -8,5 +8,5 @@ import Messagedetail from './components/Messagedetail';
 
 import {name as appName} from './app.json';
 import ReceivedBox from './screens/ReceivedBox';
-
-AppRegistry.registerComponent(appName, () => App);
+import AnimationTest from './AnimationTest';
+AppRegistry.registerComponent(appName, () => Messagedetail);

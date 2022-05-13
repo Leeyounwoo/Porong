@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {  StyleSheet,  Text,  View,  Image} from 'react-native';
+import {  StyleSheet,  Text,  View,  Image,   Animated} from 'react-native';
 
-import MapView, {PROVIDER_GOOGLE, Marker, Animated} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { useSelector, useStore } from 'react-redux';
 import axios from 'axios';
@@ -60,7 +60,6 @@ const Home = ({ navigation }) => {
   function displayedAt(createdAt) {
     console.log(createdAt);
     const duedate = new Date(createdAt[0],createdAt[1],createdAt[2],createdAt[3],createdAt[4],createdAt[5]);
-
     const milliSeconds = duedate - new Date(); 
     const seconds = milliSeconds / 1000
     if (seconds < 60) return `잠시 뒤에 확인할 수 있습니다!`
@@ -77,10 +76,25 @@ const Home = ({ navigation }) => {
     const years = days / 365
     return `${Math.floor(years)}년 후 확인할 수 있습니다!`
   }
+  let rotateValueHolder = new Animated.Value(0);
+  const RotateData = rotateValueHolder.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  })
+
+
 
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
+        <Animated.Image source={require('../assets/icons/update-arrows.png')}
+          style={{
+            width: 30,
+            height: 30,
+            tintColor: 'white',
+            transfrom: [{rotate: RotateData}]
+          }}
+        />
       <Image style={styles.imgstyle} source={{ uri: user ? user.profileUrl : ``}} />
         <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user? user.nickname : `로그인 처리가 안됬습니다.`}</Text>
       </View>
@@ -100,7 +114,13 @@ const Home = ({ navigation }) => {
         >
           {markers.map((single, idx) => {
             //제약 시간 - 현재 시간을 표시
-            return <Marker ref={markerRef} key={idx} onPress={(e) => { clicktest(e.currentTarget, single.messageId) }} title={`제목 : ${single.title}` } description={displayedAt(single.dueTime)} icon={single.type == 0 ? secret : null} coordinate={{ latitude: single.latitude, longitude: single.longitude }}><Image source={{uri:single.senderProfileUrl}} style={{height: 35, width:35 ,borderRadius:100}} /></Marker>
+            return <Marker ref={markerRef} key={idx}
+              onPress={(e) => { clicktest(e.currentTarget, single.messageId) }}
+              title={`제목 : ${single.title}`}
+              description={displayedAt(single.dueTime)}
+              icon={single.type == 0 ? secret : null}
+              coordinate={{ latitude: single.latitude, longitude: single.longitude }}>
+             <Image source={{ uri: single.senderProfileUrl }} style={{ height: 35, width: 35, borderRadius: 100 }} /></Marker>
           })}
           </MapView>
       </View>
@@ -123,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: 30,
-    borderRadius: 30,
+    borderRadius: 20,
     overflow: 'hidden',
   },
   map: {
