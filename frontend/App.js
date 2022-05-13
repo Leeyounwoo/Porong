@@ -1,20 +1,48 @@
 import React, {useState, useEffect} from 'react';
-import 'react-native-gesture-handler';
+import { PermissionsAndroid } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
-import {AsyncStorage} from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {reducer} from './reducer';
 import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
 import rootReducer from './reducer/index';
-import Geolocation from '@react-native-community/geolocation';
-import {positionContain} from './reducer/index';
-const store = createStore(rootReducer);
+import Geolocation from 'react-native-geolocation-service';
+import { positionContain } from './reducer/index';
+import {createStackNavigator} from '@react-navigation/stack';
+import Login from './screens/Login';
+import Signin from './screens/Signin';
+import PhoneForm from './screens/PhoneForm';
 
+const store = createStore(rootReducer);
+const init = createStackNavigator();
+const Stack = createStackNavigator();
+async function requestCameraPermission() {
+  //Calling the permission function
+  const granted = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    {
+      title: 'AndoridPermissionExample App Camera Permission',
+      message: 'AndoridPermissionExample App needs access to your camera ',
+    }
+  );
+}
+
+requestCameraPermission();
+Geolocation.watchPosition(
+  position => {
+    store.dispatch(positionContain(position.coords.latitude, position.coords.longitude));
+  },
+  error => {
+    // See error code charts below.
+    console.log(error.code, error.message);
+  },
+  {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+);
 // async function saveTokenToDatabase(token) {
 //   console.log('토큰', token);
 // }
@@ -42,9 +70,40 @@ const App = () => {
     distance = distance * 60 * 1.1515 * 1.609344 * 1000;
     if (distance < 100) distance = Math.round(distance / 10) * 10;
     else distance = Math.round(distance / 100) * 100;
-
     return distance;
-  }
+}
+const loginProcess = () => {
+  return (
+    <init.Navigator initialRouteName='login'>
+      <init.Screen name="login" component={Login} />
+      <init.Screen name="signin" component={Signin} />
+      <init.Screen name="phone" component={PhoneForm} />
+    </init.Navigator>
+  )
+}
+const Stacks = () => {
+  const [isLogin, setIsLogin] = React.useState(false);
+  AsyncStorage.getItem('user')
+    .then(info => {
+      if (info !== null) {
+        setIsLogin(true);
+      }
+    })
+    .catch(err => {
+      console.log("err", err)
+    });
+
+  return (
+    <Stack.Navigator
+      initialRouteName={isLogin ? 'home' : 'login'}
+      screenOptions={{ headerShown: false}}>
+      <Stack.Screen name="home" component={Tabs} />
+      <Stack.Screen name="login" component={loginProcess} />
+    </Stack.Navigator>
+  )
+}
+
+
 
   useEffect(() => {
     const watchID = Geolocation.watchPosition(
@@ -233,7 +292,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Tabs />
+        <Stacks />
       </NavigationContainer>
     </Provider>
   );
