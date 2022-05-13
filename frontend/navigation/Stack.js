@@ -14,6 +14,7 @@ import MessageScreen from '../components/sendmessage/MessagePerson';
 import ReceivedBox from '../screens/ReceivedBox';
 import PersonScreen from '../components/sendmessage/MessagePerson';
 import PlaceScreen from '../components/sendmessage/MessagePlace';
+import TempScreen from '../screens/Temp';
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
@@ -42,6 +43,7 @@ function AlarmStackScreen() {
         headerTitleAlign: 'center',
       }}>
       <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
+      <AlarmStack.Screen name="Temp" component={TempScreen} />
     </AlarmStack.Navigator>
   );
 }

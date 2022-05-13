@@ -1,32 +1,35 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableHighlight} from 'react-native';
 
 export default function TimeSatisfactionAlert({
   senderNickname,
   place,
   isChecked,
+  goToMessageDetail,
 }) {
   return (
-    <View style={styles.alarmcompletion}>
-      <View style={styles.alarmcontainer}>
-        <View style={styles.profilebox}>
-          <Image
-            source={{uri: 'https://reactjs.org/logo-og.png'}}
-            style={styles.profileimage}
-          />
+    <TouchableHighlight underlayColor={'#FF9292'} onPress={goToMessageDetail}>
+      <View style={styles.alarmcompletion}>
+        <View style={styles.alarmcontainer}>
+          <View style={styles.profilebox}>
+            <Image
+              source={{uri: 'https://reactjs.org/logo-og.png'}}
+              style={styles.profileimage}
+            />
+          </View>
+          <View style={styles.textbox}>
+            <Text style={styles.text}>
+              <Text>지금부터 </Text>
+              <Text style={styles.textbold}>{`${senderNickname}`}</Text>
+              <Text> 님이 보낸 메세지를 </Text>
+              <Text style={styles.textbold}>{`[${place}]`}</Text>
+              <Text> 에서 확인할 수 있습니다.</Text>
+            </Text>
+          </View>
+          {!isChecked && <View style={styles.circle}></View>}
         </View>
-        <View style={styles.textbox}>
-          <Text style={styles.text}>
-            <Text>지금부터 </Text>
-            <Text style={styles.textbold}>{`${senderNickname}`}</Text>
-            <Text> 님이 보낸 메세지를 </Text>
-            <Text style={styles.textbold}>{`[${place}]`}</Text>
-            <Text> 에서 확인할 수 있습니다.</Text>
-          </Text>
-        </View>
-        {!isChecked && <View style={styles.circle}></View>}
       </View>
-    </View>
+    </TouchableHighlight>
   );
 }
 
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   text: {
-    whiteSpace: 'nowrap',
+    // whiteSpace: 'nowrap',
   },
   textbold: {
     fontWeight: 'bold',

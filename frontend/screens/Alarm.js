@@ -2,16 +2,21 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, Button, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AsyncStorage} from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimeSatisfactionAlert from '../components/alert/TimeSatisfactionAlert';
 import MessageReceiveAlert from '../components/alert/MessageReceiveAlert';
 import MessageConditionAlert from '../components/alert/MessageConditionAlert';
 
-export default function Alarm(navigation) {
+export default function Alarm({navigation}) {
   const [keys, setKeys] = useState([]);
   const [alertLocations, setAlertLocations] = useState({});
 
   const [ready, setReady] = useState(false);
+
+  const goToMessageDetail = () => {
+    console.log('메세지 디테일로 가기');
+    navigation.navigate('Temp');
+  };
 
   const deleteAll = () => {
     const a = ['A202205091951001'];
@@ -49,13 +54,14 @@ export default function Alarm(navigation) {
 
   return (
     <View style={styles.allcontainer}>
-      <Button onPress={deleteAll} title={'지우기'}></Button>
+      <Button onPress={goToMessageDetail} title={'지우기'}></Button>
 
       {keys.map((key, idx) => {
         if (alertLocations[keys[idx]]['alertType'] === 'message_condition') {
           return (
             <MessageReceiveAlert
               key={idx}
+              goToMessageDetail={goToMessageDetail}
               senderNickname={alertLocations[keys[idx]]['senderNickname']}
               time={alertLocations[keys[idx]]['time']}
               place={alertLocations[keys[idx]]['place']}
@@ -67,6 +73,8 @@ export default function Alarm(navigation) {
         ) {
           return (
             <TimeSatisfactionAlert
+              key={idx}
+              goToMessageDetail={goToMessageDetail}
               senderNickname={alertLocations[keys[idx]]['senderNickname']}
               place={alertLocations[keys[idx]]['place']}
               isChecked={alertLocations[keys[idx]]['isChecked']}
@@ -77,6 +85,8 @@ export default function Alarm(navigation) {
         ) {
           return (
             <MessageConditionAlert
+              key={idx}
+              goToMessageDetail={goToMessageDetail}
               senderNickname={alertLocations[keys[idx]]['senderNickname']}
               place={alertLocations[keys[idx]]['place']}
               isChecked={alertLocations[keys[idx]]['isChecked']}
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
   profileimage: {
     width: '100%',
     height: '100%',
-    'object-fit': 'cover',
+    // 'object-fit': 'cover',
   },
   textbox: {
     width: '80%',
@@ -124,7 +134,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   text: {
-    whiteSpace: 'nowrap',
+    // whiteSpace: 'nowrap',
   },
   textbold: {
     fontWeight: 'bold',
