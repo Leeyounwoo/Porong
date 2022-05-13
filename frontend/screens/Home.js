@@ -11,20 +11,20 @@ import {
 
 import MapView, {PROVIDER_GOOGLE, Marker, Animated} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { useSelector, useStore } from 'react-redux';
+import {useSelector, useStore} from 'react-redux';
 import axios from 'axios';
 
 const secret = require('../assets/icons/question.png');
 
-const Home = ({ navigation }) => {
+const Home = ({navigation}) => {
   const store = useStore();
   console.log(store);
-  const position = useSelector((state) => state.posreducer );
+  const position = useSelector(state => state.posreducer);
   const [markers, setMarkers] = useState([]);
   const [temp, setTemp] = useState(null);
   const markerRef = useRef();
   const [user, setUser] = useState({
-    name: "yunseol"
+    name: 'yunseol',
   });
   console.log(position);
 
@@ -49,7 +49,7 @@ const Home = ({ navigation }) => {
     //  error => {
     //     // See error code charts below.
     //     console.log(error.code, error.message);
-    //   }, 
+    //   },
     //   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     // );
   }, []);
@@ -57,9 +57,9 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     //마커 확인용.
     markers.map((single, idx) => {
-      console.log("idx : ",idx," ",single.latitude," ", single.longitude);
-    })
-  }, [markers])
+      console.log('idx : ', idx, ' ', single.latitude, ' ', single.longitude);
+    });
+  }, [markers]);
   function clicktest(e, id) {
     console.log(id);
   }
@@ -68,7 +68,7 @@ const Home = ({ navigation }) => {
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
         {/* <Image style={styles.imgstyle} source={require('../imgtest.jpg')} /> */}
-        <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user.name }</Text>
+        <Text style={{marginTop: 5, alignSelf: 'center'}}>{user.name}</Text>
       </View>
 
       <View style={styles.mapcontainer}>
@@ -82,16 +82,55 @@ const Home = ({ navigation }) => {
             longitudeDelta: 0.0121,
           }}
           showUserLocation={true}
-          followsUserLocation={ true}
-        >
+          followsUserLocation={true}>
           {markers.map((single, idx) => {
             //제약 시간 - 현재 시간을 표시
-            return <Marker ref={markerRef} key={idx} onPress={(e) => { clicktest(e.currentTarget, single.messageId) }} title={`제목 : ${single.title}` } description={`${new Date()}, ${Math.abs(Math.floor((new Date() - new Date(single.dueTime[0], single.dueTime[1]-1,single.dueTime[2],single.dueTime[3],single.dueTime[4],single.dueTime[5]))/3600))}시간 후에 볼 수 있습니다.`} icon={single.type == 0 ? secret : null} coordinate={{ latitude: single.latitude, longitude: single.longitude }}><Image source={{uri:single.senderProfileUrl}} style={{height: 35, width:35 ,borderRadius:100}} /></Marker>
+            return (
+              <Marker
+                ref={markerRef}
+                key={idx}
+                onPress={e => {
+                  clicktest(e.currentTarget, single.messageId);
+                }}
+                title={`제목 : ${single.title}`}
+                description={`${new Date()}, ${Math.abs(
+                  Math.floor(
+                    (new Date() -
+                      new Date(
+                        single.dueTime[0],
+                        single.dueTime[1] - 1,
+                        single.dueTime[2],
+                        single.dueTime[3],
+                        single.dueTime[4],
+                        single.dueTime[5],
+                      )) /
+                      3600,
+                  ),
+                )}시간 후에 볼 수 있습니다.`}
+                icon={single.type == 0 ? secret : null}
+                coordinate={{
+                  latitude: single.latitude,
+                  longitude: single.longitude,
+                }}>
+                <Image
+                  source={{uri: single.senderProfileUrl}}
+                  style={{height: 35, width: 35, borderRadius: 100}}
+                />
+              </Marker>
+            );
           })}
-          </MapView>
+        </MapView>
       </View>
       <View style={styles.messageContainer}>
-        {markers.length != 0 ? <Text style={{alignSelf:'center', marginTop:5}}>확인 안한 메세지가 {markers.length }개 있습니다</Text> : <Text style={{alignSelf:'center', marginTop:5}}>메세지를 기다리는 중이에요</Text> }
+        {markers.length != 0 ? (
+          <Text style={{alignSelf: 'center', marginTop: 5}}>
+            확인 안한 메세지가 {markers.length}개 있습니다
+          </Text>
+        ) : (
+          <Text style={{alignSelf: 'center', marginTop: 5}}>
+            메세지를 기다리는 중이에요
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -108,7 +147,7 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 30
+    marginTop: 30,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -122,12 +161,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   messageContainer: {
-    position:'absolute',
+    position: 'absolute',
     borderRadius: 20,
     width: 220,
     height: 30,
     top: 150,
-    backgroundColor: '#FDE1E3'
+    backgroundColor: '#FDE1E3',
   },
   imgstyle: {
     width: 80,
@@ -137,7 +176,7 @@ const styles = StyleSheet.create({
   newmessage: {
     position: 'absolute',
     bottom: 300,
-  }
+  },
 });
 
 export default Home;

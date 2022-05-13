@@ -6,6 +6,7 @@ import LoginScreen from '../screens/Login';
 import SigninScreen from '../screens/Signin';
 import PhoneScreen from '../screens/PhoneForm';
 import AlarmScreen from '../screens/Alarm';
+import TotalScreen from '../screens/MessageDetail';
 import TimeScreen from '../components/sendmessage/MessageTime';
 import ContentScreen from '../components/sendmessage/MessageContent';
 import TypeScreen from '../components/sendmessage/MessageType';
@@ -13,7 +14,6 @@ import MessageScreen from '../components/sendmessage/MessagePerson';
 import ReceivedBox from '../screens/ReceivedBox';
 import PersonScreen from '../components/sendmessage/MessagePerson';
 import PlaceScreen from '../components/sendmessage/MessagePlace';
-import TotalScreen from '../components/Messagedetail';
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
@@ -41,8 +41,7 @@ function AlarmStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      {/* <AlarmStack.Screen name="Alarm" component={AlarmScreen} /> */}
-      <AlarmStack.Screen name="Alarm" component={ReceivedBox} />
+      <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
     </AlarmStack.Navigator>
   );
 }
@@ -75,7 +74,7 @@ function MessageStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <MessageStack.Screen name="Messege" component={MessageScreen} />
+      <MessageStack.Screen name="Messege" component={ReceivedBox} />
     </MessageStack.Navigator>
   );
 }

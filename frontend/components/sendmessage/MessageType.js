@@ -25,17 +25,30 @@ export default function MessageType({navigation}) {
       },
       {
         text: 'Ok',
-        onPress: () => {
+        onPress: async () => {
+          // axios
+          //   .post(`http://k6c102.p.ssafy.io:8080/v1/member/updateFCMToken`, {
+          //     fcmToken: fcmToken,
+          //     memberId: res.data.memberId,
+          //   })
+          //   .then(res => {
+          //     console.log('FCM 토큰 저장 성공');
+          //   })
+          //   .catch(err => console.log(err));
           alert('전송 완료! \n메인 페이지로 이동합니다.');
           store.dispatch(typeContain(false));
           console.log(store.getState().reducer);
-          axios.post(`http://k6c102.p.ssafy.io:8080/v1/message`, store.getState().reducer )
+          axios
+            .post(
+              `http://k6c102.p.ssafy.io:8080/v1/message`,
+              store.getState().reducer,
+            )
             .then(res => {
-              console.log(res)
+              console.log(res);
             })
             .catch(err => {
-            console.log(err);
-          })
+              console.log(err);
+            });
           navigation.navigate('Home');
         },
       },
@@ -63,7 +76,7 @@ export default function MessageType({navigation}) {
   };
   const prev = () => {
     navigation.navigate('Content');
-  }
+  };
   return (
     <View
       style={{
@@ -102,9 +115,10 @@ export default function MessageType({navigation}) {
         <TouchableOpacity style={styles.btn} onPress={secret}>
           <Text style={{color: 'white', fontSize: 18}}>비밀메시지</Text>
         </TouchableOpacity>
-      </View><View style={{marginBottom:130}}>
-      <Button title='이전' onPress={prev}/>
-        </View>
+      </View>
+      <View style={{marginBottom: 130}}>
+        <Button title="이전" onPress={prev} />
+      </View>
     </View>
   );
 }
