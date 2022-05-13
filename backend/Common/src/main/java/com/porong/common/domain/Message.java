@@ -38,6 +38,9 @@ public class Message {
     @Column(name = "longitude", nullable = false)
     private double longitude;
 
+    @Column(name = "location", nullable = false)
+    private String location;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "due_time")
     private LocalDateTime dueTime;
@@ -73,11 +76,12 @@ public class Message {
         this.isChecked = true;
     }
 
-    public Message (RequestCreateMessageDto requestCreateMessageDto, Member sender, Member receiver){
+    public Message (RequestCreateMessageDto requestCreateMessageDto, Member sender, Member receiver, String location){
         this.sender = sender;
         this.receiver = receiver;
         this.latitude = requestCreateMessageDto.getLatitude();
         this.longitude = requestCreateMessageDto.getLongitude();
+        this.location = location;
         this.dueTime = requestCreateMessageDto.getDueTime();
         this.title = requestCreateMessageDto.getTitle();
         this.contentText = requestCreateMessageDto.getTitle();

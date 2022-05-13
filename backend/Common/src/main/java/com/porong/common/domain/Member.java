@@ -32,11 +32,14 @@ public class Member {
     @Column(name = "member_email")
     private String email;
 
-    @Column(name = "member_phonenumber") // format : 010 - xxxx - xxxx
+    @Column(name = "member_phonenumber") // format : 010xxxxxxxx
     private String phoneNumber;
 
     @Column(name = "member_profile") // 카카오톡 프로필 사진 url
     private String profileUrl;
+
+    @Column(name = "fcm_token")
+    private String fcmToken;
 
     @OneToMany
     @Column(name = "member_following_list") // 현재 내가 추가한 친구 목록
