@@ -100,9 +100,11 @@ const App = () => {
   // 메세지 상태 관리 (Async Storage)
   useEffect(() => {
     AsyncStorage.getAllKeys((err, keys) => {
-      AsyncStorage.multiGet(keys, async (err, stores) => {
-        await updateMessageLocations(keys, stores);
-        await setMessageIdList(keys);
+      const messageKeys = keys.filter(key => key[0] === 'M');
+      console.log('in app', messageKeys);
+      AsyncStorage.multiGet(messageKeys, async (err, stores) => {
+        await updateMessageLocations(messageKeys, stores);
+        await setMessageIdList(messageKeys);
         await setUpdateCnt(prev => prev + 1);
         await setFlag(true);
       });
@@ -160,45 +162,45 @@ const App = () => {
   }, []);
 
   // 임의로 메세지 보내는 코드
-  // useEffect(async () => {
-  //   const tempRemoteMessage1 = {
-  //     data: {
-  //       alertId: 'A202205091951001',
-  //       messageId: 'M202205091951001',
-  //       alertType: 'message_condition',
-  //       senderNickname: '윤설',
-  //       place: '장덕동 1333',
-  //       time: '2022년 4월 20일 00시 01분',
-  //     },
-  //   };
+  useEffect(async () => {
+    const tempRemoteMessage1 = {
+      data: {
+        alertId: 'A202205091951001',
+        messageId: 'M202205091951001',
+        alertType: 'message_condition',
+        senderNickname: '윤설',
+        place: '장덕동 1333',
+        time: '2022년 4월 20일 00시 01분',
+      },
+    };
 
-  //   const tempRemoteMessage2 = {
-  //     data: {
-  //       alertId: 'A202205091951004',
-  //       messageId: 'M202205091951002',
-  //       alertType: 'time_satisfaction',
-  //       senderNickname: '윤설',
-  //       place: '장덕동 1333',
-  //       latitude: 38.190589347561485,
-  //       longitude: 129.81490193851873,
-  //     },
-  //   };
+    const tempRemoteMessage2 = {
+      data: {
+        alertId: 'A202205091951004',
+        messageId: 'M202205091951002',
+        alertType: 'time_satisfaction',
+        senderNickname: '윤설',
+        place: '장덕동 1333',
+        latitude: 38.190589347561485,
+        longitude: 129.81490193851873,
+      },
+    };
 
-  //   const tempRemoteMessage3 = {
-  //     data: {
-  //       alertId: 'A202205091951003',
-  //       messageId: 'M202205091951001',
-  //       alertType: 'message_receive',
-  //       senderNickname: '윤설',
-  //       place: '장덕동 1333',
-  //     },
-  //   };
+    const tempRemoteMessage3 = {
+      data: {
+        alertId: 'A202205091951003',
+        messageId: 'M202205091951001',
+        alertType: 'message_receive',
+        senderNickname: '윤설',
+        place: '장덕동 1333',
+      },
+    };
 
-  //   // getAlert(tempRemoteMessage1);
-  //   await getAlert(tempRemoteMessage2);
-  //   manageMessageState(tempRemoteMessage2);
-  //   // getAlert(tempRemoteMessage3);
-  // }, []);
+    // getAlert(tempRemoteMessage1);
+    await getAlert(tempRemoteMessage2);
+    manageMessageState(tempRemoteMessage2);
+    // getAlert(tempRemoteMessage3);
+  }, []);
 
   // 메세지 상태가 잘 바뀌는지 확인할 수 있는 코드
   useEffect(() => {

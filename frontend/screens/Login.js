@@ -11,6 +11,7 @@ export default function Login({navigation}) {
     messaging()
       .getToken()
       .then(token => {
+        console.log('토큰', token);
         setFfcmToken(token);
       });
   }, []);

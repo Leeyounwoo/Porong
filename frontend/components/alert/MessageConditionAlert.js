@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   text: {
-    whiteSpace: 'norap',
+    whiteSpace: 'nowrap',
   },
   textbold: {
     fontWeight: 'bold',

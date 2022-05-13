@@ -39,6 +39,7 @@ export default function Alarm(navigation) {
 
   useEffect(() => {
     AsyncStorage.getAllKeys((err, keys) => {
+      console.log('in alert', keys);
       AsyncStorage.multiGet(keys, async (err, stores) => {
         await updateAlertLocations(keys, stores);
         setKeys(keys);
@@ -54,6 +55,7 @@ export default function Alarm(navigation) {
         if (alertLocations[keys[idx]]['alertType'] === 'message_condition') {
           return (
             <MessageReceiveAlert
+              key={idx}
               senderNickname={alertLocations[keys[idx]]['senderNickname']}
               time={alertLocations[keys[idx]]['time']}
               place={alertLocations[keys[idx]]['place']}
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   text: {
-    whiteSpace: 'norap',
+    whiteSpace: 'nowrap',
   },
   textbold: {
     fontWeight: 'bold',
