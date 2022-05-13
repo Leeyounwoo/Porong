@@ -1,12 +1,21 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import KakaoSDK from '@actbase/react-kakaosdk';
 import axios from 'axios';
-import { useStore } from 'react-redux';
-import { userContain } from '../reducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
+
 export default function Login({navigation}) {
-  const store = useStore();
+  const [fcmToken, setFfcmToken] = useState('');
+  useEffect(() => {
+    // Get the device token
+    messaging()
+      .getToken()
+      .then(token => {
+        console.log('토큰', token);
+        setFfcmToken(token);
+      });
+  }, []);
+
   const Login = async () => {
 
     try {
@@ -41,6 +50,17 @@ export default function Login({navigation}) {
           console.log(res);
           store.dispatch(userContain(res.data.memberId,res.data.authMember.imageUrl,res.data.authMember.kakaoId,res.data.authMember.nickName));
               
+          console.log('윤우', res);
+          axios
+            .post(`http://k6c102.p.ssafy.io:8080/v1/member/updateFCMToken`, {
+              fcmToken: fcmToken,
+              memberId: res.data.memberId,
+            })
+            .then(res => {
+              console.log('FCM 토큰 저장 성공');
+            })
+            .catch(err => console.log(err));
+
           if (res.data.firstCheck) {
             alert('회원가입을 위해 새로운 페이지로 이동합니다.');
             navigation.navigate('signin', {

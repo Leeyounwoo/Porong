@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
 import {
   HomeStackScreen,
   AlarmStackScreen,
@@ -9,6 +8,8 @@ import {
   MessageStackScreen,
   SendStackScreen,
 } from './Stack';
+import {useNavigation} from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 
 const SendButton = ({children, onPress}) => {
   return (
@@ -37,8 +38,24 @@ const SendButton = ({children, onPress}) => {
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      navigation.navigate(remoteMessage.data.type);
+    });
+  }, []);
+
   return (
     <Tab.Navigator
+      // 첫 화면 Route 설정
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -181,26 +198,3 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 });
-
-//   <Tabs.Screen
-//     name="alarm"
-//     component={AlarmStackScreen}
-//     options={{
-//       tabBarIcon: ({focused}) => (
-//         <View
-//           style={{
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           }}>
-//           <Image
-//             style={{
-//               width: 30,
-//               height: 30,
-//               tintColor: focused ? '#C449C2' : 'grey',
-//             }}
-//             source={require('./assets/icons/bell.png')}
-//           />
-//         </View>
-//       ),
-//     }}
-//   />

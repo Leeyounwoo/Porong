@@ -6,6 +6,7 @@ import LoginScreen from '../screens/Login';
 import SigninScreen from '../screens/Signin';
 import PhoneScreen from '../screens/PhoneForm';
 import AlarmScreen from '../screens/Alarm';
+import TotalScreen from '../screens/MessageDetail';
 import TimeScreen from '../components/sendmessage/MessageTime';
 import ContentScreen from '../components/sendmessage/MessageContent';
 import TypeScreen from '../components/sendmessage/MessageType';
@@ -46,7 +47,6 @@ function AlarmStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      {/* <AlarmStack.Screen name="Alarm" component={AlarmScreen} /> */}
       <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
     </AlarmStack.Navigator>
   );

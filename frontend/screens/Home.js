@@ -8,7 +8,7 @@ import axios from 'axios';
 import {positionContain} from '../reducer';
 const secret = require('../assets/icons/question.png');
 
-const Home = ({ navigation }) => {
+const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector((state) => state.posreducer );
   const [markers, setMarkers] = useState([]);
@@ -122,10 +122,18 @@ const Home = ({ navigation }) => {
               coordinate={{ latitude: single.latitude, longitude: single.longitude }}>
              <Image source={{ uri: single.senderProfileUrl }} style={{ height: 35, width: 35, borderRadius: 100 }} /></Marker>
           })}
-          </MapView>
+        </MapView>
       </View>
       <View style={styles.messageContainer}>
-        {markers.length != 0 ? <Text style={{alignSelf:'center', marginTop:5}}>확인 안한 메세지가 {markers.length }개 있습니다</Text> : <Text style={{alignSelf:'center', marginTop:5}}>메세지를 기다리는 중이에요</Text> }
+        {markers.length != 0 ? (
+          <Text style={{alignSelf: 'center', marginTop: 5}}>
+            확인 안한 메세지가 {markers.length}개 있습니다
+          </Text>
+        ) : (
+          <Text style={{alignSelf: 'center', marginTop: 5}}>
+            메세지를 기다리는 중이에요
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -158,12 +166,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   messageContainer: {
-    position:'absolute',
+    position: 'absolute',
     borderRadius: 20,
     width: 220,
     height: 30,
     top: 150,
-    backgroundColor: '#FDE1E3'
+    backgroundColor: '#FDE1E3',
   },
   imgstyle: {
     width: 80,
@@ -173,7 +181,7 @@ const styles = StyleSheet.create({
   newmessage: {
     position: 'absolute',
     bottom: 300,
-  }
+  },
 });
 
 export default Home;
