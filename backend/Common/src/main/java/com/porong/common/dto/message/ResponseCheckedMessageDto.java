@@ -12,6 +12,8 @@ public class ResponseCheckedMessageDto implements Serializable {
     private Long messageId;
     private Long senderId; // 보낸사람 아이디
     private String senderName;
+    private Long receiverId; // 보낸사람 아이디
+    private String receiverName;
     private String senderProfileUrl;
     private double latitude;
     private double longitude;
@@ -28,6 +30,8 @@ public class ResponseCheckedMessageDto implements Serializable {
         this.messageId = message.getMessageId();
         this.senderId = message.getSender().getMemberId();
         this.senderName = message.getSender().getName();
+        this.receiverId = message.getReceiver().getMemberId();
+        this.receiverName = message.getReceiver().getName();
         this.senderProfileUrl = message.getSender().getProfileUrl();
         this.latitude = message.getLatitude();
         this.longitude = message.getLongitude();
@@ -37,7 +41,6 @@ public class ResponseCheckedMessageDto implements Serializable {
         this.title = message.getTitle();
         this.contentText = message.getContentText();
         this.location = message.getLocation();
-
     }
 
     public ResponseCheckedMessageDto(){
