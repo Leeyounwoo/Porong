@@ -18,14 +18,15 @@ public class Post {
 
     @Id
     @Column(name = "post_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long postId;
 
     @Column(name = "post_title")
-    private String title;
+    private String postTitle;
 
     @Column(name = "post_content")
-    private String content;
+    private String postContent;
 
     @Column(name = "latitude")
     private double latitude;
