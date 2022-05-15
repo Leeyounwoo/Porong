@@ -1,34 +1,31 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet, View, Text, Image, TouchableHighlight} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 
 export default function MessageConditionAlert({
   senderNickname,
   place,
   isChecked,
-  goToMessageDetail,
 }) {
   return (
-    <TouchableHighlight onPress={goToMessageDetail}>
-      <View style={styles.alarmcompletion}>
-        <View style={styles.alarmcontainer}>
-          <View style={styles.profilebox}>
-            <Image
-              source={{uri: 'https://reactjs.org/logo-og.png'}}
-              style={styles.profileimage}
-            />
-          </View>
-          <View style={styles.textbox}>
-            <Text style={styles.text}>
-              <Text style={styles.textbold}>{`[${place}]`}</Text>
-              <Text> 에서 </Text>
-              <Text style={styles.textbold}>{`${senderNickname}`}</Text>
-              <Text> 님이 보낸 메세지를 받았습니다.</Text>
-            </Text>
-          </View>
-          {!isChecked && <View style={styles.circle}></View>}
+    <View style={styles.alarmcompletion}>
+      <View style={styles.alarmcontainer}>
+        <View style={styles.profilebox}>
+          <Image
+            source={{uri: 'https://reactjs.org/logo-og.png'}}
+            style={styles.profileimage}
+          />
         </View>
+        <View style={styles.textbox}>
+          <Text style={styles.text}>
+            <Text style={styles.textbold}>{`[${place}]`}</Text>
+            <Text> 에서 </Text>
+            <Text style={styles.textbold}>{`${senderNickname}`}</Text>
+            <Text> 님이 보낸 메세지를 받았습니다.</Text>
+          </Text>
+        </View>
+        {!isChecked && <View style={styles.circle}></View>}
       </View>
-    </TouchableHighlight>
+    </View>
   );
 }
 
@@ -56,7 +53,7 @@ const styles = StyleSheet.create({
   profileimage: {
     width: '100%',
     height: '100%',
-    'object-fit': 'cover',
+    // 'object-fit': 'cover',
   },
   textbox: {
     width: '80%',
