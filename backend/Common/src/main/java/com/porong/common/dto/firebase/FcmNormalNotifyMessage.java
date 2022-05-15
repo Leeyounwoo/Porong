@@ -19,7 +19,7 @@ public class FcmNormalNotifyMessage {
     @AllArgsConstructor
     public static class NormalMessage {
         private Notification notification;
-        //private HashMap<String, String> data;
+        private HashMap<String, String> data;
         private String token;
     }
 

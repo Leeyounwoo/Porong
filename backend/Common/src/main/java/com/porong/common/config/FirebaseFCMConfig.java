@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.porong.common.dto.firebase.FcmNormalNotifyMessage;
+import com.porong.common.dto.message.RequestCreateMessageDto;
 import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
@@ -11,6 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -21,16 +23,14 @@ public class FirebaseFCMConfig {
     private final MemberRepository MEMBER_REPOSITORY;
     private final ObjectMapper objectMapper;
 
-    public void postNormalMessage(long fromMemberId, long toMemberId) throws Exception {
+    public void postNormalMessage(RequestCreateMessageDto requestCreateMessageDto, String senderName, long toMemberId, long messageId) throws Exception {
         if(!MEMBER_REPOSITORY.existsByMemberId(toMemberId)) throw new Exception();
 
         String targetToken = MEMBER_REPOSITORY.findByMemberId(toMemberId).getFcmToken();
-        String title = "새로운 메시지가 도착했습니다.";
-        String body = "사랑합니다.";
 
         System.out.println("목적지 토큰 : " + targetToken);
 
-        String message = makeMessage(targetToken, title, body);
+        String message = makeNormalMessage(targetToken, requestCreateMessageDto, senderName, messageId);
 
         OkHttpClient okHttpClient = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -48,11 +48,21 @@ public class FirebaseFCMConfig {
         System.out.println(response.body().string());
     }
 
-    public String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
+    public String makeNormalMessage(String targetToken, RequestCreateMessageDto requestCreateMessageDto, String senderName, long messageId) throws JsonProcessingException {
+
+        String title = "새로운 메시지가 도착했습니다.";
+        String body = senderName + "님이 위도 : " + requestCreateMessageDto.getLatitude() + ", 경도 : " + requestCreateMessageDto.getLongitude() + " 에서 볼 수 있는 메시지를 보냈습니다.";
+
+        HashMap<String, String> dataMap = new HashMap<>();
+        dataMap.put("alertType", "message_condition");
+        dataMap.put("messageId", String.valueOf(messageId));
+        dataMap.put("senderNickname", senderName);
+
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
                                                                               .validate_only(false)
                                                                               .message(FcmNormalNotifyMessage.NormalMessage.builder()
                                                                                                                            .token(targetToken)
+                                                                                                                           .data(dataMap)
                                                                                                                            .notification(FcmNormalNotifyMessage.Notification.builder()
                                                                                                                                                                             .title(title)
                                                                                                                                                                             .body(body)
