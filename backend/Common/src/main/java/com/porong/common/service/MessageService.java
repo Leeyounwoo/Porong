@@ -56,22 +56,21 @@ public class MessageService {
 
         String coordinate =  requestCreateMessageDto.getLongitude() +","+ requestCreateMessageDto.getLatitude();
 
-        String location = get(coordinate);
+        String location = "";
 
         Message message = new Message(requestCreateMessageDto, sender, receiver, location); // location 추가
 
         messageRepository.save(message);
+        Long messageId = message.getMessageId();
 
         // FCM 알림 로직 시작
         try {
-            firebaseFCMConfig.postNormalMessage(senderId, receiverId);
+            firebaseFCMConfig.postNormalMessage(requestCreateMessageDto, sender.getName(), receiverId, messageId);
         }
         catch (Exception e) {
             new MemberNotFoundException();
         }
         // FCM 알림 로직 끝
-
-        Long messageId = message.getMessageId();
 
         return messageId;
     }

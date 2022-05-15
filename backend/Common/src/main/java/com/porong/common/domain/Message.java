@@ -38,7 +38,7 @@ public class Message {
     @Column(name = "longitude", nullable = false)
     private double longitude;
 
-    @Column(name = "location", nullable = false)
+    @Column(name = "location")
     private String location;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
