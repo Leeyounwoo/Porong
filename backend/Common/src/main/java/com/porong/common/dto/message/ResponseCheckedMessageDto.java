@@ -20,6 +20,7 @@ public class ResponseCheckedMessageDto implements Serializable {
     private LocalDateTime createdAt;
     private String title;
     private String contentText;
+    private String location;
 
 
     public ResponseCheckedMessageDto(Message message){
@@ -35,6 +36,7 @@ public class ResponseCheckedMessageDto implements Serializable {
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
         this.contentText = message.getContentText();
+        this.location = message.getLocation();
 
     }
 
