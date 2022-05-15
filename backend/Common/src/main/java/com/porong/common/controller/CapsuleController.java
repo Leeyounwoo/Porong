@@ -60,7 +60,7 @@ public class CapsuleController {
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/getone/post/{postId}")
     @ApiOperation(value = "해당 게시글 단건 조회하기")
     public ResponseEntity<ResponsePostDto> getPost(@PathVariable Long postId){
         ResponsePostDto responsePostDto = new ResponsePostDto();
@@ -75,7 +75,7 @@ public class CapsuleController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePostDto);
     }
 
-    @GetMapping("/capsule/{capsuleId}")
+    @GetMapping("/getone/capsule/{capsuleId}")
     @ApiOperation(value = "해당 타임캡슐 단건 조회하기")
     public ResponseEntity<ResponseCapsuleDto> getCapsule(@PathVariable Long capsuleId){
         ResponseCapsuleDto responseCapsuleDto = new ResponseCapsuleDto();
@@ -90,7 +90,7 @@ public class CapsuleController {
         return ResponseEntity.status(HttpStatus.OK).body(responseCapsuleDto);
     }
 
-    @GetMapping("/postlist/{capsuleId}")
+    @GetMapping("/getlist/postlist/{capsuleId}")
     @ApiOperation(value = "해당 타임캡슐 게시글 리스트 조회하기")
     public ResponseEntity<ResponsePostListDto> getPostList(@PathVariable Long capsuleId){
         ResponsePostListDto responsePostListDto = new ResponsePostListDto();
@@ -105,7 +105,7 @@ public class CapsuleController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePostListDto);
     }
 
-    @GetMapping("/capsulelist/{memberId}")
+    @GetMapping("/getlist/capsulelist/{memberId}")
     @ApiOperation(value = "사용자가 속해있는 타임캡슐 리스트 조회하기")
     public ResponseEntity<ResponseCapsuleListDto> getCapsuleList(@PathVariable Long memberId){
         ResponseCapsuleListDto responseCapsuleListDto = new ResponseCapsuleListDto();
@@ -120,7 +120,7 @@ public class CapsuleController {
         return ResponseEntity.status(HttpStatus.OK).body(responseCapsuleListDto);
     }
 
-    @GetMapping("/memberlist/{capsuleId}")
+    @GetMapping("/getlist/memberlist/{capsuleId}")
     @ApiOperation(value = "해당 타임캡슐에 속해있는 사용자 전체 조회하기")
     public ResponseEntity<ResponseMemberListDto> getMemberList(@PathVariable Long capsuleId){
         ResponseMemberListDto responseMemberListDto = new ResponseMemberListDto();
