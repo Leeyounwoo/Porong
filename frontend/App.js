@@ -249,8 +249,8 @@ const App = () => {
     // manageMessageState(tempRemoteMessage22);
     // await getAlert(tempRemoteMessage3);
     // manageMessageState(tempRemoteMessage3);
-    // await getAlert(tempRemoteMessage31);
-    // manageMessageState(tempRemoteMessage31);
+    await getAlert(tempRemoteMessage31);
+    manageMessageState(tempRemoteMessage31);
     // getAlert(tempRemoteMessage1);
     // await getAlert(tempRemoteMessage22);
     // manageMessageState(tempRemoteMessage22);
