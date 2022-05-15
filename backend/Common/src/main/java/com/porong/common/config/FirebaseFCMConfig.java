@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FirebaseFCMConfig {
 
-    private final String POST_API_URL = "https://fcm.googleapis.com/v1/c102-d214f/messages:send";
+    private final String POST_API_URL = "https://fcm.googleapis.com/v1/projects/c102-d214f/messages:send";
     private final MemberRepository MEMBER_REPOSITORY;
     private final ObjectMapper objectMapper;
 
@@ -26,7 +26,9 @@ public class FirebaseFCMConfig {
 
         String targetToken = MEMBER_REPOSITORY.findByMemberId(toMemberId).getFcmToken();
         String title = "새로운 메시지가 도착했습니다.";
-        String body = "테스트 입니다.";
+        String body = "사랑합니다.";
+
+        System.out.println("목적지 토큰 : " + targetToken);
 
         String message = makeMessage(targetToken, title, body);
 
@@ -40,14 +42,17 @@ public class FirebaseFCMConfig {
                                      .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                                      .build();
 
+        System.out.println("액세스 토큰 : Bearer " + getAccessToken());
+
         Response response = okHttpClient.newCall(request).execute();
+        System.out.println(response.body().string());
     }
 
     public String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
                                                                               .validate_only(false)
                                                                               .message(FcmNormalNotifyMessage.NormalMessage.builder()
-                                                                                                                           .targetToken(targetToken)
+                                                                                                                           .token(targetToken)
                                                                                                                            .notification(FcmNormalNotifyMessage.Notification.builder()
                                                                                                                                                                             .title(title)
                                                                                                                                                                             .body(body)
