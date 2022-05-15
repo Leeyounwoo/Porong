@@ -21,6 +21,7 @@ public class Capsule {
     @Id
     @Column(name = "capsule_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long capsuleId;
 
     @Column(name = "capsule_name")

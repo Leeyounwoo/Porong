@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestPositionDto {
+public class RequestAccessDto {
     private Long capsuleId;
     private Long memberId;
     private double latitude;

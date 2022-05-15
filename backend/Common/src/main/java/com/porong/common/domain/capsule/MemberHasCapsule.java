@@ -12,7 +12,8 @@ import javax.persistence.*;
 public class MemberHasCapsule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_has_capsule_id")
     private Long id;
 

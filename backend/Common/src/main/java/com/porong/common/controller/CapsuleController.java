@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("v1/capsule")
@@ -22,17 +21,18 @@ public class CapsuleController {
 
     private final CapsuleService capsuleService;
 
-    @GetMapping("/calc/position")
-    @ApiOperation(value = "타임캡슐 조회 위치 자격 판단하기")
-    public ResponseEntity<String> calcPosition(@RequestBody RequestPositionDto requestPositionDto){
-//        String result = capsuleService.calcPosition(requestPositionDto);
-//        if (Objects.equals(result, "fail")){
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
-//        }
-        double distance = capsuleService.calcPosition(requestPositionDto);
-        System.out.println("distance : " + distance);
-        if (distance > 50){
-            return ResponseEntity.status(HttpStatus.OK).body("fail");
+    @GetMapping("/access/capsule")
+    @ApiOperation(value = "타임캡슐 조회 자격(시간 조건, 장소 조건, 소속된 사용자) 판단하기")
+    public ResponseEntity<String> accessCapsule(@RequestBody RequestAccessDto requestAccessDto){
+        String result = capsuleService.accessCapsule(requestAccessDto);
+        if (result.equals("fail time")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail time");
+        }
+        if (result.equals("fail member")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail member");
+        }
+        if (result.equals("fail position")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail position");
         }
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
@@ -41,16 +41,23 @@ public class CapsuleController {
     @ApiOperation(value = "타임캡술 (방) 만들기")
     public ResponseEntity<String> createCapsule(@RequestBody CreateCapsuleDto createCapsuleDto){
         Capsule capsule = capsuleService.createCapsule(createCapsuleDto);
-        Long capsuleId = capsule.getCapsuleId();
-        return ResponseEntity.status(HttpStatus.OK).body("success " + capsuleId);
+        if (capsule == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
     @PostMapping("/create/post")
     @ApiOperation(value = "해당 타임캡슐 장소에서 게시글 작성하기")
     public ResponseEntity<String> createPost(@RequestBody CreatePostDto createPostDto){
-        Post post = capsuleService.createPost(createPostDto);
-        Long postId = post.getPostId();
-        return ResponseEntity.status(HttpStatus.OK).body("success " + postId);
+        String result = capsuleService.createPost(createPostDto);
+        if (result.equals("fail member")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail member");
+        }
+        if (result.equals("fail position")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail position");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
     @GetMapping("/post/{postId}")
