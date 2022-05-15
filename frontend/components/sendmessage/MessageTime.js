@@ -8,7 +8,13 @@ export default function MessageTime({navigation}) {
   const store = useStore();
 
   const next = () => {
-    let temp  =`${date.getFullYear()}-${("00"+(date.getMonth()+1).toString()).slice(-2) }-${("00"+(date.getDate()).toString()).slice(-2)}T${("00"+(date.getHours()).toString()).slice(-2)}:${("00"+(date.getMinutes()).toString()).slice(-2)}:${("00"+(date.getSeconds()).toString()).slice(-2)}Z`;
+    let temp = `${date.getFullYear()}-${(
+      '00' + (date.getMonth() + 1).toString()
+    ).slice(-2)}-${('00' + date.getDate().toString()).slice(-2)}T${(
+      '00' + date.getHours().toString()
+    ).slice(-2)}:${('00' + date.getMinutes().toString()).slice(-2)}:${(
+      '00' + date.getSeconds().toString()
+    ).slice(-2)}Z`;
     console.log(temp);
     store.dispatch(timeContain(temp));
     navigation.navigate('Place');

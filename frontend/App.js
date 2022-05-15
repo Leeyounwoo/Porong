@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { PermissionsAndroid } from 'react-native';
+import {PermissionsAndroid} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import {Provider} from 'react-redux';
@@ -12,7 +12,7 @@ import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
 import rootReducer from './reducer/index';
 import Geolocation from 'react-native-geolocation-service';
-import { positionContain } from './reducer/index';
+import {positionContain} from './reducer/index';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './screens/Login';
 import Signin from './screens/Signin';
@@ -28,14 +28,16 @@ async function requestCameraPermission() {
     {
       title: 'AndoridPermissionExample App Camera Permission',
       message: 'AndoridPermissionExample App needs access to your camera ',
-    }
+    },
   );
 }
 
 requestCameraPermission();
 Geolocation.watchPosition(
   position => {
-    store.dispatch(positionContain(position.coords.latitude, position.coords.longitude));
+    store.dispatch(
+      positionContain(position.coords.latitude, position.coords.longitude),
+    );
   },
   error => {
     // See error code charts below.
@@ -43,9 +45,6 @@ Geolocation.watchPosition(
   },
   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
 );
-// async function saveTokenToDatabase(token) {
-//   console.log('토큰', token);
-// }
 
 const App = () => {
   const [messageIdList, setMessageIdList] = useState([]);
@@ -71,39 +70,37 @@ const App = () => {
     if (distance < 100) distance = Math.round(distance / 10) * 10;
     else distance = Math.round(distance / 100) * 100;
     return distance;
-}
-const loginProcess = () => {
-  return (
-    <init.Navigator initialRouteName='login'>
-      <init.Screen name="login" component={Login} />
-      <init.Screen name="signin" component={Signin} />
-      <init.Screen name="phone" component={PhoneForm} />
-    </init.Navigator>
-  )
-}
-const Stacks = () => {
-  const [isLogin, setIsLogin] = React.useState(false);
-  AsyncStorage.getItem('user')
-    .then(info => {
-      if (info !== null) {
-        setIsLogin(true);
-      }
-    })
-    .catch(err => {
-      console.log("err", err)
-    });
+  }
+  const loginProcess = () => {
+    return (
+      <init.Navigator initialRouteName="login">
+        <init.Screen name="login" component={Login} />
+        <init.Screen name="signin" component={Signin} />
+        <init.Screen name="phone" component={PhoneForm} />
+      </init.Navigator>
+    );
+  };
+  const Stacks = () => {
+    const [isLogin, setIsLogin] = React.useState(false);
+    AsyncStorage.getItem('user')
+      .then(info => {
+        if (info !== null) {
+          setIsLogin(true);
+        }
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
 
-  return (
-    <Stack.Navigator
-      initialRouteName={isLogin ? 'home' : 'login'}
-      screenOptions={{ headerShown: false}}>
-      <Stack.Screen name="home" component={Tabs} />
-      <Stack.Screen name="login" component={loginProcess} />
-    </Stack.Navigator>
-  )
-}
-
-
+    return (
+      <Stack.Navigator
+        initialRouteName={isLogin ? 'home' : 'login'}
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="home" component={Tabs} />
+        <Stack.Screen name="login" component={loginProcess} />
+      </Stack.Navigator>
+    );
+  };
 
   useEffect(() => {
     const watchID = Geolocation.watchPosition(
@@ -234,12 +231,27 @@ const Stacks = () => {
       },
     };
 
-    const tempRemoteMessage2 = {
+    const tempRemoteMessage21 = {
       data: {
         alertId: 'A202205091951004',
         messageId: 'M202205091951002',
         alertType: 'time_satisfaction',
-        senderNickname: '윤설',
+        senderNickname: '윤설1',
+        place: '장덕동 1333',
+        latitude: 38.190589347561485,
+        longitude: 129.81490193851873,
+      },
+    };
+    const tempRemoteMessage22 = {
+      notification: {
+        body: '내용',
+        title: '제목',
+      },
+      data: {
+        alertId: 'A202205091951014',
+        messageId: 'M202205091951012',
+        alertType: 'time_satisfaction',
+        senderNickname: '윤설2',
         place: '장덕동 1333',
         latitude: 38.190589347561485,
         longitude: 129.81490193851873,
@@ -248,17 +260,33 @@ const Stacks = () => {
 
     const tempRemoteMessage3 = {
       data: {
-        alertId: 'A202205091951003',
-        messageId: 'M202205091951001',
+        alertId: 'A202205091951015',
+        messageId: 'M202205091951012',
         alertType: 'message_receive',
         senderNickname: '윤설',
         place: '장덕동 1333',
       },
     };
 
+    const tempRemoteMessage31 = {
+      data: {
+        alertId: 'A202205091951016',
+        messageId: 'M202205091951013',
+        alertType: 'message_receive',
+        senderNickname: '윤설',
+        place: '장덕동 1333',
+      },
+    };
+
+    // await getAlert(tempRemoteMessage22);
+    // manageMessageState(tempRemoteMessage22);
+    // await getAlert(tempRemoteMessage3);
+    // manageMessageState(tempRemoteMessage3);
+    await getAlert(tempRemoteMessage31);
+    manageMessageState(tempRemoteMessage31);
     // getAlert(tempRemoteMessage1);
-    await getAlert(tempRemoteMessage2);
-    manageMessageState(tempRemoteMessage2);
+    // await getAlert(tempRemoteMessage22);
+    // manageMessageState(tempRemoteMessage22);
     // getAlert(tempRemoteMessage3);
   }, []);
 

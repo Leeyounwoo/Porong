@@ -8,6 +8,8 @@ import messaging from '@react-native-firebase/messaging';
 import {name as appName} from './app.json';
 import {getAlert} from './functions/getAlert';
 import MessageDetail from './screens/MessageDetail';
+import Readable from './components/Readable';
+import Nodereadable from './components/Notreadable';
 
 // Register background handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -15,4 +17,4 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   // getAlert(remoteMessage)
 });
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appName, () => Nodereadable);

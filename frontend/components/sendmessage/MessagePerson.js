@@ -17,7 +17,7 @@ import Contacts from 'react-native-contacts';
 import {useStore} from 'react-redux';
 import {personContain} from '../../reducer';
 import axios from 'axios';
-import {AsyncStorage} from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessagePerson({navigation}) {
   const [contacts, setContacts] = useState({});

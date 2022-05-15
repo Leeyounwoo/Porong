@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   profileimage: {
     width: '100%',
     height: '100%',
-    'object-fit': 'cover',
+    // 'object-fit': 'cover',
   },
   textbox: {
     width: '80%',
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   text: {
-    whiteSpace: 'nowrap',
+    // whiteSpace: 'nowrap',
   },
   textbold: {
     fontWeight: 'bold',

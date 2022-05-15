@@ -14,6 +14,8 @@ import MessageScreen from '../components/sendmessage/MessagePerson';
 import ReceivedBox from '../screens/ReceivedBox';
 import PersonScreen from '../components/sendmessage/MessagePerson';
 import PlaceScreen from '../components/sendmessage/MessagePlace';
+import TempScreen from '../screens/Temp';
+
 import Setting from '../screens/Setting';
 const HomeStack = createStackNavigator();
 const AccountStack = createStackNavigator();
@@ -47,6 +49,7 @@ function AlarmStackScreen() {
         headerTitleAlign: 'center',
       }}>
       <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
+      <AlarmStack.Screen name="Temp" component={TempScreen} />
     </AlarmStack.Navigator>
   );
 }
@@ -87,7 +90,6 @@ function MessageStackScreen() {
   );
 }
 
-
 function AccountStackScreen() {
   return (
     <AccountStack.Navigator
@@ -98,7 +100,7 @@ function AccountStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-       <AccountStack.Screen name="setting" component={Setting}/>
+      <AccountStack.Screen name="setting" component={Setting} />
     </AccountStack.Navigator>
   );
 }

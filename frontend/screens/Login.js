@@ -15,7 +15,7 @@ export default function Login({navigation}) {
       .getToken()
       .then(token => {
         console.log('토큰', token);
-        setFfcmToken(token);
+        // setFfcmToken(token);
       });
   }, []);
 
