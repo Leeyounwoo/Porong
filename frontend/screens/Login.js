@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import KakaoSDK from '@actbase/react-kakaosdk';
-import { useStore } from 'react-redux';
+import {useStore} from 'react-redux';
 import axios from 'axios';
-import { userContain } from '../reducer';
+import {userContain} from '../reducer';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function Login({navigation}) { 
+export default function Login({navigation}) {
   const [fcmToken, setFfcmToken] = useState('');
   const store = useStore();
   useEffect(() => {
@@ -15,12 +15,11 @@ export default function Login({navigation}) {
       .getToken()
       .then(token => {
         console.log('토큰', token);
-        // setFfcmToken(token);
+        setFfcmToken(token);
       });
   }, []);
 
   const Login = async () => {
-
     try {
       await KakaoSDK.init('066f28139628e8b5440363889440f7be');
       const tokens = await KakaoSDK.login();
@@ -51,8 +50,15 @@ export default function Login({navigation}) {
         )
         .then(res => {
           console.log(res);
-          store.dispatch(userContain(res.data.memberId,res.data.authMember.imageUrl,res.data.authMember.kakaoId,res.data.authMember.nickName));
-              
+          store.dispatch(
+            userContain(
+              res.data.memberId,
+              res.data.authMember.imageUrl,
+              res.data.authMember.kakaoId,
+              res.data.authMember.nickName,
+            ),
+          );
+
           console.log('윤우', res);
           axios
             .post(`http://k6c102.p.ssafy.io:8080/v1/member/updateFCMToken`, {
@@ -70,9 +76,9 @@ export default function Login({navigation}) {
               properties: profile.properties,
               id: res.data.authMember.kakaoId,
             });
-          } 
+          }
           AsyncStorage.setItem('user', JSON.stringify(res));
-              navigation.navigate('home');
+          navigation.navigate('home');
         })
         .catch(err => console.log(err));
       // alert('회원가입을 위해 새로운 페이지로 이동합니다.');
