@@ -21,7 +21,8 @@ public class CapsuleController {
 
     private final CapsuleService capsuleService;
 
-    @GetMapping("/access/capsule")
+//    @GetMapping("/access/capsule")
+    @PostMapping("/access/capsule")
     @ApiOperation(value = "타임캡슐 조회 자격(시간 조건, 장소 조건, 소속된 사용자) 판단하기")
     public ResponseEntity<String> accessCapsule(@RequestBody RequestAccessDto requestAccessDto){
         String result = capsuleService.accessCapsule(requestAccessDto);
