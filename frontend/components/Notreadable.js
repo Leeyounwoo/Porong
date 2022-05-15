@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {StyleSheet, View, Text,Button } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import Geocoder from 'react-native-geocoding';
 import { useStore } from 'react-redux';
-import Geolocation from 'react-native-geolocation-service';
+import Geoloation from 'react-native-geolocation-service';
+import axios from 'axios';
 
 const icon = require('../assets/icons/letter.png');
 
 function calcDistance(lat, lon) {
 
-    const current = useStore().getState().posreducer;
-
+    // const current = useStore().getState().posreducer;
+    const current = { lat:37, lng:126};
     if (current.lat == lat && current.lng == lon) return 0;
 
     const radLat1 = (Math.PI * current.lat) / 180;
@@ -28,11 +28,11 @@ function calcDistance(lat, lon) {
 
     return distance;
 }
-
 function displayedAt(createdAt) {
     console.log(createdAt);
     const duedate = new Date(createdAt[0],createdAt[1],createdAt[2],createdAt[3],createdAt[4],createdAt[5]);
     const milliSeconds = duedate - new Date(); 
+    if (milliSeconds <= 0) return ``; 
     const seconds = milliSeconds / 1000
     if (seconds < 60) return `잠시 뒤에 확인할 수 있습니다!`
     const minutes = seconds / 60
@@ -48,57 +48,58 @@ function displayedAt(createdAt) {
     const years = days / 365
     return `${Math.floor(years)}년 후 확인할 수 있습니다!`
 }
-
 //데이터의 위치를 
-export default function Messagedetail({ data, ischecked }) {
+export default function Nodereadable({ route }) {
     //데이터 셋을 받는다는 가정.
-    
-    let now = Date.now();
-
     const [isAfter, setIsAfter] = useState(false);
     const [isInrange, setIsInrange] = useState(false);
+    const time = new Date(2022, 4, 13, 12, 13, 22);
+    const [data, setData] = useState({
+        nick: 'test',
+        time: 'test',
+        place: '흑석동 어딘가',
+        lat: 37,
+        lng: 126
+    });
+    useLayoutEffect(() => {
+        // setData({ nick: route.nickname, time: route.time, place: route.place, lat: latitude, lng: longitude });
+        // setData({  nick: 'inputnick', time: 'inputtime', place: 'inputplace', lat: 37, lng: 126 });  
+        // if (displayedAt(route.time) == ``) {
+        let tempdate = [2022, 5, 15, 1, 3, 2];
     
-    const [readable, setReadable] = useState({});
-
-    useEffect(() => {
-        //let transdate = new Date(data.dueTime[0],data.dueTime[1],data.dueTime[2],data.dueTime[3],data.dueTime[4],data.dueTime[5])
-        let transdate = new Date(2022, 4, 13, 10, 33, 0);
-
-        //현재 읽는이가 나인지 확인하는 로직.
-        //sender receiver
-
-
-        if (transdate <= now) {            
-            console.log(displayedAt(transdate));
-            setIsAfter(true);
-        }
+        let timeTest = displayedAt(tempdate);
+        let rangeTest = calcDistance(37,126);
         
-        //calcDistance(데이터 값 , 데이터 값 );
-        if (calcDistance(37, 121) <= 50) {
-            console.log();
+        if (timeTest != ``) {
+            setIsAfter(true);
+        } else {
+            setData({ ...data, time: timeTest });
+        }
+
+        if (rangeTest <= 50) {
             setIsInrange(true);
         }
-    }, [])
-    Geocoder.init("AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s");
 
-   
-    
-    const btnClick = () => {
-    }
 
-    
+        // console.log(calcDistance(37, 127));
+        // if (calcDistance(route.lat, route.lng) <= 50) {
+        // if (calcDistance(37,126) <= 50) {
+        //     setIsInrange(true);
+        // }
+    },[])
+
 
 
     return (
         <View style={ styles.allcontainer }>
-            {type == 'resend' ?
+            {data ? 
                 <View style={styles.fromtoContainer}>
-                    <Text style={styles.textContainer('blue')}>{data1.nickname}</Text>
+                    <Text style={styles.textContainer('blue')}>{data.nick}</Text>
                     <Text style={styles.textContainer('black')}> 님에게</Text>
                 </View>
                 :
                 <View style={styles.fromtoContainer}>
-                    <Text style={styles.textContainer('blue')}>{data1.nickname}</Text>
+                    <Text style={styles.textContainer('blue')}>{data.nick}</Text>
                     <Text style={styles.textContainer('black')}> 님이 보낸 메세지를</Text>
                 </View>
             }
@@ -109,40 +110,22 @@ export default function Messagedetail({ data, ischecked }) {
                     maxZoomLevel={18 }
                     style={{ width: 350, height: 350}}
                     initialRegion={{
-                    latitude: data.position.lat,
-                    longitude: data.position.lng,
+                    latitude: data.lat,
+                    longitude: data.lng,
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
                     }}>
-                    <Marker title="test" icon={ icon}coordinate={{ latitude : data.position.lat, longitude : data.position.lng}}/>
+                    <Marker title="test" icon={ icon}coordinate={{ latitude : data.lat, longitude : data.lng}}/>
                 </MapView>
             </View>
-            {isAfter ? <View style={styles.timeContainer}><Text style={styles.textContainer('blue')}>{data.dueTime}</Text>
-                    <Text style={styles.textContainer('black')}>해당 시간 이후에 확인가능합니다.</Text></View>
-                : <View style={styles.timeContainer}><Text style={styles.textContainer('blue')}>{data.dueTime}</Text>
+            {isAfter ? null : <View style={styles.timeContainer}><Text style={styles.textContainer('blue')}>{data.time}</Text>
                     <Text style={styles.textContainer('black')}>해당 시간 이후에 확인가능합니다.</Text></View>
             }
-            {isInrange ? <View style={styles.positionContainer}>
-                <Text style={styles.textContainer('blue')}>{data1Address}</Text>
-                <Text style={styles.textContainer('black')}>에서 확인했습니다!</Text>
-                </View>
-            :
-                <View style={styles.positionContainer}>
-                <Text style={styles.textContainer('blue')}>{data1Address}</Text>
+            {isInrange ?null: <View style={styles.positionContainer}>
+                <Text style={styles.textContainer('blue')}>{data.place}</Text>
                 <Text style={styles.textContainer('black')}>에서 볼 수 있습니다!</Text>
                 </View>
             }
-            {readable ? <View>
-                <View style={styles.messageTitle }>
-                    <Text style={styles.textContainer('black')}>메세지 내용</Text>
-                </View>
-                <View style={styles.messageContent }>
-                    <Text>{ data.messageContext }</Text>
-                </View>
-            </View>: ``}
-            {type == 'resend' ? <View style={styles.buttonContainer}>
-                <Button onPress={btnClick } title={'답장하기'}></Button>
-            </View> : <View><Text>전송하기</Text></View>}
         </View>
     );
 }
