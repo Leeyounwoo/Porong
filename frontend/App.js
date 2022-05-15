@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import 'react-native-gesture-handler';
+import {PermissionsAndroid} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import {Provider} from 'react-redux';
@@ -11,13 +11,16 @@ import {reducer} from './reducer';
 import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
 import rootReducer from './reducer/index';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {positionContain} from './reducer/index';
-const store = createStore(rootReducer);
+import {createStackNavigator} from '@react-navigation/stack';
+import Login from './screens/Login';
+import Signin from './screens/Signin';
+import PhoneForm from './screens/PhoneForm';
 
-// async function saveTokenToDatabase(token) {
-//   console.log('토큰', token);
-// }
+const store = createStore(rootReducer);
+const init = createStackNavigator();
+const Stack = createStackNavigator();
 async function requestCameraPermission() {
   //Calling the permission function
   const granted = await PermissionsAndroid.request(
@@ -28,6 +31,7 @@ async function requestCameraPermission() {
     },
   );
 }
+
 requestCameraPermission();
 Geolocation.watchPosition(
   position => {
@@ -65,9 +69,38 @@ const App = () => {
     distance = distance * 60 * 1.1515 * 1.609344 * 1000;
     if (distance < 100) distance = Math.round(distance / 10) * 10;
     else distance = Math.round(distance / 100) * 100;
-
     return distance;
   }
+  const loginProcess = () => {
+    return (
+      <init.Navigator initialRouteName="login">
+        <init.Screen name="login" component={Login} />
+        <init.Screen name="signin" component={Signin} />
+        <init.Screen name="phone" component={PhoneForm} />
+      </init.Navigator>
+    );
+  };
+  const Stacks = () => {
+    const [isLogin, setIsLogin] = React.useState(false);
+    AsyncStorage.getItem('user')
+      .then(info => {
+        if (info !== null) {
+          setIsLogin(true);
+        }
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
+
+    return (
+      <Stack.Navigator
+        initialRouteName={isLogin ? 'home' : 'login'}
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="home" component={Tabs} />
+        <Stack.Screen name="login" component={loginProcess} />
+      </Stack.Navigator>
+    );
+  };
 
   useEffect(() => {
     const watchID = Geolocation.watchPosition(
@@ -287,7 +320,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Tabs />
+        <Stacks />
       </NavigationContainer>
     </Provider>
   );
