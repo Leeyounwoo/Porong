@@ -19,6 +19,7 @@ public class ResponseUnCheckedMessageDto implements Serializable {
     private boolean isChecked; // 확인 여부 X
     private LocalDateTime createdAt;
     private String title;
+    private String location;
 
     public ResponseUnCheckedMessageDto(Message message) {
         this.messageId = message.getMessageId();
@@ -31,6 +32,7 @@ public class ResponseUnCheckedMessageDto implements Serializable {
         this.isChecked = false;
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
+        this.location = message.getLocation();
     }
 
 }

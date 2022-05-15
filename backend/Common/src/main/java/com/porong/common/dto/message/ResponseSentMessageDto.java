@@ -19,6 +19,7 @@ public class ResponseSentMessageDto implements Serializable {
     private boolean isChecked; // 상대의 확인 여부 추가
     private LocalDateTime createdAt;
     private String title;
+    private String location;
 
     public ResponseSentMessageDto(Message message) {
 
@@ -32,7 +33,7 @@ public class ResponseSentMessageDto implements Serializable {
         this.isChecked = message.isChecked();
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
-
+        this.location = message.getLocation();
     }
 
 }
