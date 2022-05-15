@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function getAlert(remoteMessage) {
+  console.log('in GetAlert', remoteMessage);
   const alertId = remoteMessage.data.alertId;
   const alertType = remoteMessage.data.alertType;
   const messageId = remoteMessage.data.messageId;
@@ -13,6 +14,15 @@ export function getAlert(remoteMessage) {
     case 'message_condition':
       time = remoteMessage.data.time;
       // 알림 저장
+      console.log(
+        '1',
+        alertId,
+        alertType,
+        messageId,
+        senderNickname,
+        place,
+        time,
+      );
       AsyncStorage.setItem(
         alertId,
         JSON.stringify({

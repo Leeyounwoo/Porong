@@ -17,4 +17,4 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   // getAlert(remoteMessage)
 });
 
-AppRegistry.registerComponent(appName, () => Nodereadable);
+AppRegistry.registerComponent(appName, () => App);
