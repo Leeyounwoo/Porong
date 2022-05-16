@@ -1,28 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Button, Image} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import ModalDropdown from 'react-native-modal-dropdown';
+import axios from 'axios';
+import {useStore} from 'react-redux';
 
-export default function ReceivedBox() {
-  const [messages, setMessages] = useState({
-    messageID01: {
-      lat: 37.5665,
-      lng: 126.978,
-      title: '메세지 제목1',
-      sender: '보낸 사람1',
-      profileImgUrl: 'https://reactjs.org/logo-og.png',
-    },
-    messageID02: {
-      lat: 37.5665,
-      lng: 126.978,
-      title: '메세지 제목22',
-      sender: '보낸 사람2',
-      profileImgUrl: 'https://reactjs.org/logo-og.png',
-    },
-  });
-
-  const messagesKeys = Object.keys(messages);
+export default function ReceivedBox({navigation}) {
+  const store = useStore();
+  const [messages, setMessages] = useState({});
+  const [messagesKeys, setMessagesKey] = useState([]);
 
   const [singlePos, setSinglePos] = useState({
     lat: 37.5665,
@@ -34,11 +28,12 @@ export default function ReceivedBox() {
 
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
 
-  useEffect(() => {
-    Geocoder.from(singlePos).then(json => {
-      setTransPos(json.results[0].formatted_address);
+  // 알림 클릭시 메세지 디테일로 이동
+  const goToMessageDetail = messageId => {
+    navigation.push('Temp', {
+      messageId: messageId,
     });
-  }, []);
+  };
 
   const btnClick = () => {
     setUlFlag(true);
@@ -53,7 +48,41 @@ export default function ReceivedBox() {
     setDisplayMap(false);
     setUlFlag(false);
   };
-  console.log('label', label);
+
+  useEffect(() => {
+    console.log('memberId', store.getState().userreducer.memberId);
+    axios
+      .get('http://k6c102.p.ssafy.io:8080/v1/message/12/getreceivedmessages')
+      .then(res => {
+        const tmessages = res.data;
+        console.log(tmessages);
+        tmessages.map(async (message, midx) => {
+          await setMessages(prev => {
+            return {
+              ...prev,
+              [tmessages[midx]['messageId']]: {
+                lat: tmessages[midx]['latitude'],
+                lng: tmessages[midx]['longitude'],
+                title: tmessages[midx]['title'],
+                sender: tmessages[midx]['senderName'],
+                profileImgUrl: tmessages[midx]['senderProfileUrl'],
+              },
+            };
+          });
+          console.log(messages);
+          setMessagesKey(prev => [...prev, tmessages[midx]['messageId']]);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    Geocoder.from(singlePos).then(json => {
+      setTransPos(json.results[0].formatted_address);
+    });
+  }, []);
 
   return (
     <View style={styles.allcontainer}>
@@ -104,26 +133,36 @@ export default function ReceivedBox() {
 
       {label === '목록으로 보기' &&
         messagesKeys.map((key, keyidx) => {
-          return (
-            <View style={styles.alarmcontainer} key={keyidx}>
-              <View style={styles.profilebox}>
-                <Image
-                  source={{uri: messages[messagesKeys[keyidx]].profileImgUrl}}
-                  style={styles.profileimage}
-                />
-              </View>
-              <View style={styles.textbox}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 'bold',
-                    marginBottom: 5,
-                    color: 'black',
-                  }}>{`${messages[messagesKeys[keyidx]].sender}`}</Text>
-                <Text>{messages[messagesKeys[keyidx]].title}</Text>
-              </View>
-            </View>
-          );
+          if (messages[messagesKeys[keyidx]] !== undefined) {
+            return (
+              <TouchableHighlight
+                onPress={() => {
+                  goToMessageDetail(messagesKeys[keyidx]);
+                }}
+                key={keyidx}>
+                <View style={styles.alarmcontainer}>
+                  <View style={styles.profilebox}>
+                    <Image
+                      source={{
+                        uri: messages[messagesKeys[keyidx]].profileImgUrl,
+                      }}
+                      style={styles.profileimage}
+                    />
+                  </View>
+                  <View style={styles.textbox}>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        marginBottom: 5,
+                        color: 'black',
+                      }}>{`${messages[messagesKeys[keyidx]].sender}`}</Text>
+                    <Text>{messages[messagesKeys[keyidx]].title}</Text>
+                  </View>
+                </View>
+              </TouchableHighlight>
+            );
+          }
         })}
     </View>
   );
@@ -143,7 +182,7 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '90%',
+    width: 300,
     marginBottom: 10,
     borderRadius: 10,
     borderWidth: 1,

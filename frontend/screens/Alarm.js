@@ -92,7 +92,6 @@ export default function Alarm({navigation}) {
               }}
               key={idx}>
               <MessageReceiveAlert
-                goToMessageDetail={goToMessageDetail}
                 senderNickname={
                   alertLocations[alertKeys[idx]]['senderNickname']
                 }
@@ -112,7 +111,6 @@ export default function Alarm({navigation}) {
               }}
               key={idx}>
               <TimeSatisfactionAlert
-                goToMessageDetail={goToMessageDetail}
                 senderNickname={
                   alertLocations[alertKeys[idx]]['senderNickname']
                 }
@@ -131,7 +129,6 @@ export default function Alarm({navigation}) {
               }}
               key={idx}>
               <MessageConditionAlert
-                goToMessageDetail={goToMessageDetail}
                 senderNickname={
                   alertLocations[alertKeys[idx]]['senderNickname']
                 }
