@@ -17,7 +17,7 @@ function dateTrans(day) {
 export default function Temp({navigation, route}) {
   const store = useStore();
   const {messageId} = route.params;
-  const [flag, setFlag] = useState(true);
+  const [flag, setFlag] = useState(false);
   const [senderNickName, setSenderNickName] = useState('');
   const [time, setTime] = useState('');
   const [place, setPlace] = useState('장덕동 1333');
@@ -56,14 +56,15 @@ export default function Temp({navigation, route}) {
         // setPlace(res.data.place)
         setLatitude(res.data.latitude);
         setLongitude(res.data.longitude);
-        setContext(res.data.contentText);
+        // setContext(res.data.contentText);
+        setContext("asdflhjkfasdjkhlasdflhjkasdfhjklsdfahjklsdfahjklsdfajkhdfshkjdsfhkjdsfhjksdfhkjsdfhkjsdfkhjsdfhjksdfkhj\nhkjsdfkhj\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\ndfkhjskdfhjdfhsjs\nfdhkjsdfkhjsdfhsfdhhkj");
       });
 
     AsyncStorage.getItem('receivedMessages', (err, result) => {
       const receivedMessagesSet = new Set(JSON.parse(result));
       console.log(receivedMessagesSet);
       if (receivedMessagesSet.has(messageId)) {
-        // setFlag(true);
+        setFlag(true);
         console.log('있음');
       } else {
         console.log('없음');
@@ -85,21 +86,13 @@ export default function Temp({navigation, route}) {
         />
       )}
       {flag === false && (
-        // <Notreadable
-        //   amISend={false}
-        //   nickName={senderNickName}
-        //   time={time}
-        //   place={place}
-        //   latitude={latitude}
-        //   longitude={longitude}
-        // />
         <Notreadable
           amISend={false}
-          nickName={'윤설'}
-          time={'2022년 5월 30일'}
+          nickName={senderNickName}
+          time={time}
           place={place}
-          latitude={36.342447121491524}
-          longitude={127.39290438328085}
+          latitude={latitude}
+          longitude={longitude}
         />
       )}
     </View>
