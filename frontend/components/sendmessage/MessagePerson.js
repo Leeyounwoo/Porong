@@ -110,16 +110,20 @@ export default function MessagePerson({navigation}) {
       });
   };
 
-  const next = () => {
-    AsyncStorage.getItem('user')
-      .then(res => {
-        console.log(JSON.parse(res));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    store.dispatch(personContain(21, 11));
-    navigation.navigate('Time');
+  const next = (id, isSignin) => {
+    if (isSignin) {
+      AsyncStorage.getItem('user')
+        .then(res => {
+          console.log(JSON.parse(res));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      store.dispatch(personContain(store.getState().userreducer.memberId, id));
+      navigation.navigate('Time');
+    } else {
+      console.log('no');
+    }
   };
 
   function fetch() {
@@ -212,10 +216,18 @@ export default function MessagePerson({navigation}) {
               height: '70%',
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'green',
-              borderRadius: 10,
+            }}
+            onPress={() => {
+              next(item.memberId, item.signup);
             }}>
-            <Text style={{color: 'white'}}>초대하기</Text>
+            <Image
+              style={{width: 25, height: 25}}
+              source={
+                isFetch && item.signup
+                  ? require('../../assets/icons/messenger.png')
+                  : require('../../assets/icons/invite.png')
+              }
+            />
           </TouchableOpacity>
         </View>
       </View>
