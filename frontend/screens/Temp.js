@@ -35,14 +35,15 @@ export default function Temp({navigation, route}) {
     axios
       .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
-          // memberId: store.getState().userreducer.memberId,
-          // messageId: messageId,
+          memberId: store.getState().userreducer.memberId,
+          messageId: messageId,
           memberId: 11,
           messageId: 35,
           timeNow: time,
         },
       })
       .then(res => {
+        console.log('getMessage 요청 성공');
         const date = `${parseInt(res.data.dueTime[0])}년${parseInt(
           res.data.dueTime[1] - 1,
         )}월${parseInt(res.data.dueTime[2])}일${parseInt(
