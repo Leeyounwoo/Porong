@@ -35,14 +35,15 @@ export default function Temp({navigation, route}) {
     axios
       .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
-          // memberId: store.getState().userreducer.memberId,
-          // messageId: messageId,
+          memberId: store.getState().userreducer.memberId,
+          messageId: messageId,
           memberId: 11,
           messageId: 35,
           timeNow: time,
         },
       })
       .then(res => {
+        console.log('getMessage 요청 성공');
         const date = `${parseInt(res.data.dueTime[0])}년${parseInt(
           res.data.dueTime[1] - 1,
         )}월${parseInt(res.data.dueTime[2])}일${parseInt(
@@ -63,7 +64,7 @@ export default function Temp({navigation, route}) {
       const receivedMessagesSet = new Set(JSON.parse(result));
       console.log(receivedMessagesSet);
       if (receivedMessagesSet.has(messageId)) {
-        // setFlag(true);
+        setFlag(true);
         console.log('있음');
       } else {
         console.log('없음');
@@ -85,21 +86,13 @@ export default function Temp({navigation, route}) {
         />
       )}
       {flag === false && (
-        // <Notreadable
-        //   amISend={false}
-        //   nickName={senderNickName}
-        //   time={time}
-        //   place={place}
-        //   latitude={latitude}
-        //   longitude={longitude}
-        // />
         <Notreadable
           amISend={false}
-          nickName={'윤설'}
-          time={'2022년 5월 30일'}
+          nickName={senderNickName}
+          time={time}
           place={place}
-          latitude={36.342447121491524}
-          longitude={127.39290438328085}
+          latitude={latitude}
+          longitude={longitude}
         />
       )}
     </View>

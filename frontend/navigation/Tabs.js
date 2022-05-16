@@ -192,7 +192,7 @@ const Tabs = () => {
         listeners={resetHomeStackOnTabPress }
         options={{
           tabBarIcon: ({focused}) => (
-            <TouchableOpacity
+            <View
               style={{
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -205,7 +205,7 @@ const Tabs = () => {
                 }}
                 source={require('../assets/icons/enter.png')}
               />
-            </TouchableOpacity>
+            </View>
           ),
         }}
       />
