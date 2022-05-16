@@ -36,11 +36,10 @@ export default function MessageType({navigation}) {
           //   })
           //   .catch(err => console.log(err));
           alert('전송 완료! \n메인 페이지로 이동합니다.');
-          store.dispatch(typeContain(false));
           console.log(store.getState().reducer);
           axios
             .post(
-              `http://k6c102.p.ssafy.io:8080/v1/message`,
+              'http://k6c102.p.ssafy.io:8080/v1/message/',
               store.getState().reducer,
             )
             .then(res => {
@@ -49,7 +48,7 @@ export default function MessageType({navigation}) {
             .catch(err => {
               console.log(err);
             });
-          navigation.navigate('Home');
+          navigation.navigate('Main');
         },
       },
     ]);
@@ -68,8 +67,8 @@ export default function MessageType({navigation}) {
         text: 'Ok',
         onPress: () => {
           alert('전송 완료! \n메인 페이지로 이동합니다.');
-          store.dispatch(typeContain(true));
-          navigation.navigate('Home');
+          store.dispatch(typeContain());
+          navigation.navigate('Main');
         },
       },
     ]);
