@@ -176,7 +176,12 @@ public class MessageService {
            ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
 
            // 본문 만족 알림 로직 시작
-           
+           try {
+               firebaseFCMConfig.makeSatisfyMessage(message);
+           }
+           catch (Exception e) {
+               throw new MemberNotFoundException();
+           }
            // 본문 만족 알림 로직 끝
 
            return responseCheckedMessageDto;
