@@ -105,6 +105,8 @@ const App = () => {
     );
   };
 
+  // 사용자가 50m 이동할 때마다 거리 계산
+  // 메세지와의 거리가 50m 이내인 경우, 메세지 받기 API 호출 + Async Storage 에서 삭제 + 받은 메세지 Set에 추가
   useEffect(() => {
     const watchID = Geolocation.watchPosition(
       position => {
@@ -146,7 +148,7 @@ const App = () => {
     );
   }, [flag]);
 
-  // 이미 Async Storage에 존재하는 데이터 가져올 때 비동기문제 해결하기 위한 함수
+  // 메세지 위치 동기화 함수
   const updateMessageLocations = stores => {
     stores.map((store, idx) => {
       const key = store[0];
@@ -157,13 +159,20 @@ const App = () => {
     });
   };
 
+  // 메세지 ID 리스트 동기화 함수
+  const updateMessageIdList = messageKeys => {
+    messageKeys.map((messageKey, kidx) => {
+      setMessageIdList(prev => [...prev, messageKeys[kidx]]);
+    });
+  };
+
   // 메세지 상태 관리 (Async Storage)
   useEffect(() => {
     AsyncStorage.getAllKeys((err, keys) => {
       const messageKeys = keys.filter(key => key[0] !== 'A');
       AsyncStorage.multiGet(messageKeys, async (err, stores) => {
         await updateMessageLocations(stores);
-        await setMessageIdList(messageKeys);
+        await updateMessageIdList(messageKeys);
         await setUpdateCnt(prev => prev + 1);
         await setFlag(true);
       });

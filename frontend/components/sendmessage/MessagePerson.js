@@ -75,15 +75,23 @@ export default function MessagePerson({navigation}) {
         title: 'Contacts',
         message: '마음 사서함이 회원님의 연락처에 접근하려고 합니다.',
       })
-        .then(res => {
-          console.log(res);
+        .then(result => {
+          console.log(result);
           Contacts.getAll()
             .then(res => {
-              console.log(
-                '최초 리스트',
-                typeof Array.prototype.slice.call(res),
-              );
-              const temp = Array.prototype.slice.call(res);
+              console.log(res);
+              const temp = [];
+              for (let i = 0; i < res.length; i++) {
+                if (res[i].phoneNumbers[0]) {
+                  temp.push({
+                    name: res[i].displayName,
+                    phoneNumber: res[i].phoneNumbers[0].number,
+                    signup: false,
+                    profileUrl: null,
+                    memberId: -1,
+                  });
+                }
+              }
               setContacts(temp);
             })
             .catch(err => {
@@ -101,66 +109,67 @@ export default function MessagePerson({navigation}) {
   const getList = () => {
     Contacts.getAll()
       .then(res => {
-        console.log('최초 리스트', typeof Array.prototype.slice.call(res));
-        const temp = Array.prototype.slice.call(res);
-        setContacts(temp);
+        setContacts(res);
       })
       .catch(err => {
         console.log('cannot access', err);
       });
   };
 
-  const next = () => {
-    AsyncStorage.getItem('user')
-      .then(res => {
-        console.log(JSON.parse(res));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    store.dispatch(personContain(21, 11));
-    navigation.navigate('Time');
+  const next = (id, isSignin) => {
+    if (isSignin) {
+      AsyncStorage.getItem('user')
+        .then(res => {
+          console.log(JSON.parse(res));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      store.dispatch(personContain(store.getState().userreducer.memberId, id));
+      navigation.navigate('Time');
+    } else {
+      console.log('no');
+    }
   };
 
   function fetch() {
     Contacts.getAll()
       .then(res => {
-        console.log('최초 리스트', res);
-        setContacts(res);
-        let d = [];
-        Array.from(res).map(c => {
-          let num = c.phoneNumbers[0].number;
-          num = num.replaceAll('-', '');
-          num = num.replaceAll(' ', '');
-          console.log(num);
-          d.push(num);
+        const contactData = [];
+        res.map(contact => {
+          if (contact.phoneNumbers[0]) { 
+            let num = contact.phoneNumbers[0].number;
+            num = num.replaceAll('-', '');
+            num = num.replaceAll(' ', '');
+            contactData.push(num);
+          } else {
+            contactData.push('');
+          }
         });
         axios({
           url: 'http://k6c102.p.ssafy.io:8080/v1/member/fetchContact',
           method: 'post',
-          data: d,
+          data: contactData,
         })
           .then(result => {
-            console.log('서버 리스트', result.data);
-            const k = [];
-            result.data.map((dt, idx) => {
-              if (dt.signup) {
-                k.push({
-                  ...dt,
-                  name: res[idx].displayName,
-                  phoneNumber: res[idx].phoneNumbers[0].number,
+            console.log('from server', result);
+            const fetchData = [];
+            for (let i = 0; i < result.data.length; i++) {
+              console.log("single data : ",result.data[i].memberId);
+              if (result.data[i].memberId < 0) {
+                fetchData.push({
+                  name: res[i].displayName,
+                  phoneNumber: res[i].phoneNumbers[0] ? res[i].phoneNumbers[0].number : '',
+                  signup: false,
+                  profileUrl: null,
+                  memberId: -1,
                 });
               } else {
-                k.push({
-                  signup: false,
-                  name: res[idx].displayName,
-                  phoneNumber: res[idx].phoneNumbers[0].number,
-                });
+                fetchData.push({...result.data[i], name: res[i].displayName});
               }
-            });
-            setIsFetch(true);
-            setFetchedItem(k);
-            console.log(k);
+            }
+            console.log("=================",fetchData);
+            setContacts(fetchData);
           })
           .catch(err => {
             console.log(err);
@@ -183,7 +192,7 @@ export default function MessagePerson({navigation}) {
           }}>
           <Image
             source={
-              isFetch && item.signup
+              item.signup
                 ? {uri: item.profileUrl}
                 : require('../../assets/icons/user.png')
             }
@@ -195,10 +204,8 @@ export default function MessagePerson({navigation}) {
             flex: 2.5,
             justifyContent: 'center',
           }}>
-          <Text>{isFetch ? item.name : item.displayName}</Text>
-          <Text>
-            {isFetch ? item.phoneNumber : item.phoneNumbers[0].number}
-          </Text>
+          <Text>{item.name}</Text>
+          <Text>{item.phoneNumber}</Text>
         </View>
         <View
           style={{
@@ -212,10 +219,18 @@ export default function MessagePerson({navigation}) {
               height: '70%',
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'green',
-              borderRadius: 10,
+            }}
+            onPress={() => {
+              next(item.memberId, item.signup);
             }}>
-            <Text style={{color: 'white'}}>초대하기</Text>
+            <Image
+              style={{width: 25, height: 25}}
+              source={
+                item.signup
+                  ? require('../../assets/icons/messenger.png')
+                  : require('../../assets/icons/invite.png')
+              }
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -226,9 +241,9 @@ export default function MessagePerson({navigation}) {
     <View style={{flex: 1}}>
       <FlatList
         style={{flex: 1}}
-        data={isFetch ? fetchedItem : contacts}
+        data={contacts}
         renderItem={PhoneBook}
-        keyExtractor={item => item}
+        keyExtractor={item => item.name}
       />
       <View style={{flex: 0.2}}></View>
     </View>

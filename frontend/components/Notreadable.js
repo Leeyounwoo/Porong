@@ -8,24 +8,9 @@ import axios from 'axios';
 const icon = require('../assets/icons/letter.png');
 
 //데이터의 위치를
-export default function Nodereadable({
-  amISend,
-  nickName,
-  time,
-  place,
-  latitude,
-  longitude,
-}) {
+export default function Nodereadable({  amISend,  nickName,  time,  place,  latitude,  longitude,}) {
   const [toFrom, setToFrom] = useState('false');
-  console.log(
-    'Notreadable',
-    amISend,
-    nickName,
-    time,
-    place,
-    latitude,
-    longitude,
-  );
+  console.log(    'Notreadable',    amISend,    nickName,    time,    place,    latitude,    longitude);
   useEffect(() => {
     if (amISend === true) {
       setToFrom('에게');
@@ -37,43 +22,36 @@ export default function Nodereadable({
   console.log(toFrom);
 
   return (
-    <View style={styles.allcontainer}>
-      <Text>{toFrom}</Text>
-      <View style={styles.fromtoContainer}>
-        <Text style={styles.textContainer('blue')}>{nickName}</Text>
-        <Text style={styles.textContainer('black')}>{toFrom}</Text>
-      </View>
-      <View>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          minZoomLevel={18}
-          maxZoomLevel={18}
-          style={{width: 350, height: 350}}
-          initialRegion={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }}>
-          <Marker
-            title="test"
-            icon={icon}
-            coordinate={{latitude: latitude, longitude: longitude}}
-          />
-        </MapView>
-      </View>
-      <View style={styles.timeContainer}>
-        <Text style={styles.textContainer('blue')}>{time}</Text>
-        <Text style={styles.textContainer('black')}>
-          해당 시간 이후에 확인가능합니다.
-        </Text>
-      </View>
-
-      <View style={styles.positionContainer}>
-        <Text style={styles.textContainer('blue')}>{place}</Text>
-        <Text style={styles.textContainer('black')}>에서 볼 수 있습니다!</Text>
-      </View>
+    <View >
+    <View style={{marginLeft: 20,marginTop:20, marginBottom:15, alignSelf:'baseline'}}>
+      <Text style={{fontSize:15, color:'black'}}><Text style={{color:'#0075FF', fontWeight:'bold'}}>{nickName}</Text>{toFrom}</Text>
     </View>
+    <View style={{ alignItems: 'center', borderRadius: 15, overflow: 'hidden',}}>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        minZoomLevel={18}
+        maxZoomLevel={18}
+        style={{width: 350, height: 200}}
+        initialRegion={{
+          latitude: latitude,
+          longitude: latitude,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+          }}
+        pitchEnabled={false}
+        >
+        <Marker
+          title="test"
+          icon={icon}
+          coordinate={{latitude: latitude, longitude: latitude}}
+        />
+      </MapView>
+          </View>
+      <View style={{ marginTop:15, marginLeft: 20,alignSelf:'baseline'}}>
+          <Text style={{color:'black'}}><Text style={{color:'#0075FF',fontWeight:'bold'}}>{time}</Text> 확인 가능합니다</Text>
+          <Text style={{color:'black'}}><Text style={{ color: '#0075FF', fontWeight: 'bold', alignSelf:'baseline'}}>{place}</Text><Text style={{alignSelf:'flex-end'}}>에서 확인할 수 있습니다</Text></Text>
+      </View>
+  </View>
   );
 }
 

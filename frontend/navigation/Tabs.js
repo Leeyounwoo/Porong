@@ -36,7 +36,31 @@ const SendButton = ({children, onPress}) => {
 };
 
 const Tab = createBottomTabNavigator();
+const TAB_TO_RESET = 'HomeTab';
+const resetHomeStackOnTabPress = ({ navigation, route }) => ({
+  tabPress: (e) => {
+    const state = navigation.getState();
+    console.log(state);
+    if (state) {
+      // Grab all the tabs that are NOT the one we just pressed
+      const nonTargetTabs = state.routes.filter((r) => r.key !== e.target);
 
+      nonTargetTabs.forEach((tab) => {
+        // Find the tab we want to reset and grab the key of the nested stack
+        const tabName = tab?.name;
+        const stackKey = tab?.state?.key;
+
+        if (stackKey && tabName === TAB_TO_RESET) {
+          // Pass the stack key that we want to reset and use popToTop to reset it
+          navigation.dispatch({
+            ...StackActions.popToTop(),
+            target: stackKey,
+          });
+        }
+      });
+    }
+  },
+});
 const Tabs = () => {
   const navigation = useNavigation();
 
@@ -55,7 +79,7 @@ const Tabs = () => {
   return (
     <Tab.Navigator
       // 첫 화면 Route 설정
-      initialRouteName="Home"
+      initialRouteName="HomeStack"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -73,8 +97,9 @@ const Tabs = () => {
         },
       }}>
       <Tab.Screen
-        name="Home"
+        name="HomeStack"
         component={HomeStackScreen}
+        listeners={resetHomeStackOnTabPress }
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -95,8 +120,9 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Alarm"
+        name="AlarmStack"
         component={AlarmStackScreen}
+        listeners={resetHomeStackOnTabPress }
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -117,8 +143,9 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Send"
+        name="SendStack"
         component={SendStackScreen}
+        listeners={resetHomeStackOnTabPress }
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -137,8 +164,9 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Message"
+        name="MessageStack"
         component={MessageStackScreen}
+        listeners={resetHomeStackOnTabPress }
         options={{
           tabBarIcon: ({focused}) => (
             <View
@@ -159,8 +187,9 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Account"
+        name="AccountStack"
         component={AccountStackScreen}
+        listeners={resetHomeStackOnTabPress }
         options={{
           tabBarIcon: ({focused}) => (
             <View
