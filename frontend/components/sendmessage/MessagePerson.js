@@ -152,9 +152,15 @@ export default function MessagePerson({navigation}) {
             const fetchData = [];
             for (let i = 0; i < result.data.length; i++) {
               if (result.data[i].memberId < 0) {
-                fetchData.push(contacts[i]);
+                fetchData.push({
+                  name: res[i].displayName,
+                  phoneNumber: res[i].phoneNumbers[0].number,
+                  signup: false,
+                  profileUrl: null,
+                  memberId: -1,
+                });
               } else {
-                fetchData.push({...result.data[i], name: contacts[i].name});
+                fetchData.push({...result.data[i], name: res[i].displayName});
               }
             }
             console.log(fetchData);
