@@ -78,7 +78,7 @@ export default function Login({navigation}) {
             });
           }
           AsyncStorage.setItem('user', JSON.stringify(res));
-          navigation.navigate('home');
+          navigation.navigate('Main');
         })
         .catch(err => console.log(err));
       // alert('회원가입을 위해 새로운 페이지로 이동합니다.');
