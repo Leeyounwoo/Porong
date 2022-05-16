@@ -75,10 +75,10 @@ const App = () => {
 
   const loginProcess = () => {
     return (
-      <init.Navigator initialRouteName="login">
-        <init.Screen name="login" component={Login} />
-        <init.Screen name="signin" component={Signin} />
-        <init.Screen name="phone" component={PhoneForm} />
+      <init.Navigator initialRouteName="Login">
+        <init.Screen name="Login" component={Login} />
+        <init.Screen name="Signin" component={Signin} />
+        <init.Screen name="Phone" component={PhoneForm} />
       </init.Navigator>
     );
   };
@@ -97,9 +97,9 @@ const App = () => {
 
     return (
       <Stack.Navigator
-        initialRouteName={isLogin ? 'home' : 'login'}
+        initialRouteName={isLogin ? 'Main' : 'login'}
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="home" component={Tabs} />
+        <Stack.Screen name="Main" component={Tabs} />
         <Stack.Screen name="login" component={loginProcess} />
       </Stack.Navigator>
     );
@@ -201,7 +201,6 @@ const App = () => {
         break;
 
       case 'message_receive':
-        console.log('message_receive Alert');
         const tempMessageLocations = messageLocations;
         await delete tempMessageLocations[messageId];
         await setMessageLocations(tempMessageLocations);
@@ -214,6 +213,9 @@ const App = () => {
 
   // 새로운 알림 왔을 때
   useEffect(() => {
+    AsyncStorage.getAllKeys((err, keys) => {
+      console.log('async Keys', keys);
+    });
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       await getAlert(remoteMessage);
       manageMessageState(remoteMessage);

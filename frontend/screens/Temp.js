@@ -26,6 +26,7 @@ export default function Temp({navigation, route}) {
   const [context, setContext] = useState('');
 
   useEffect(() => {
+    console.log('123', messageId);
     const now = new Date();
     const time = `${now.getFullYear()}-${dateTrans(
       now.getMonth() + 1,
@@ -37,27 +38,25 @@ export default function Temp({navigation, route}) {
         params: {
           memberId: store.getState().userreducer.memberId,
           messageId: messageId,
-          memberId: 11,
-          messageId: 35,
           timeNow: time,
         },
       })
       .then(res => {
-        console.log('getMessage 요청 성공');
+        console.log('getMessage 요청 성공', res);
         const date = `${parseInt(res.data.dueTime[0])}년${parseInt(
-          res.data.dueTime[1] - 1,
+          res.data.dueTime[1],
         )}월${parseInt(res.data.dueTime[2])}일${parseInt(
           res.data.dueTime[3],
         )}시${parseInt(res.data.dueTime[4])}분${parseInt(
           res.data.dueTime[5],
         )}초`;
+        console.log('date', date);
         setTime(date);
         setSenderNickName(res.data.senderName);
-        // setPlace(res.data.place)
+        setPlace(res.data.location);
         setLatitude(res.data.latitude);
         setLongitude(res.data.longitude);
-        // setContext(res.data.contentText);
-        setContext("asdflhjkfasdjkhlasdflhjkasdfhjklsdfahjklsdfahjklsdfajkhdfshkjdsfhkjdsfhjksdfhkjsdfhkjsdfkhjsdfhjksdfkhj\nhkjsdfkhj\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\ndfkhjskdfhjdfhsjs\nfdhkjsdfkhjsdfhsfdhhkj");
+        setContext(res.data.contentText);
       });
 
     AsyncStorage.getItem('receivedMessages', (err, result) => {
