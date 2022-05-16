@@ -175,6 +175,10 @@ public class MessageService {
 
            ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
 
+           // 본문 만족 알림 로직 시작
+           
+           // 본문 만족 알림 로직 끝
+
            return responseCheckedMessageDto;
        }
 
