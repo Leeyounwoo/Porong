@@ -52,6 +52,7 @@ const App = () => {
   const [flag, setFlag] = useState(false);
   const [updateCnt, setUpdateCnt] = useState(0);
 
+  // 지도상의 두 좌표간의 거리 계산
   function calcDistance(lat1, lon1, lat2, lon2) {
     if (lat1 == lat2 && lon1 == lon2) return 0;
 
@@ -71,6 +72,7 @@ const App = () => {
     else distance = Math.round(distance / 100) * 100;
     return distance;
   }
+
   const loginProcess = () => {
     return (
       <init.Navigator initialRouteName="login">
@@ -80,6 +82,7 @@ const App = () => {
       </init.Navigator>
     );
   };
+
   const Stacks = () => {
     const [isLogin, setIsLogin] = React.useState(false);
     AsyncStorage.getItem('user')
@@ -144,7 +147,7 @@ const App = () => {
   }, [flag]);
 
   // 이미 Async Storage에 존재하는 데이터 가져올 때 비동기문제 해결하기 위한 함수
-  const updateMessageLocations = (keys, stores) => {
+  const updateMessageLocations = stores => {
     stores.map((store, idx) => {
       const key = store[0];
       const value = JSON.parse(store[1]);
@@ -157,10 +160,9 @@ const App = () => {
   // 메세지 상태 관리 (Async Storage)
   useEffect(() => {
     AsyncStorage.getAllKeys((err, keys) => {
-      const messageKeys = keys.filter(key => key[0] === 'M');
-      console.log('in app', messageKeys);
+      const messageKeys = keys.filter(key => key[0] !== 'A');
       AsyncStorage.multiGet(messageKeys, async (err, stores) => {
-        await updateMessageLocations(messageKeys, stores);
+        await updateMessageLocations(stores);
         await setMessageIdList(messageKeys);
         await setUpdateCnt(prev => prev + 1);
         await setFlag(true);
@@ -173,8 +175,7 @@ const App = () => {
     const alertType = remoteMessage.data.alertType;
     const messageId = remoteMessage.data.messageId;
     switch (alertType) {
-      case 'time_satisfaction':
-        console.log('time_satisfaction Alert');
+      case 'message_condition':
         const latitude = remoteMessage.data.latitude;
         const longitude = remoteMessage.data.longitude;
         await setMessageLocations(prevMessageLocations => {
@@ -192,7 +193,6 @@ const App = () => {
 
       case 'message_receive':
         console.log('message_receive Alert');
-
         const tempMessageLocations = messageLocations;
         await delete tempMessageLocations[messageId];
         await setMessageLocations(tempMessageLocations);
@@ -218,105 +218,6 @@ const App = () => {
     return unsubscribe;
   }, []);
 
-  // 임의로 메세지 보내는 코드
-  useEffect(async () => {
-    const tempRemoteMessage1 = {
-      data: {
-        alertId: 'A202205091951001',
-        messageId: 'M202205091951001',
-        alertType: 'message_condition',
-        senderNickname: '윤설',
-        place: '장덕동 1333',
-        time: '2022년 4월 20일 00시 01분',
-      },
-    };
-
-    const tempRemoteMessage21 = {
-      data: {
-        alertId: 'A202205091951004',
-        messageId: 'M202205091951002',
-        alertType: 'time_satisfaction',
-        senderNickname: '윤설1',
-        place: '장덕동 1333',
-        latitude: 38.190589347561485,
-        longitude: 129.81490193851873,
-      },
-    };
-    const tempRemoteMessage22 = {
-      notification: {
-        body: '내용',
-        title: '제목',
-      },
-      data: {
-        alertId: 'A202205091951014',
-        messageId: 'M202205091951012',
-        alertType: 'time_satisfaction',
-        senderNickname: '윤설2',
-        place: '장덕동 1333',
-        latitude: 38.190589347561485,
-        longitude: 129.81490193851873,
-      },
-    };
-
-    const tempRemoteMessage3 = {
-      data: {
-        alertId: 'A202205091951015',
-        messageId: 'M202205091951012',
-        alertType: 'message_receive',
-        senderNickname: '윤설',
-        place: '장덕동 1333',
-      },
-    };
-
-    const tempRemoteMessage31 = {
-      data: {
-        alertId: 'A202205091951016',
-        messageId: 'M202205091951013',
-        alertType: 'message_receive',
-        senderNickname: '윤설',
-        place: '장덕동 1333',
-      },
-    };
-
-    // await getAlert(tempRemoteMessage22);
-    // manageMessageState(tempRemoteMessage22);
-    // await getAlert(tempRemoteMessage3);
-    // manageMessageState(tempRemoteMessage3);
-    await getAlert(tempRemoteMessage31);
-    manageMessageState(tempRemoteMessage31);
-    // getAlert(tempRemoteMessage1);
-    // await getAlert(tempRemoteMessage22);
-    // manageMessageState(tempRemoteMessage22);
-    // getAlert(tempRemoteMessage3);
-  }, []);
-
-  // 메세지 상태가 잘 바뀌는지 확인할 수 있는 코드
-  useEffect(() => {
-    console.log('메세지 수', messageIdList.length);
-    messageIdList.map((messageId, idx) => {
-      if (messageLocations[messageIdList[idx]]) {
-        console.log('1messageId: ', messageIdList[idx]);
-        console.log('total: ', messageLocations[messageIdList[idx]]);
-        console.log(
-          '1latitude: ',
-          messageLocations[messageIdList[idx]]['latitude'],
-        );
-        console.log(
-          '1longitude: ',
-          messageLocations[messageIdList[idx]]['longitude'],
-        );
-      }
-    });
-  }, [updateCnt]);
-
-  // // 토큰을 생성하는 코드
-  // useEffect(() => {
-  //   messaging()
-  //     .getToken()
-  //     .then(token => {
-  //       return saveTokenToDatabase(token);
-  //     });
-  // });
   return (
     <Provider store={store}>
       <NavigationContainer>
