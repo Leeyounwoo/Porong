@@ -86,6 +86,7 @@ function MessageStackScreen() {
         headerTitleAlign: 'center',
       }}>
       <MessageStack.Screen name="Messege" component={ReceivedBox} />
+      <AlarmStack.Screen name="Temp" component={TempScreen} />
     </MessageStack.Navigator>
   );
 }
