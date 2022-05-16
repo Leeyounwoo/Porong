@@ -137,10 +137,10 @@ export default function MessagePerson({navigation}) {
       .then(res => {
         const contactData = [];
         res.map(contact => {
-          if (contact.phoneNumbers[0]) { 
+          if (contact.phoneNumbers[0]) {
             let num = contact.phoneNumbers[0].number;
-            num = num.replaceAll('-', '');
-            num = num.replaceAll(' ', '');
+            num = num.replace(/-/g, '');
+            num = num.replace(/ /g, '');
             contactData.push(num);
           } else {
             contactData.push('');
@@ -155,11 +155,13 @@ export default function MessagePerson({navigation}) {
             console.log('from server', result);
             const fetchData = [];
             for (let i = 0; i < result.data.length; i++) {
-              console.log("single data : ",result.data[i].memberId);
+              console.log('single data : ', result.data[i].memberId);
               if (result.data[i].memberId < 0) {
                 fetchData.push({
                   name: res[i].displayName,
-                  phoneNumber: res[i].phoneNumbers[0] ? res[i].phoneNumbers[0].number : '',
+                  phoneNumber: res[i].phoneNumbers[0]
+                    ? res[i].phoneNumbers[0].number
+                    : '',
                   signup: false,
                   profileUrl: null,
                   memberId: -1,
@@ -168,7 +170,7 @@ export default function MessagePerson({navigation}) {
                 fetchData.push({...result.data[i], name: res[i].displayName});
               }
             }
-            console.log("=================",fetchData);
+            console.log('=================', fetchData);
             setContacts(fetchData);
           })
           .catch(err => {
