@@ -17,7 +17,7 @@ function dateTrans(day) {
 export default function Temp({navigation, route}) {
   const store = useStore();
   const {messageId} = route.params;
-  const [flag, setFlag] = useState(true);
+  const [flag, setFlag] = useState(false);
   const [senderNickName, setSenderNickName] = useState('');
   const [time, setTime] = useState('');
   const [place, setPlace] = useState('장덕동 1333');
@@ -55,7 +55,8 @@ export default function Temp({navigation, route}) {
         // setPlace(res.data.place)
         setLatitude(res.data.latitude);
         setLongitude(res.data.longitude);
-        setContext(res.data.contentText);
+        // setContext(res.data.contentText);
+        setContext("asdflhjkfasdjkhlasdflhjkasdfhjklsdfahjklsdfahjklsdfajkhdfshkjdsfhkjdsfhjksdfhkjsdfhkjsdfkhjsdfhjksdfkhj\nhkjsdfkhj\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\nsdfhkjsdfkhjs\ndfkhjskdfhjdfhsjs\nfdhkjsdfkhjsdfhsfdhhkj");
       });
 
     AsyncStorage.getItem('receivedMessages', (err, result) => {

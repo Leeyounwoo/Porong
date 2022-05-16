@@ -71,12 +71,12 @@ const App = () => {
     else distance = Math.round(distance / 100) * 100;
     return distance;
   }
-  const loginProcess = () => {
+  const LoginProcess = () => {
     return (
-      <init.Navigator initialRouteName="login">
-        <init.Screen name="login" component={Login} />
-        <init.Screen name="signin" component={Signin} />
-        <init.Screen name="phone" component={PhoneForm} />
+      <init.Navigator initialRouteName="Login">
+        <init.Screen name="Login" component={Login} />
+        <init.Screen name="Signin" component={Signin} />
+        <init.Screen name="Phone" component={PhoneForm} />
       </init.Navigator>
     );
   };
@@ -94,10 +94,10 @@ const App = () => {
 
     return (
       <Stack.Navigator
-        initialRouteName={isLogin ? 'home' : 'login'}
+        initialRouteName={isLogin ? 'Main' : 'login'}
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="home" component={Tabs} />
-        <Stack.Screen name="login" component={loginProcess} />
+        <Stack.Screen name="Main" component={Tabs} />
+        <Stack.Screen name="login" component={LoginProcess} />
       </Stack.Navigator>
     );
   };

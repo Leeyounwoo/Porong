@@ -33,7 +33,7 @@ function HomeStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Profile" component={HomeScreen} />
     </HomeStack.Navigator>
   );
 }

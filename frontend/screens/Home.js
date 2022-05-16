@@ -14,9 +14,9 @@ const Home = ({navigation}) => {
   const [markers, setMarkers] = useState([]);
   const markerRef = useRef();
   const user = useSelector((state) => state.userreducer);
-
+  console.log(navigation.getState());
   useEffect(() => {
-    axios.get('http://k6c102.p.ssafy.io:8080/v1/message/11/fetchUncheckedMesaages')
+    axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${store.getState().userreducer.memberId}/fetchUncheckedMesaages`)
       .then(json => {
         let received = [];
         // console.log("markers test : ",json);
@@ -87,14 +87,6 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
-        <Animated.Image source={require('../assets/icons/update-arrows.png')}
-          style={{
-            width: 30,
-            height: 30,
-            tintColor: 'white',
-            transfrom: [{rotate: RotateData}]
-          }}
-        />
       <Image style={styles.imgstyle} source={{ uri: user ? user.profileUrl : ``}} />
         <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user? user.nickname : `로그인 처리가 안됬습니다.`}</Text>
       </View>
@@ -110,7 +102,8 @@ const Home = ({navigation}) => {
             longitudeDelta: 0.0121,
           }}
           showsUserLocation={true}
-          followsUserLocation={ true}
+          followsUserLocation={true}
+          toolbarEnabled={false}
         >
           {markers.map((single, idx) => {
             //제약 시간 - 현재 시간을 표시

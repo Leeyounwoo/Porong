@@ -3,6 +3,8 @@ import {StyleSheet, View, Text, Button, Image} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import ModalDropdown from 'react-native-modal-dropdown';
+import axios from 'axios';
+import { useStore } from 'react-redux';
 
 export default function ReceivedBox() {
   const [messages, setMessages] = useState({
@@ -22,6 +24,9 @@ export default function ReceivedBox() {
     },
   });
 
+
+
+
   const messagesKeys = Object.keys(messages);
 
   const [singlePos, setSinglePos] = useState({
@@ -31,7 +36,7 @@ export default function ReceivedBox() {
   const [transPos, setTransPos] = useState('ee');
 
   const [label, setLabel] = useState('목록으로 보기');
-
+  const [markers, setMarkers] = useState(null);
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
 
   useEffect(() => {
@@ -39,6 +44,26 @@ export default function ReceivedBox() {
       setTransPos(json.results[0].formatted_address);
     });
   }, []);
+
+  const store = useStore();
+  useEffect(() => {
+    if (label == '지도로 보기') {
+      axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${store.getState().userreducer.memberId}/getsentmessages`)
+        .then(res => {
+          let temp = res.data;
+          let show = [];
+          temp.map((single, idx) => {
+            show.push(single);
+          })
+          setMarkers(show);
+        }).catch(err => { console.log(err); });
+      
+    }
+
+
+
+  },[label])
+
 
   const btnClick = () => {
     setUlFlag(true);
@@ -85,19 +110,21 @@ export default function ReceivedBox() {
         <View style={styles.map}>
           <MapView
             provider={PROVIDER_GOOGLE}
-            minZoomLevel={18}
-            maxZoomLevel={18}
+            minZoomLevel={7}
+            maxZoomLevel={7}
             style={{width: 350, height: 350}}
             initialRegion={{
-              latitude: singlePos.lat,
-              longitude: singlePos.lng,
+              latitude: 35.9255,
+              longitude:  127.8610,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
-            <Marker
-              title="test"
-              coordinate={{latitude: singlePos.lat, longitude: singlePos.lng}}
-            />
+            {markers != null ? markers.map((single, idx) => {
+              return <Marker key={idx}
+                title={`${single.latitude}, ${single.longitude}`}
+                coordinate={{ latitude: single.latitude, longitude: single.longitude }}>
+                <Image source={{ uri: single.receiverProfileUrl }} style={{ height: 35, width: 35, borderRadius: 100 }} /></Marker>
+            }) : null}
           </MapView>
         </View>
       )}

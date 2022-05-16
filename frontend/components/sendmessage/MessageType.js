@@ -49,7 +49,8 @@ export default function MessageType({navigation}) {
             .catch(err => {
               console.log(err);
             });
-          navigation.navigate('Home');
+          navigation.reset({ routes: [{ name: 'Home' }] });
+          
         },
       },
     ]);
