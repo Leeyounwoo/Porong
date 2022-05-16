@@ -56,11 +56,14 @@ public class MessageService {
 
         String coordinate =  requestCreateMessageDto.getLongitude() +","+ requestCreateMessageDto.getLatitude();
 
-//        String location = "";
 
-        String location = get(coordinate);
+        String location = "";
 
-        System.out.println(location);
+        if (get(coordinate) == null) {
+            location = "";
+        } else {
+            location = get(coordinate);
+        }
 
         Message message = new Message(requestCreateMessageDto, sender, receiver, location); // location 추가
 
