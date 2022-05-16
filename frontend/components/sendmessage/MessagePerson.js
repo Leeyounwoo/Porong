@@ -216,15 +216,18 @@ export default function MessagePerson({navigation}) {
               height: '70%',
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'green',
-              borderRadius: 10,
             }}
             onPress={() => {
               next(item.memberId, item.signup);
             }}>
-            <Text style={{color: 'white'}}>
-              {isFetch && item.signup ? 'send' : 'invite'}
-            </Text>
+            <Image
+              style={{width: 25, height: 25}}
+              source={
+                isFetch && item.signup
+                  ? require('../../assets/icons/messenger.png')
+                  : require('../../assets/icons/invite.png')
+              }
+            />
           </TouchableOpacity>
         </View>
       </View>
