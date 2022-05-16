@@ -69,7 +69,7 @@ export default function Readable({ route }) {
     const latitude = 37;
     const longitude = 126;
     const [checked, setChecked] = useState(false);
-    // const store = useStore();
+    const store = useStore();
     const [data, setData] = useState({
         nick: 'test',
         time: '',
@@ -77,18 +77,16 @@ export default function Readable({ route }) {
         lat: 37,
         lng: 126
     });
-
-    useLayoutEffect(() => {
+    console.log("==============================", route);
+    useEffect(() => {
         let now = new Date();
         let time = `${now.getFullYear()}-${dateTrans(now.getMonth() + 1)}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(now.getMinutes())}:${dateTrans(now.getSeconds())}`;
-        
-        // params: { memberId: store.getState().userreducer.memberId, messageId: route.messageId, timeNow: time }
         axios.post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
-            params: { memberId: 11, messageId: 35, timeNow: time }
+            params: { memberId: store.getState().userreducer.memberId, messageId: 35, timeNow: time }
         }).then(res => {
-            let date = `${parseInt(res.data.dueTime[0])}년${parseInt(res.data.dueTime[1]-1)}월${parseInt(res.data.dueTime[2])}일${parseInt(res.data.dueTime[3])}시${parseInt(res.data.dueTime[4])}분${parseInt(res.data.dueTime[5])}초`;
             
-            setChecked(res.data.checked);
+            let date = `${parseInt(res.data.dueTime[0])}년${parseInt(res.data.dueTime[1] - 1)}월${parseInt(res.data.dueTime[2])}일${parseInt(res.data.dueTime[3])}시${parseInt(res.data.dueTime[4])}분${parseInt(res.data.dueTime[5])}초`;
+            
             setData({
                 ...data,
                 nick: res.data.senderName,
@@ -107,31 +105,29 @@ export default function Readable({ route }) {
     
 
     useEffect(() => {
-        // console.log(data.time);
+        console.log(data);
     },[data])
     return (
         <View style={ styles.allcontainer }>
-            <View style={styles.fromtoContainer}>
+            <View>
                 <Text style={styles.textContainer('blue')}>{data.nick}</Text>
                 <Text style={styles.textContainer('black')}> 님이 보낸 메세지를</Text>
             </View>
-            <View>
+            <View style={styles.mapcontainer }>
                 <MapView
                     provider={PROVIDER_GOOGLE}
-                    minZoomLevel={18 }
-                    maxZoomLevel={18 }
-                    style={{ width: 350, height: 350}}
-                    initialRegion={{
-                    latitude: data.lat,
-                    longitude: data.lng,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.0121,
-                    }}>
+                    style={styles.map}
+                    region={{
+                        latitude: data.lat,
+                        longitude: data.lng,
+                        latitudeDelta: 0.015,
+                        longitudeDelta: 0.0121,
+                    }}>   
                     <Marker title="test" icon={ icon}coordinate={{ latitude : data.lat, longitude : data.lng}}/>
                 </MapView>
             </View>
-            <View style={styles.timeContainer}><Text style={styles.textContainer('blue')}>{data.time}</Text><Text>에</Text>
-                <Text style={styles.textContainer('black')}></Text>
+            <View style={styles.timeContainer}>
+                <Text style={styles.textContainer('blue')}>{data.time}</Text><Text>에</Text>
             </View>
 
             <View style={styles.positionContainer}>
@@ -140,14 +136,11 @@ export default function Readable({ route }) {
             </View>
             
             <View>
-                <View style={styles.messageTitle }>
-                    <Text style={styles.textContainer('black')}>메세지 내용</Text>
-                </View>
+                <Text style={styles.textContainer('black')}>메세지 내용</Text>
                 <View style={styles.messageContent }>
                     <Text>{ data.context }</Text>
                 </View>
             </View>
-
         </View>
     );
 }
@@ -157,22 +150,29 @@ export default function Readable({ route }) {
 const styles = StyleSheet.create({
     allcontainer: {
         flex: 1,
+        marginTop: 5,
+        flexDirection: 'column',
         alignItems: 'center',
     },
-    fromtoContainer: {
-        marginLeft:10,
-        flexDirection: 'row',
-        alignSelf:'flex-start'    
+    mapcontainer: {
+        height: 300,
+        width: 350,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginTop: 30,
+        borderRadius: 20,
+        overflow: 'hidden',
+    },
+    map: {
+        width: 350,
+        height: 300,
+        ...StyleSheet.absoluteFillObject,
     },
     positionContainer: {
         flexWrap:'nowrap',
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
     },
     timeContainer: {
         flexWrap:'nowrap',
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
     },
     messageTitle: {
         marginTop:10,
@@ -185,15 +185,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black'
     },
-    buttonContainer: {
-        marginTop:10,
-        width: 100
-    },
     textContainer : (mycolor) =>  {
-        return{
+        return {
             fontWeight: 'bold',
             color:mycolor, 
-            fontSize: 15
+            fontSize: 50
         }
      }
 });
