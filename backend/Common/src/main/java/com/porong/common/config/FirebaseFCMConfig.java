@@ -51,7 +51,7 @@ public class FirebaseFCMConfig {
         String body = senderName + "님이 위도 : " + requestCreateMessageDto.getLatitude() + ", 경도 : " + requestCreateMessageDto.getLongitude() + " 에서 볼 수 있는 메시지를 보냈습니다.";
 
         HashMap<String, String> dataMap = new HashMap<>();
-        dataMap.put("alertId", requestCreateMessageDto.getDueTime().toString());
+        dataMap.put("alertId", "A" + requestCreateMessageDto.getDueTime().toString());
         dataMap.put("alertType", "message_condition");
         dataMap.put("messageId", String.valueOf(messageId));
         dataMap.put("senderNickname", senderName);
@@ -99,7 +99,7 @@ public class FirebaseFCMConfig {
         String body = message.getLocation() + "에서 " + message.getSender().getName() + "님이 보낸 메시지를 받았습니다.";
 
         HashMap<String, String> dataMap = new HashMap<>();
-        dataMap.put("alertId", message.getDueTime().toString());
+        dataMap.put("alertId", "A" + message.getDueTime().toString());
         dataMap.put("messageId", String.valueOf(message.getMessageId()));
         dataMap.put("alertType", "message_receive");
         dataMap.put("senderNickname", message.getSender().getName());
