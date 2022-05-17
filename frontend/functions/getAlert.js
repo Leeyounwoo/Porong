@@ -62,6 +62,7 @@ export function getAlert(remoteMessage) {
           senderNickname: senderNickname,
           isChecked: false,
           place: place,
+          senderProfile: senderProfile,
         }),
       )
         .then(() => {

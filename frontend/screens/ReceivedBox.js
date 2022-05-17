@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, Image, TouchableHighlight} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableHighlight,
+  ScrollView,
+} from 'react-native';
 
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
@@ -162,7 +169,6 @@ export default function ReceivedBox({navigation}) {
             marginVertical: 50,
             borderRadius: 5,
             borderWidth: 1,
-            // borderBottomWidth: 1,
             borderColor: 'black',
           }}>
           <ModalDropdown
@@ -176,7 +182,6 @@ export default function ReceivedBox({navigation}) {
             dropdownStyle={{
               height: 70,
             }}
-            // defaultTextStyle={{fontWeight: 'bold'}}
             textStyle={{color: 'black', fontWeight: '900'}}
             onSelect={(idx, value) => setLabel1(value)}
           />
@@ -187,7 +192,6 @@ export default function ReceivedBox({navigation}) {
             marginVertical: 50,
             borderRadius: 5,
             borderWidth: 1,
-            // borderBottomWidth: 1,
             borderColor: 'black',
           }}>
           <ModalDropdown
@@ -201,7 +205,6 @@ export default function ReceivedBox({navigation}) {
             dropdownStyle={{
               height: 70,
             }}
-            // defaultTextStyle={{fontWeight: 'bold'}}
             textStyle={{color: 'black', fontWeight: '900'}}
             onSelect={(idx, value) => setLabel(value)}
           />
@@ -242,84 +245,86 @@ export default function ReceivedBox({navigation}) {
         </View>
       )}
 
-      {label === '목록으로 보기' &&
-        label1 === '받은 메세지' &&
-        receivedMessagesKeys.map((key, keyidx) => {
-          if (receivedMessages[receivedMessagesKeys[keyidx]] !== undefined) {
-            return (
-              <TouchableHighlight
-                onPress={() => {
-                  goToMessageDetail1(receivedMessagesKeys[keyidx]);
-                }}
-                key={keyidx}>
-                <View style={styles.alarmcontainer}>
-                  <View style={styles.profilebox}>
-                    <Image
-                      source={{
-                        uri: receivedMessages[receivedMessagesKeys[keyidx]]
-                          .profileImgUrl,
-                      }}
-                      style={styles.profileimage}
-                    />
+      <ScrollView style={{marginBottom: 33}}>
+        {label === '목록으로 보기' &&
+          label1 === '받은 메세지' &&
+          receivedMessagesKeys.map((key, keyidx) => {
+            if (receivedMessages[receivedMessagesKeys[keyidx]] !== undefined) {
+              return (
+                <TouchableHighlight
+                  onPress={() => {
+                    goToMessageDetail1(receivedMessagesKeys[keyidx]);
+                  }}
+                  key={keyidx}>
+                  <View style={styles.alarmcontainer}>
+                    <View style={styles.profilebox}>
+                      <Image
+                        source={{
+                          uri: receivedMessages[receivedMessagesKeys[keyidx]]
+                            .profileImgUrl,
+                        }}
+                        style={styles.profileimage}
+                      />
+                    </View>
+                    <View style={styles.textbox}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          marginBottom: 5,
+                          color: 'black',
+                        }}>{`${
+                        receivedMessages[receivedMessagesKeys[keyidx]].sender
+                      }`}</Text>
+                      <Text>
+                        {receivedMessages[receivedMessagesKeys[keyidx]].title}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles.textbox}>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        marginBottom: 5,
-                        color: 'black',
-                      }}>{`${
-                      receivedMessages[receivedMessagesKeys[keyidx]].sender
-                    }`}</Text>
-                    <Text>
-                      {receivedMessages[receivedMessagesKeys[keyidx]].title}
-                    </Text>
+                </TouchableHighlight>
+              );
+            }
+          })}
+        {label === '목록으로 보기' &&
+          label1 === '보낸 메세지' &&
+          sendedMessagesKeys.map((key, keyidx) => {
+            if (sendedMessages[sendedMessagesKeys[keyidx]] !== undefined) {
+              return (
+                <TouchableHighlight
+                  onPress={() => {
+                    goToMessageDetail2(sendedMessagesKeys[keyidx]);
+                  }}
+                  key={keyidx}>
+                  <View style={styles.alarmcontainer}>
+                    <View style={styles.profilebox}>
+                      <Image
+                        source={{
+                          uri: sendedMessages[sendedMessagesKeys[keyidx]]
+                            .profileImgUrl,
+                        }}
+                        style={styles.profileimage}
+                      />
+                    </View>
+                    <View style={styles.textbox}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          marginBottom: 5,
+                          color: 'black',
+                        }}>{`${
+                        sendedMessages[sendedMessagesKeys[keyidx]].sender
+                      }`}</Text>
+                      <Text>
+                        {sendedMessages[sendedMessagesKeys[keyidx]].title}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableHighlight>
-            );
-          }
-        })}
-      {label === '목록으로 보기' &&
-        label1 === '보낸 메세지' &&
-        sendedMessagesKeys.map((key, keyidx) => {
-          if (sendedMessages[sendedMessagesKeys[keyidx]] !== undefined) {
-            return (
-              <TouchableHighlight
-                onPress={() => {
-                  goToMessageDetail2(sendedMessagesKeys[keyidx]);
-                }}
-                key={keyidx}>
-                <View style={styles.alarmcontainer}>
-                  <View style={styles.profilebox}>
-                    <Image
-                      source={{
-                        uri: sendedMessages[sendedMessagesKeys[keyidx]]
-                          .profileImgUrl,
-                      }}
-                      style={styles.profileimage}
-                    />
-                  </View>
-                  <View style={styles.textbox}>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        marginBottom: 5,
-                        color: 'black',
-                      }}>{`${
-                      sendedMessages[sendedMessagesKeys[keyidx]].sender
-                    }`}</Text>
-                    <Text>
-                      {sendedMessages[sendedMessagesKeys[keyidx]].title}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableHighlight>
-            );
-          }
-        })}
+                </TouchableHighlight>
+              );
+            }
+          })}
+      </ScrollView>
     </View>
   );
 }
