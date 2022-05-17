@@ -51,6 +51,17 @@ public class MemberController {
         return new ResponseEntity<>("인증번호가 같습니다. 가입진행", HttpStatus.OK);
     }
 
+    @PostMapping("/recommend")
+    public ResponseEntity<String> recommend(String phoneNumber) {
+        try {
+            memberService.recommend(phoneNumber);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("추천 문자 전송 실패", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("추천 문자 전송 성공", HttpStatus.OK);
+    }
+
     @PostMapping("/follow") // 팔로우 하기
     public ResponseEntity<String> follow(@RequestBody FollowDto followDto) {
         try {

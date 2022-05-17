@@ -11,4 +11,5 @@ public interface MemberService {
     public void follow(FollowDto followDto) throws Exception;
     public List<PhoneBookDto> fetchContact(List<String> phoneList) throws Exception;
     public void updateFCMToken(UpdateFCMTokenDto updateFCMTokenDto) throws Exception;
+    public void recommend(String phoneNumber) throws Exception;
 }
