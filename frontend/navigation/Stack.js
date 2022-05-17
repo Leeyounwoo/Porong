@@ -33,7 +33,10 @@ function HomeStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <HomeStack.Screen name="Profile" component={HomeScreen} />
+      <HomeStack.Screen name="Profile" options={{
+        title: '홈',
+        headerLeft: false,
+      }} component={HomeScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -86,7 +89,7 @@ function MessageStackScreen() {
         headerTitleAlign: 'center',
       }}>
       <MessageStack.Screen name="Messege" component={ReceivedBox} />
-      <AlarmStack.Screen name="Temp" component={TempScreen} />
+      <AlarmStack.Screen name="Temp" options={{ title:'상세 페이지'}} component={TempScreen} />
     </MessageStack.Navigator>
   );
 }
@@ -101,7 +104,7 @@ function AccountStackScreen() {
         headerTintColor: 'white',
         headerTitleAlign: 'center',
       }}>
-      <AccountStack.Screen name="setting" component={Setting} />
+      <AccountStack.Screen name="setting" options={{title:'환경설정'}} component={Setting} />
     </AccountStack.Navigator>
   );
 }

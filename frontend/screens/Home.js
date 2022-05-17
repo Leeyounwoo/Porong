@@ -81,13 +81,8 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
-        <Image
-          style={styles.imgstyle}
-          source={{uri: user ? user.profileUrl : ``}}
-        />
-        <Text style={{marginTop: 5, alignSelf: 'center'}}>
-          {user ? user.nickname : `로그인 처리가 안됬습니다.`}
-        </Text>
+      {user ?  <Image style={styles.imgstyle} source={{ uri:user.profileUrl }} />: null}
+        <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user? user.nickname : `로그인 처리가 안됬습니다.`}</Text>
       </View>
 
       <View style={styles.mapcontainer}>

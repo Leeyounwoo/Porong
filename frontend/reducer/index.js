@@ -21,8 +21,8 @@ export const placeContain = (lat, lng) => {
 export const typeContain = data => {
   return {type: TYPE, data};
 };
-export const messageContain = (title, content) => {
-  return {type: MESSAGE, title, content};
+export const messageContain = (title, content, pic) => {
+  return {type: MESSAGE, title, content, pic};
 };
 export const positionContain = (lat, lng) => {
   return {type: POSITION, lat, lng};
@@ -43,6 +43,7 @@ const init = {
   title: '',
   contentText: '',
   secret: false,
+  contentUrl: '',
 };
 
 //reducer
@@ -70,6 +71,7 @@ const reducer = (state = init, action) => {
         ...state,
         title: action.title,
         contentText: action.content,
+        contentUrl: action.pic,
       };
     case 'ISSECRET':
       return {
