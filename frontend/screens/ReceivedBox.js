@@ -5,13 +5,14 @@ import {
   Text,
   Image,
   TouchableHighlight,
+  ScrollView,
 } from 'react-native';
 
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import ModalDropdown from 'react-native-modal-dropdown';
 import axios from 'axios';
-import { useStore } from 'react-redux';
+import {useStore} from 'react-redux';
 
 export default function ReceivedBox({navigation}) {
   const store = useStore();
@@ -31,26 +32,43 @@ export default function ReceivedBox({navigation}) {
 
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
 
-  // 알림 클릭시 메세지 디테일로 이동
-  const goToMessageDetail = messageId => {
+  // 받은 메세지 클릭시 상세 페이지로 이동
+  const goToMessageDetail1 = messageId => {
     navigation.push('Temp', {
       messageId: messageId,
+      amISend: false,
     });
   };
+
+  // 보낸 메세지 클릭시 상세 디테일로 이동
+  const goToMessageDetail2 = messageId => {
+    navigation.push('Temp', {
+      messageId: messageId,
+      amISend: true,
+    });
+  };
+
   useEffect(() => {
     if (label == '지도로 보기') {
-      axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${store.getState().userreducer.memberId}/getsentmessages`)
+      axios
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/message/${
+            store.getState().userreducer.memberId
+          }/getsentmessages`,
+        )
         .then(res => {
           let temp = res.data;
           let show = [];
           temp.map((single, idx) => {
             show.push(single);
-          })
+          });
           setMarkers(show);
-        }).catch(err => { console.log(err); });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-  },[label])
-
+  }, [label]);
 
   const btnClick = () => {
     setUlFlag(true);
@@ -101,9 +119,11 @@ export default function ReceivedBox({navigation}) {
       });
     // 보낸 메세지
     axios
-      .get(`http://k6c102.p.ssafy.io:8080/v1/message/${
+      .get(
+        `http://k6c102.p.ssafy.io:8080/v1/message/${
           store.getState().userreducer.memberId
-        }/getsentmessages`)
+        }/getsentmessages`,
+      )
       .then(res => {
         const tmessages = res.data;
         tmessages.map(async (message, midx) => {
@@ -149,7 +169,6 @@ export default function ReceivedBox({navigation}) {
             marginVertical: 50,
             borderRadius: 5,
             borderWidth: 1,
-            // borderBottomWidth: 1,
             borderColor: 'black',
           }}>
           <ModalDropdown
@@ -163,7 +182,6 @@ export default function ReceivedBox({navigation}) {
             dropdownStyle={{
               height: 70,
             }}
-            // defaultTextStyle={{fontWeight: 'bold'}}
             textStyle={{color: 'black', fontWeight: '900'}}
             onSelect={(idx, value) => setLabel1(value)}
           />
@@ -174,7 +192,6 @@ export default function ReceivedBox({navigation}) {
             marginVertical: 50,
             borderRadius: 5,
             borderWidth: 1,
-            // borderBottomWidth: 1,
             borderColor: 'black',
           }}>
           <ModalDropdown
@@ -188,7 +205,6 @@ export default function ReceivedBox({navigation}) {
             dropdownStyle={{
               height: 70,
             }}
-            // defaultTextStyle={{fontWeight: 'bold'}}
             textStyle={{color: 'black', fontWeight: '900'}}
             onSelect={(idx, value) => setLabel(value)}
           />
@@ -203,98 +219,112 @@ export default function ReceivedBox({navigation}) {
             style={{width: 350, height: 350}}
             initialRegion={{
               latitude: 35.9255,
-              longitude:  127.8610,
+              longitude: 127.861,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
-            {markers != null ? markers.map((single, idx) => {
-              return <Marker key={idx}
-                title={`${single.latitude}, ${single.longitude}`}
-                coordinate={{ latitude: single.latitude, longitude: single.longitude }}>
-                <Image source={{ uri: single.receiverProfileUrl }} style={{ height: 35, width: 35, borderRadius: 100 }} /></Marker>
-            }) : null}
+            {markers != null
+              ? markers.map((single, idx) => {
+                  return (
+                    <Marker
+                      key={idx}
+                      title={`${single.latitude}, ${single.longitude}`}
+                      coordinate={{
+                        latitude: single.latitude,
+                        longitude: single.longitude,
+                      }}>
+                      <Image
+                        source={{uri: single.receiverProfileUrl}}
+                        style={{height: 35, width: 35, borderRadius: 100}}
+                      />
+                    </Marker>
+                  );
+                })
+              : null}
           </MapView>
         </View>
       )}
 
-      {label === '목록으로 보기' &&
-        label1 === '받은 메세지' &&
-        receivedMessagesKeys.map((key, keyidx) => {
-          if (receivedMessages[receivedMessagesKeys[keyidx]] !== undefined) {
-            return (
-              <TouchableHighlight
-                onPress={() => {
-                  goToMessageDetail(receivedMessagesKeys[keyidx]);
-                }}
-                key={keyidx}>
-                <View style={styles.alarmcontainer}>
-                  <View style={styles.profilebox}>
-                    <Image
-                      source={{
-                        uri: receivedMessages[receivedMessagesKeys[keyidx]]
-                          .profileImgUrl,
-                      }}
-                      style={styles.profileimage}
-                    />
+      <ScrollView style={{marginBottom: 33}}>
+        {label === '목록으로 보기' &&
+          label1 === '받은 메세지' &&
+          receivedMessagesKeys.map((key, keyidx) => {
+            if (receivedMessages[receivedMessagesKeys[keyidx]] !== undefined) {
+              return (
+                <TouchableHighlight
+                  onPress={() => {
+                    goToMessageDetail1(receivedMessagesKeys[keyidx]);
+                  }}
+                  key={keyidx}>
+                  <View style={styles.alarmcontainer}>
+                    <View style={styles.profilebox}>
+                      <Image
+                        source={{
+                          uri: receivedMessages[receivedMessagesKeys[keyidx]]
+                            .profileImgUrl,
+                        }}
+                        style={styles.profileimage}
+                      />
+                    </View>
+                    <View style={styles.textbox}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          marginBottom: 5,
+                          color: 'black',
+                        }}>{`${
+                        receivedMessages[receivedMessagesKeys[keyidx]].sender
+                      }`}</Text>
+                      <Text>
+                        {receivedMessages[receivedMessagesKeys[keyidx]].title}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles.textbox}>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        marginBottom: 5,
-                        color: 'black',
-                      }}>{`${
-                      receivedMessages[receivedMessagesKeys[keyidx]].sender
-                    }`}</Text>
-                    <Text>
-                      {receivedMessages[receivedMessagesKeys[keyidx]].title}
-                    </Text>
+                </TouchableHighlight>
+              );
+            }
+          })}
+        {label === '목록으로 보기' &&
+          label1 === '보낸 메세지' &&
+          sendedMessagesKeys.map((key, keyidx) => {
+            if (sendedMessages[sendedMessagesKeys[keyidx]] !== undefined) {
+              return (
+                <TouchableHighlight
+                  onPress={() => {
+                    goToMessageDetail2(sendedMessagesKeys[keyidx]);
+                  }}
+                  key={keyidx}>
+                  <View style={styles.alarmcontainer}>
+                    <View style={styles.profilebox}>
+                      <Image
+                        source={{
+                          uri: sendedMessages[sendedMessagesKeys[keyidx]]
+                            .profileImgUrl,
+                        }}
+                        style={styles.profileimage}
+                      />
+                    </View>
+                    <View style={styles.textbox}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          marginBottom: 5,
+                          color: 'black',
+                        }}>{`${
+                        sendedMessages[sendedMessagesKeys[keyidx]].sender
+                      }`}</Text>
+                      <Text>
+                        {sendedMessages[sendedMessagesKeys[keyidx]].title}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableHighlight>
-            );
-          }
-        })}
-      {label === '목록으로 보기' &&
-        label1 === '보낸 메세지' &&
-        sendedMessagesKeys.map((key, keyidx) => {
-          if (sendedMessages[sendedMessagesKeys[keyidx]] !== undefined) {
-            return (
-              <TouchableHighlight
-                onPress={() => {
-                  goToMessageDetail(sendedMessagesKeys[keyidx]);
-                }}
-                key={keyidx}>
-                <View style={styles.alarmcontainer}>
-                  <View style={styles.profilebox}>
-                    <Image
-                      source={{
-                        uri: sendedMessages[sendedMessagesKeys[keyidx]]
-                          .profileImgUrl,
-                      }}
-                      style={styles.profileimage}
-                    />
-                  </View>
-                  <View style={styles.textbox}>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                        marginBottom: 5,
-                        color: 'black',
-                      }}>{`${
-                      sendedMessages[sendedMessagesKeys[keyidx]].sender
-                    }`}</Text>
-                    <Text>
-                      {sendedMessages[sendedMessagesKeys[keyidx]].title}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableHighlight>
-            );
-          }
-        })}
+                </TouchableHighlight>
+              );
+            }
+          })}
+      </ScrollView>
     </View>
   );
 }

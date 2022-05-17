@@ -3,25 +3,29 @@ import {StyleSheet, View, Text, Image} from 'react-native';
 
 export default function MessageReceiveAlert({
   senderNickname,
-  time,
   place,
   isChecked,
+  senderProfile,
 }) {
   return (
     <View style={styles.alarmcompletion}>
       <View style={styles.alarmcontainer}>
         <View style={styles.profilebox}>
           <Image
-            source={{uri: 'https://reactjs.org/logo-og.png'}}
+            source={
+              senderProfile === undefined
+                ? require('../../assets/icons/user.png')
+                : {uri: senderProfile}
+            }
             style={styles.profileimage}
           />
         </View>
         <View style={styles.textbox}>
           <Text style={styles.text}>
+            <Text style={styles.textbold}>{`[${place}]`}</Text>
+            <Text> 에서 </Text>
             <Text style={styles.textbold}>{`${senderNickname}`}</Text>
-            <Text> 님이 </Text>
-            <Text style={styles.textbold}>{`[${time}] [${'place'}]`}</Text>
-            <Text> 에서 볼 수 있는 메세지를 보냈습니다.</Text>
+            <Text> 님이 보낸 메세지를 받았습니다.</Text>
           </Text>
         </View>
         {!isChecked && <View style={styles.circle}></View>}
@@ -45,7 +49,6 @@ const styles = StyleSheet.create({
   },
   profilebox: {
     width: 70,
-    backgroundColor: 'blue',
     height: 70,
     borderRadius: 70,
     marginLeft: 12,

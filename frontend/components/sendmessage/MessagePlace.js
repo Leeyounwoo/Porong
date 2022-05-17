@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet,Dimensions, View, Text,Button } from 'react-native';
+import {StyleSheet,Dimensions, View, Text,Button,TouchableOpacity } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import { TextInput } from 'react-native-gesture-handler';
@@ -29,9 +29,11 @@ export default function MessagePlace({ navigation}) {
     }, []);
     
     useEffect(() => {
-        if (totalpos) {
+        if (totalpos.lat != 0 && totalpos.lng != 0) {
             Geocoder.from(totalpos).then(json => {
                 setAddress(json.results[0].formatted_address);
+            }).catch(err => {
+                console.log("find? ====================================", err);
             })
         }
     }, [totalpos]);
@@ -72,17 +74,42 @@ export default function MessagePlace({ navigation}) {
                 <Button  title="검색" onPress={searchAddress}></Button>
             </View>
 
-            <View>
-        <Button title="이전" onPress={prev}></Button>
-        <Button title="다음" onPress={next}></Button>
-
+            <View
+                style={{
+                flex: 1.1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                marginHorizontal: 10,
+                marginBottom: 10,
+            }}>
+            <TouchableOpacity
+          style={{...styles.dateBtn, backgroundColor: 'grey'}}
+          onPress={() => navigation.goBack()}>
+          <Text style={styles.dateText}>이전</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{...styles.dateBtn, backgroundColor: '#4385E0'}}
+          onPress={next}>
+          <Text style={styles.dateText}>다음</Text>
+        </TouchableOpacity>
             </View>
-        </View>
+            </View>
     )
 
 }
 
 const styles = StyleSheet.create({
+    dateBtn: {
+        height: 35,
+        width: 100,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      dateText: {
+        color: 'white',
+      },
     selectPositionContainer: {
         marginTop: 40,
     },

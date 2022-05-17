@@ -8,6 +8,7 @@ import {
   MessageStackScreen,
   SendStackScreen,
 } from './Stack';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 
@@ -86,13 +87,9 @@ const Tabs = () => {
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 15,
-          left: 20,
-          right: 20,
           elevation: 3,
           backgroundColor: '#ffffff',
-          borderRadius: 15,
-          height: 80,
+          height: 60,
           ...styles.shadow,
         },
       }}>
@@ -101,6 +98,7 @@ const Tabs = () => {
         component={HomeStackScreen}
         listeners={resetHomeStackOnTabPress }
         options={{
+          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -124,6 +122,7 @@ const Tabs = () => {
         component={AlarmStackScreen}
         listeners={resetHomeStackOnTabPress }
         options={{
+          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -147,6 +146,7 @@ const Tabs = () => {
         component={SendStackScreen}
         listeners={resetHomeStackOnTabPress }
         options={{
+          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../assets/icons/send.png')}
@@ -168,6 +168,7 @@ const Tabs = () => {
         component={MessageStackScreen}
         listeners={resetHomeStackOnTabPress }
         options={{
+          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -191,6 +192,7 @@ const Tabs = () => {
         component={AccountStackScreen}
         listeners={resetHomeStackOnTabPress }
         options={{
+          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
           tabBarIcon: ({focused}) => (
             <View
               style={{
