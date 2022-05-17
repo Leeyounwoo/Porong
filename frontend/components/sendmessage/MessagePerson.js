@@ -116,7 +116,7 @@ export default function MessagePerson({navigation}) {
       });
   };
 
-  const next = (id, isSignin) => {
+  const next = (id, isSignin, phoneNumber) => {
     if (isSignin) {
       AsyncStorage.getItem('user')
         .then(res => {
@@ -128,7 +128,11 @@ export default function MessagePerson({navigation}) {
       store.dispatch(personContain(store.getState().userreducer.memberId, id));
       navigation.navigate('Time');
     } else {
-      console.log('no');
+      axios({
+        url: 'http://k6c102.p.ssafy.io:8080/v1/member/recommend/',
+        method: 'post',
+        params: phoneNumber,
+      });
     }
   };
 
@@ -223,7 +227,7 @@ export default function MessagePerson({navigation}) {
               alignItems: 'center',
             }}
             onPress={() => {
-              next(item.memberId, item.signup);
+              next(item.memberId, item.signup, item.phoneNumber);
             }}>
             <Image
               style={{width: 25, height: 25}}

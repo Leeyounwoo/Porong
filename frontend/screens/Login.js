@@ -51,13 +51,14 @@ export default function Login({navigation}) {
 
           if (res.data.firstCheck) {
             alert('회원가입을 위해 새로운 페이지로 이동합니다.');
-            navigation.navigate('signin', {
+            navigation.navigate('Signin', {
               properties: profile.properties,
               id: res.data.authMember.kakaoId,
             });
+          } else {
+            AsyncStorage.setItem('user', JSON.stringify(res));
+            navigation.navigate('Main');
           }
-          AsyncStorage.setItem('user', JSON.stringify(res));
-          navigation.navigate('Main');
         })
         .catch(err => console.log(err));
       // alert('회원가입을 위해 새로운 페이지로 이동합니다.');
