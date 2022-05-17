@@ -19,6 +19,7 @@ export default function Alarm({navigation}) {
   const [alertKeys, setAlertKeys] = useState([]);
   const [alertLocations, setAlertLocations] = useState({});
   const [ready, setReady] = useState(false);
+  console.log(alertKeys);
 
   const updateChecked = async key => {
     // alertLocations[alertKeys[idx]]['isChecked']
@@ -26,12 +27,8 @@ export default function Alarm({navigation}) {
     value['isChecked'] = true;
     AsyncStorage.setItem(key, JSON.stringify(value));
     setAlertLocations(prev => {
-      return {[key]: value};
+      return {...prev, [key]: value};
     });
-
-    // AsyncStorage.getItem(key, (err, result) => {
-    //   console.log('result', result)
-    // })
   };
 
   // 알림 클릭시 메세지 디테일로 이동

@@ -14,7 +14,6 @@ export default function Login({navigation}) {
     messaging()
       .getToken()
       .then(token => {
-        console.log('토큰', token);
         setFfcmToken(token);
       });
   }, []);
@@ -23,27 +22,8 @@ export default function Login({navigation}) {
     try {
       await KakaoSDK.init('066f28139628e8b5440363889440f7be');
       const tokens = await KakaoSDK.login();
-      console.log(tokens);
       const profile = await KakaoSDK.getProfile();
 
-      console.log(profile);
-      console.log(
-        `http://k6c102.p.ssafy.io:8080/v1/oauth/login?token=${tokens.access_token}`,
-      );
-      // axios
-      //   .post(
-      //     'http://k6c102.p.ssafy.io:8080/v1/member/v1/member/authentication',
-      //     {
-      //       accessToken: tokens.access_token,
-      //       kakaoId: profile.id,
-      //     },
-      //   )
-      //   .then(res => {
-      //     console.log(res);
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
       axios
         .get(
           `http://k6c102.p.ssafy.io:8080/v1/oauth/login?token=${tokens.access_token}`,
@@ -59,7 +39,6 @@ export default function Login({navigation}) {
             ),
           );
 
-          console.log('윤우', res);
           axios
             .post(`http://k6c102.p.ssafy.io:8080/v1/member/updateFCMToken`, {
               fcmToken: fcmToken,
