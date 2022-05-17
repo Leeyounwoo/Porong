@@ -1,13 +1,12 @@
 package com.porong.common.controller;
 
-
-
 import com.porong.common.dto.message.*;
 import com.porong.common.service.MemberServiceImpl;
 import com.porong.common.service.MessageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +19,6 @@ import java.util.List;
 public class MessageController {
 
     private final MessageService messageService;
-
 
     // 메세지 보내기
     @ResponseStatus(HttpStatus.CREATED)
@@ -79,6 +77,17 @@ public class MessageController {
     @ApiOperation(value = "확인 안한 메세지들 중 가장 빠른 시간 조건 조회")
     LocalDateTime getRecentMessageTime(@PathVariable("memberId") Long memberId) {
         return messageService.getRecentMessageTime(memberId);
+    }
+
+    @PostMapping("/postSatisfyFCM")
+    public ResponseEntity<String> postSatisfyMessage(long messageId) throws Exception{
+        try{
+            messageService.postSatisfyMessage(messageId);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("해당 요청을 처리할 수 없습니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("요청 완료", HttpStatus.OK);
     }
 
     // 보류

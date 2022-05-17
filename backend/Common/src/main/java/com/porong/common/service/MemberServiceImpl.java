@@ -103,15 +103,7 @@ public class MemberServiceImpl implements MemberService {
             String phoneNumber = phoneList.get(i);
             boolean isFind = MEMBER_REPOSITORY.existsByPhoneNumber(phoneNumber);
 
-            if(!isFind) { // 회원가입이 되지 않은 번호일 경우
-                tempBookDto.setSignup(false);
-                tempBookDto.setProfileUrl(null);
-                tempBookDto.setEmail(null);
-                tempBookDto.setPhoneNumber(phoneNumber);
-                tempBookDto.setMemberId(-1);
-                phoneBookList.add(tempBookDto);
-            }
-            else { // 회원가입이 된 경우
+            if(isFind) { // 가입된 번호일 경우
                 Member signUpEdMember = MEMBER_REPOSITORY.findByPhoneNumber(phoneNumber);
                 tempBookDto.setSignup(true);
                 tempBookDto.setMemberId(signUpEdMember.getMemberId());

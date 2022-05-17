@@ -65,7 +65,7 @@ public class MessageService {
 
         // FCM 알림 로직 시작
         try {
-            firebaseFCMConfig.postNormalMessage(requestCreateMessageDto, sender.getName(), receiverId, messageId);
+            firebaseFCMConfig.postNormalMessage(message, sender, receiver);
         }
         catch (Exception e) {
             new MemberNotFoundException();
@@ -175,15 +175,6 @@ public class MessageService {
 
            ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
 
-           // 본문 만족 알림 로직 시작
-           try {
-               firebaseFCMConfig.makeSatisfyMessage(message);
-           }
-           catch (Exception e) {
-               throw new MemberNotFoundException();
-           }
-           // 본문 만족 알림 로직 끝
-
            return responseCheckedMessageDto;
        }
 
@@ -191,6 +182,21 @@ public class MessageService {
 
        return responseCheckedMessageDto; // 해당 없으면 빈 값 반환
 
+    }
+
+    public void postSatisfyMessage(long messageId) throws Exception {
+        if(!messageRepository.existsById(messageId)) throw new Exception();
+
+        Message message = messageRepository.getById(messageId);
+
+        // 본문 만족 알림 로직 시작
+        try {
+            firebaseFCMConfig.postSatisfyMessage(message);
+        }
+        catch (Exception e) {
+            throw new MessageNotFoundException();
+        }
+        // 본문 만족 알림 로직 끝
     }
 
 

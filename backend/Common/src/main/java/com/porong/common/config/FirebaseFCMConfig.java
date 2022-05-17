@@ -3,6 +3,7 @@ package com.porong.common.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.porong.common.domain.Member;
 import com.porong.common.domain.Message;
 import com.porong.common.dto.firebase.FcmNormalNotifyMessage;
 import com.porong.common.dto.message.RequestCreateMessageDto;
@@ -10,9 +11,12 @@ import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,15 +28,15 @@ public class FirebaseFCMConfig {
     private final MemberRepository MEMBER_REPOSITORY;
     private final ObjectMapper objectMapper;
 
-    public void postNormalMessage(RequestCreateMessageDto requestCreateMessageDto, String senderName, long toMemberId, long messageId) throws Exception {
-        if(!MEMBER_REPOSITORY.existsByMemberId(toMemberId)) throw new Exception();
+    public void postNormalMessage(Message message, Member sender, Member receiver) throws Exception {
+        if(!MEMBER_REPOSITORY.existsByMemberId(receiver.getMemberId())) throw new Exception();
 
-        String targetToken = MEMBER_REPOSITORY.findByMemberId(toMemberId).getFcmToken();
+        String targetToken = receiver.getFcmToken();
 
-        String message = makeNormalMessage(targetToken, requestCreateMessageDto, senderName, messageId);
+        String normalMessage = makeNormalMessage(message, sender, receiver);
 
         OkHttpClient okHttpClient = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+        RequestBody requestBody = RequestBody.create(normalMessage, MediaType.get("application/json; charset=utf-8"));
 
         Request request = new Request.Builder()
                                      .url(POST_API_URL)
@@ -45,23 +49,30 @@ public class FirebaseFCMConfig {
         System.out.println(response.body().string());
     }
 
-    public String makeNormalMessage(String targetToken, RequestCreateMessageDto requestCreateMessageDto, String senderName, long messageId) throws JsonProcessingException {
+    public String makeNormalMessage(Message message, Member sender, Member receiver) throws JsonProcessingException {
 
         String title = "새로운 메시지가 도착했습니다.";
-        String body = senderName + "님이 위도 : " + requestCreateMessageDto.getLatitude() + ", 경도 : " + requestCreateMessageDto.getLongitude() + " 에서 볼 수 있는 메시지를 보냈습니다.";
+        LocalDateTime messageTime = message.getDueTime();
+        DateTimeFormatter timePattern = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+        DateTimeFormatter alertPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        String time = messageTime.format(timePattern);
+        String alertId = messageTime.format(alertPattern);
+
+        String body = sender.getName() + "님이 " + time + " " + message.getLocation() + " 에서 볼 수 있는 메시지를 보냈습니다.";
 
         HashMap<String, String> dataMap = new HashMap<>();
-        dataMap.put("alertId", "A" + requestCreateMessageDto.getDueTime().toString());
+        dataMap.put("alertId", "A" + alertId);
         dataMap.put("alertType", "message_condition");
-        dataMap.put("messageId", String.valueOf(messageId));
-        dataMap.put("senderNickname", senderName);
-        dataMap.put("place", "장덕동 1333"); // 수정 필요
-        dataMap.put("time", "2022년 5월 16일 00시 00분");
+        dataMap.put("messageId", String.valueOf(message.getMessageId()));
+        dataMap.put("senderNickname", sender.getName());
+        dataMap.put("place", message.getLocation()); // 수정 필요
+        dataMap.put("time", time);
 
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
                                                                               .validate_only(false)
                                                                               .message(FcmNormalNotifyMessage.NormalMessage.builder()
-                                                                                                                           .token(targetToken)
+                                                                                                                           .token(receiver.getFcmToken())
                                                                                                                            .data(dataMap)
                                                                                                                            .notification(FcmNormalNotifyMessage.Notification.builder()
                                                                                                                                                                             .title(title)
@@ -74,8 +85,6 @@ public class FirebaseFCMConfig {
 
     public void postSatisfyMessage(Message message) throws Exception {
         if(!MEMBER_REPOSITORY.existsByMemberId(message.getReceiver().getMemberId())) throw new Exception();
-
-        String targetToken = MEMBER_REPOSITORY.findByMemberId(message.getReceiver().getMemberId()).getFcmToken();
 
         String FCMmessage = makeSatisfyMessage(message);
 
@@ -96,14 +105,19 @@ public class FirebaseFCMConfig {
     public String makeSatisfyMessage(Message message) throws JsonProcessingException {
 
         String title = "메시지가 도착했습니다.";
+        LocalDateTime messageTime = message.getDueTime();
+        DateTimeFormatter alertPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        String alertId = messageTime.format(alertPattern);
+
         String body = message.getLocation() + "에서 " + message.getSender().getName() + "님이 보낸 메시지를 받았습니다.";
 
         HashMap<String, String> dataMap = new HashMap<>();
-        dataMap.put("alertId", "A" + message.getDueTime().toString());
+        dataMap.put("alertId", "A" + alertId);
         dataMap.put("messageId", String.valueOf(message.getMessageId()));
         dataMap.put("alertType", "message_receive");
         dataMap.put("senderNickname", message.getSender().getName());
-        dataMap.put("place", "장덕동 1333"); // 수정 필요
+        dataMap.put("place", message.getLocation());
 
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
                 .validate_only(false)
