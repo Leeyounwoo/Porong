@@ -20,32 +20,11 @@ public class RankingZset {
         this.SetOperations = redisTemplate.opsForSet();
     }
 
-    public void ramenViewCount(Long ramenId) {
-        zSetOperations.incrementScore("ramenviewcount", String.valueOf(ramenId), 1);
+    public void locationCount(String locationName) {
+        zSetOperations.incrementScore("locationcount", String.valueOf(locationName), 1);
     }
-
-//    public void ramenLoginViewCount(Long ramenId) {
-//        zSetOperations.incrementScore("ramenloginviewcount", String.valueOf(ramenId), 1);
-//    }
-
-    public void ramenLikeCountUp(Long ramenId) {
-        zSetOperations.incrementScore("ramenlikecount", String.valueOf(ramenId), 1);
-    }
-
-    public void ramenLikeCountDown(Long ramenId){
-        zSetOperations.incrementScore("ramenlikecount", String.valueOf(ramenId), -1);
-    }
-
-    public List<String> getRamenViewId() {
-        return new ArrayList<>(zSetOperations.reverseRange("ramenviewcount", 0,1));
-    }
-
-//    public List<String> getRamenLoginViewId() {
-//        return new ArrayList<>(zSetOperations.reverseRange("ramenloginviewcount", 0,1));
-//    }
-
-    public List<String> getRamenLikeId() {
-        return new ArrayList<>(zSetOperations.reverseRange("ramenlikecount", 0,1));
+    public List<String> getLocation() {
+        return new ArrayList<>(zSetOperations.reverseRange("ramenviewcount", 0,2));
     }
 
 }

@@ -14,8 +14,6 @@ public class Location implements Serializable {
     @org.springframework.data.annotation.Id
     private Long Id;
     @Indexed
-    private Long ramenId;
-    @Indexed
-    private Long memberId;
+    private String location;
 
 }

@@ -1,5 +1,7 @@
 package com.porong.ranking.controller;
 
+import com.porong.ranking.domain.LocationVo;
+import com.porong.ranking.domain.RequestDto;
 import com.porong.ranking.service.ClearService;
 import com.porong.ranking.service.LocationService;
 import lombok.RequiredArgsConstructor;
@@ -24,38 +26,26 @@ public class RankingController {
     @Autowired
     private final ClearService clearService;
 
-    @GetMapping("/view/{ramenId}")
-    public void ramenView(@PathVariable("ramenId") Long ramenId){//, @PathVariable("userIp") Long userIp) {
-
-        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String ip = req.getHeader("X-FORWARDED-FOR");
-        if (ip == null) {
-            ip = req.getRemoteAddr();
+    @PostMapping("/postmessage")
+    public void ramenView(@RequestBody RequestDto requestDto){
+        String coordinate = requestDto.getLongitude() +","+ requestDto.getLatitude();
+        String locationName = null;
+        locationName = locationService.getlocation(coordinate);
+        if (locationName != null) {
+            locationService.countLocation(locationName);
         }
-        String userIp = ip;
-        System.out.println(ip);
-        locationService.saveRamenView(ramenId, userIp);
-        System.out.println("not login view" + ramenId);
     }
 
-    @GetMapping("/view/{ramenId}/{memberId}")
-    public void ramenLoginView(@PathVariable("ramenId") Long ramenId, @PathVariable("memberId") Long memberId) {
-        locationService.saveRamenLoginView(ramenId, memberId);
-        System.out.println("login view" + ramenId +" "+memberId);
+    @GetMapping("/daily")
+    public List<LocationVo> fetchDaliyRanking() {
+        List<String> locations = locationService.getDaliyRanking();
+        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
     }
 
-
-    @GetMapping("/like/{ramenId}/{memberId}")
-    public void ramenLike(@PathVariable("ramenId") Long ramenId, @PathVariable("memberId") Long memberId) {
-        locationService.saveRamenLike(ramenId, memberId);
-        System.out.println("like" + ramenId +" "+memberId);
-    }
-
-    @GetMapping("/ramen")
-    public List<RamenVo> fetchPopRamen() {
-        List<String> ramens = locationService.getPopRamen();
-        System.out.println("read");
-        return ramens.stream().map(RamenVo::new).collect(Collectors.toList());
+    @GetMapping("/total")
+    public List<LocationVo> fetchTotalRanking() {
+        List<String> locations = locationService.getTotalRanking();
+        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
     }
 
     @DeleteMapping("/clear")
