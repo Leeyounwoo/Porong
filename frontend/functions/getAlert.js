@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function getAlert(remoteMessage) {
+  console.log('새로운 알림', remoteMessage);
   const alertId = remoteMessage.data.alertId;
   const alertType = remoteMessage.data.alertType;
   const messageId = remoteMessage.data.messageId;

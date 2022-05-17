@@ -16,7 +16,8 @@ function dateTrans(day) {
 //데이터의 위치를
 export default function Temp({navigation, route}) {
   const store = useStore();
-  const {messageId} = route.params;
+  const {messageId, amISend} = route.params;
+  console.log('amISend', amISend, messageId);
   const [flag, setFlag] = useState(false);
   const [senderNickName, setSenderNickName] = useState('');
   const [time, setTime] = useState('');
@@ -73,9 +74,9 @@ export default function Temp({navigation, route}) {
 
   return (
     <View>
-      {flag === true && (
+      {(amISend === true || (amISend === false && flag === true)) && (
         <Readable
-          amISend={false}
+          amISend={amISend}
           nickName={senderNickName}
           time={time}
           place={place}
@@ -84,9 +85,9 @@ export default function Temp({navigation, route}) {
           longitude={longitude}
         />
       )}
-      {flag === false && (
+      {amISend === false && flag === false && (
         <Notreadable
-          amISend={false}
+          amISend={amISend}
           nickName={senderNickName}
           time={time}
           place={place}

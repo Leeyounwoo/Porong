@@ -6,6 +6,7 @@ import {
   Button,
   Image,
   TouchableHighlight,
+  ScrollView,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -19,11 +20,27 @@ export default function Alarm({navigation}) {
   const [alertLocations, setAlertLocations] = useState({});
   const [ready, setReady] = useState(false);
 
+  const updateChecked = async key => {
+    // alertLocations[alertKeys[idx]]['isChecked']
+    let value = alertLocations[key];
+    value['isChecked'] = true;
+    AsyncStorage.setItem(key, JSON.stringify(value));
+    setAlertLocations(prev => {
+      return {[key]: value};
+    });
+
+    // AsyncStorage.getItem(key, (err, result) => {
+    //   console.log('result', result)
+    // })
+  };
+
   // 알림 클릭시 메세지 디테일로 이동
-  const goToMessageDetail = key => {
+  const goToMessageDetail = async key => {
+    await updateChecked(key);
     console.log(alertLocations[key]['messageId']);
     navigation.push('Temp', {
       messageId: alertLocations[key]['messageId'],
+      amISend: false,
     });
   };
 
@@ -41,15 +58,14 @@ export default function Alarm({navigation}) {
   // 알림ID 배열 업데이트
   const updateAlertKeys = keys => {
     keys.map((key, idx) => {
-      setAlertKeys(prev => [...prev, keys[idx]]);
+      if (alertKeys.includes(keys[idx]) === false) {
+        setAlertKeys(prev => [...prev, keys[idx]]);
+      }
     });
   };
 
   // Async Storage에 있는 데이터 가져오기
   useEffect(() => {
-    AsyncStorage.getItem('receivedMessages', (err, result) => {
-      console.log('receivedMessages', result);
-    });
     AsyncStorage.getAllKeys((err, keys) => {
       const talertKeys = [];
       keys.map((key, idx) => {
@@ -57,11 +73,13 @@ export default function Alarm({navigation}) {
           talertKeys.push(keys[idx]);
         }
       });
-      AsyncStorage.multiGet(keys, async (err, stores) => {
+      AsyncStorage.multiGet(talertKeys, async (err, stores) => {
         await updateAlertLocations(stores);
         await updateAlertKeys(talertKeys);
       });
     });
+    console.log('상태', alertLocations);
+    console.log('상태 키', alertKeys);
   }, []);
 
   const deleteAll = () => {
@@ -78,68 +96,73 @@ export default function Alarm({navigation}) {
     });
   };
   return (
-    <View style={styles.allcontainer}>
-      <Button onPress={deleteAll} title={'지우기'}></Button>
+    <ScrollView style={{marginBottom: 170}}>
+      <View style={styles.allcontainer}>
+        {/* <Button onPress={deleteAll} title={'지우기'}></Button> */}
 
-      {alertKeys.map((key, idx) => {
-        if (
-          alertLocations[alertKeys[idx]]['alertType'] === 'message_condition'
-        ) {
-          return (
-            <TouchableHighlight
-              onPress={() => {
-                goToMessageDetail(alertKeys[idx]);
-              }}
-              key={idx}>
-              <MessageReceiveAlert
-                senderNickname={
-                  alertLocations[alertKeys[idx]]['senderNickname']
-                }
-                time={alertLocations[alertKeys[idx]]['time']}
-                place={alertLocations[alertKeys[idx]]['place']}
-                isChecked={alertLocations[alertKeys[idx]]['isChecked']}
-              />
-            </TouchableHighlight>
-          );
-        } else if (
-          alertLocations[alertKeys[idx]]['alertType'] === 'time_satisfaction'
-        ) {
-          return (
-            <TouchableHighlight
-              onPress={() => {
-                goToMessageDetail(alertKeys[idx]);
-              }}
-              key={idx}>
-              <TimeSatisfactionAlert
-                senderNickname={
-                  alertLocations[alertKeys[idx]]['senderNickname']
-                }
-                place={alertLocations[alertKeys[idx]]['place']}
-                isChecked={alertLocations[alertKeys[idx]]['isChecked']}
-              />
-            </TouchableHighlight>
-          );
-        } else if (
-          alertLocations[alertKeys[idx]]['alertType'] === 'message_receive'
-        ) {
-          return (
-            <TouchableHighlight
-              onPress={() => {
-                goToMessageDetail(alertKeys[idx]);
-              }}
-              key={idx}>
-              <MessageConditionAlert
-                senderNickname={
-                  alertLocations[alertKeys[idx]]['senderNickname']
-                }
-                place={alertLocations[alertKeys[idx]]['place']}
-                isChecked={alertLocations[alertKeys[idx]]['isChecked']}
-              />
-            </TouchableHighlight>
-          );
-        }
-      })}
-    </View>
+        {alertKeys.map((key, idx) => {
+          if (
+            alertLocations[alertKeys[idx]] !== undefined &&
+            alertLocations[alertKeys[idx]]['alertType'] === 'message_condition'
+          ) {
+            return (
+              <TouchableHighlight
+                onPress={() => {
+                  goToMessageDetail(alertKeys[idx]);
+                }}
+                key={idx}>
+                <MessageReceiveAlert
+                  senderNickname={
+                    alertLocations[alertKeys[idx]]['senderNickname']
+                  }
+                  time={alertLocations[alertKeys[idx]]['time']}
+                  place={alertLocations[alertKeys[idx]]['place']}
+                  isChecked={alertLocations[alertKeys[idx]]['isChecked']}
+                />
+              </TouchableHighlight>
+            );
+          } else if (
+            alertLocations[alertKeys[idx]] !== undefined &&
+            alertLocations[alertKeys[idx]]['alertType'] === 'time_satisfaction'
+          ) {
+            return (
+              <TouchableHighlight
+                onPress={() => {
+                  goToMessageDetail(alertKeys[idx]);
+                }}
+                key={idx}>
+                <TimeSatisfactionAlert
+                  senderNickname={
+                    alertLocations[alertKeys[idx]]['senderNickname']
+                  }
+                  place={alertLocations[alertKeys[idx]]['place']}
+                  isChecked={alertLocations[alertKeys[idx]]['isChecked']}
+                />
+              </TouchableHighlight>
+            );
+          } else if (
+            alertLocations[alertKeys[idx]] !== undefined &&
+            alertLocations[alertKeys[idx]]['alertType'] === 'message_receive'
+          ) {
+            return (
+              <TouchableHighlight
+                onPress={() => {
+                  goToMessageDetail(alertKeys[idx]);
+                }}
+                key={idx}>
+                <MessageConditionAlert
+                  senderNickname={
+                    alertLocations[alertKeys[idx]]['senderNickname']
+                  }
+                  place={alertLocations[alertKeys[idx]]['place']}
+                  isChecked={alertLocations[alertKeys[idx]]['isChecked']}
+                />
+              </TouchableHighlight>
+            );
+          }
+        })}
+      </View>
+    </ScrollView>
   );
 }
 

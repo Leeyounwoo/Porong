@@ -20,7 +20,7 @@ export default function MessageReceiveAlert({
           <Text style={styles.text}>
             <Text style={styles.textbold}>{`${senderNickname}`}</Text>
             <Text> 님이 </Text>
-            <Text style={styles.textbold}>{`[${time}] [${'place'}]`}</Text>
+            <Text style={styles.textbold}>{`[${time}] [${place}]`}</Text>
             <Text> 에서 볼 수 있는 메세지를 보냈습니다.</Text>
           </Text>
         </View>

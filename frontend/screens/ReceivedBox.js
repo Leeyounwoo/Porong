@@ -1,17 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableHighlight,
-} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableHighlight} from 'react-native';
 
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import ModalDropdown from 'react-native-modal-dropdown';
 import axios from 'axios';
-import { useStore } from 'react-redux';
+import {useStore} from 'react-redux';
 
 export default function ReceivedBox({navigation}) {
   const store = useStore();
@@ -31,26 +25,43 @@ export default function ReceivedBox({navigation}) {
 
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
 
-  // 알림 클릭시 메세지 디테일로 이동
-  const goToMessageDetail = messageId => {
+  // 받은 메세지 클릭시 상세 페이지로 이동
+  const goToMessageDetail1 = messageId => {
     navigation.push('Temp', {
       messageId: messageId,
+      amISend: false,
     });
   };
+
+  // 보낸 메세지 클릭시 상세 디테일로 이동
+  const goToMessageDetail2 = messageId => {
+    navigation.push('Temp', {
+      messageId: messageId,
+      amISend: true,
+    });
+  };
+
   useEffect(() => {
     if (label == '지도로 보기') {
-      axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${store.getState().userreducer.memberId}/getsentmessages`)
+      axios
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/message/${
+            store.getState().userreducer.memberId
+          }/getsentmessages`,
+        )
         .then(res => {
           let temp = res.data;
           let show = [];
           temp.map((single, idx) => {
             show.push(single);
-          })
+          });
           setMarkers(show);
-        }).catch(err => { console.log(err); });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-  },[label])
-
+  }, [label]);
 
   const btnClick = () => {
     setUlFlag(true);
@@ -101,9 +112,11 @@ export default function ReceivedBox({navigation}) {
       });
     // 보낸 메세지
     axios
-      .get(`http://k6c102.p.ssafy.io:8080/v1/message/${
+      .get(
+        `http://k6c102.p.ssafy.io:8080/v1/message/${
           store.getState().userreducer.memberId
-        }/getsentmessages`)
+        }/getsentmessages`,
+      )
       .then(res => {
         const tmessages = res.data;
         tmessages.map(async (message, midx) => {
@@ -203,16 +216,28 @@ export default function ReceivedBox({navigation}) {
             style={{width: 350, height: 350}}
             initialRegion={{
               latitude: 35.9255,
-              longitude:  127.8610,
+              longitude: 127.861,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
-            {markers != null ? markers.map((single, idx) => {
-              return <Marker key={idx}
-                title={`${single.latitude}, ${single.longitude}`}
-                coordinate={{ latitude: single.latitude, longitude: single.longitude }}>
-                <Image source={{ uri: single.receiverProfileUrl }} style={{ height: 35, width: 35, borderRadius: 100 }} /></Marker>
-            }) : null}
+            {markers != null
+              ? markers.map((single, idx) => {
+                  return (
+                    <Marker
+                      key={idx}
+                      title={`${single.latitude}, ${single.longitude}`}
+                      coordinate={{
+                        latitude: single.latitude,
+                        longitude: single.longitude,
+                      }}>
+                      <Image
+                        source={{uri: single.receiverProfileUrl}}
+                        style={{height: 35, width: 35, borderRadius: 100}}
+                      />
+                    </Marker>
+                  );
+                })
+              : null}
           </MapView>
         </View>
       )}
@@ -224,7 +249,7 @@ export default function ReceivedBox({navigation}) {
             return (
               <TouchableHighlight
                 onPress={() => {
-                  goToMessageDetail(receivedMessagesKeys[keyidx]);
+                  goToMessageDetail1(receivedMessagesKeys[keyidx]);
                 }}
                 key={keyidx}>
                 <View style={styles.alarmcontainer}>
@@ -263,7 +288,7 @@ export default function ReceivedBox({navigation}) {
             return (
               <TouchableHighlight
                 onPress={() => {
-                  goToMessageDetail(sendedMessagesKeys[keyidx]);
+                  goToMessageDetail2(sendedMessagesKeys[keyidx]);
                 }}
                 key={keyidx}>
                 <View style={styles.alarmcontainer}>
