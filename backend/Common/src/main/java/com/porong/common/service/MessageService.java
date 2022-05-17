@@ -2,6 +2,7 @@ package com.porong.common.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.porong.common.config.FirebaseFCMConfig;
 import com.porong.common.domain.Member;
 import com.porong.common.domain.Message;
@@ -12,6 +13,7 @@ import com.porong.common.exception.MessageNotFoundException;
 import com.porong.common.repository.MemberRepository;
 import com.porong.common.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class MessageService {
 
     private final MemberRepository memberRepository;
@@ -78,6 +81,13 @@ public class MessageService {
             new MemberNotFoundException();
         }
         // FCM 알림 로직 끝
+
+        // log
+        if (!location.equals("")) {
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(location);
+            log.info(jsonString);
+        }
 
         return messageId;
     }
