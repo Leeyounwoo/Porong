@@ -57,8 +57,8 @@ public class Message {
     @Column(length = 2200)
     private String contentText;
 
-//    @Column(length = 2200)
-//    private String contentUrl; // 추후에 사진, 영상 등 추가
+    @Column(length = 2200)
+    private String contentUrl; // 추후에 사진, 영상 등 추가
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
