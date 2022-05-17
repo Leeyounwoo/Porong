@@ -21,7 +21,7 @@ export default function MapTest({ totalpos, mark }) {
                 }}
                 onPress={checkreceive}
             > 
-                <Marker coordinate={{ latitude: totalpos.lat, longitude: totalpos.lng }} />
+                {totalpos ?    <Marker coordinate={{ latitude: totalpos.lat, longitude: totalpos.lng }} /> : null}
             </MapView> 
         </View>
     )

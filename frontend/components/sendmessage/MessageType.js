@@ -115,14 +115,36 @@ export default function MessageType({navigation}) {
           <Text style={{color: 'white', fontSize: 18}}>비밀메시지</Text>
         </TouchableOpacity>
       </View>
-      <View style={{marginBottom: 130}}>
-        <Button title="이전" onPress={prev} />
-      </View>
+      <View
+        style={{
+          flex: 1.1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginHorizontal: 10,
+          marginBottom: 10,
+        }}>
+        <TouchableOpacity
+          style={{...styles.dateBtn, backgroundColor: 'grey'}}
+          onPress={() => navigation.goBack()}>
+          <Text style={styles.dateText}>이전</Text>
+        </TouchableOpacity>
+        </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  dateBtn: {
+    height: 35,
+    width: 100,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateText: {
+    color: 'white',
+  },
   btn: {
     backgroundColor: '#4385E0',
     width: 150,
