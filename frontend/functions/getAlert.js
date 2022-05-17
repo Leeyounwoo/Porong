@@ -1,12 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
 
 export function getAlert(remoteMessage) {
   console.log('새로운 알림', remoteMessage);
-  const alertId = remoteMessage.data.alertId;
+  const alertId = 'A' + uuid.v4();
   const alertType = remoteMessage.data.alertType;
   const messageId = remoteMessage.data.messageId;
   const senderNickname = remoteMessage.data.senderNickname;
   const place = remoteMessage.data.place;
+  const senderProfile = remoteMessage.data.senderProfile;
   let time = '';
 
   switch (alertType) {
@@ -25,6 +27,7 @@ export function getAlert(remoteMessage) {
           isChecked: false,
           place: place,
           time: time,
+          senderProfile: senderProfile,
         }),
       )
         .then(() => {

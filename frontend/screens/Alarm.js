@@ -11,7 +11,6 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TimeSatisfactionAlert from '../components/alert/TimeSatisfactionAlert';
 import MessageReceiveAlert from '../components/alert/MessageReceiveAlert';
 import MessageConditionAlert from '../components/alert/MessageConditionAlert';
 
@@ -20,6 +19,7 @@ export default function Alarm({navigation}) {
   const [alertLocations, setAlertLocations] = useState({});
   const [ready, setReady] = useState(false);
   console.log(alertKeys);
+  console.log(alertLocations);
 
   const updateChecked = async key => {
     // alertLocations[alertKeys[idx]]['isChecked']
@@ -108,32 +108,16 @@ export default function Alarm({navigation}) {
                   goToMessageDetail(alertKeys[idx]);
                 }}
                 key={idx}>
-                <MessageReceiveAlert
+                <MessageConditionAlert
                   senderNickname={
                     alertLocations[alertKeys[idx]]['senderNickname']
                   }
                   time={alertLocations[alertKeys[idx]]['time']}
                   place={alertLocations[alertKeys[idx]]['place']}
                   isChecked={alertLocations[alertKeys[idx]]['isChecked']}
-                />
-              </TouchableHighlight>
-            );
-          } else if (
-            alertLocations[alertKeys[idx]] !== undefined &&
-            alertLocations[alertKeys[idx]]['alertType'] === 'time_satisfaction'
-          ) {
-            return (
-              <TouchableHighlight
-                onPress={() => {
-                  goToMessageDetail(alertKeys[idx]);
-                }}
-                key={idx}>
-                <TimeSatisfactionAlert
-                  senderNickname={
-                    alertLocations[alertKeys[idx]]['senderNickname']
+                  senderProfile={
+                    alertLocations[alertKeys[idx]]['senderProfile']
                   }
-                  place={alertLocations[alertKeys[idx]]['place']}
-                  isChecked={alertLocations[alertKeys[idx]]['isChecked']}
                 />
               </TouchableHighlight>
             );
@@ -147,12 +131,15 @@ export default function Alarm({navigation}) {
                   goToMessageDetail(alertKeys[idx]);
                 }}
                 key={idx}>
-                <MessageConditionAlert
+                <MessageReceiveAlert
                   senderNickname={
                     alertLocations[alertKeys[idx]]['senderNickname']
                   }
                   place={alertLocations[alertKeys[idx]]['place']}
                   isChecked={alertLocations[alertKeys[idx]]['isChecked']}
+                  senderProfile={
+                    alertLocations[alertKeys[idx]]['senderProfile']
+                  }
                 />
               </TouchableHighlight>
             );
