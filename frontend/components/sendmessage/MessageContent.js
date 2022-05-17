@@ -38,6 +38,7 @@ export default function MessageContent({navigation}) {
     });
   }
   return (
+    <ScrollView style={{ flex: 1, }}>
     <KeyboardAvoidingView
     behavior="height"
     style={{
@@ -77,10 +78,6 @@ export default function MessageContent({navigation}) {
         />
        
       </View>
-
-
-      
-
       <View
         style={{
           flex: 1.1,
@@ -102,6 +99,7 @@ export default function MessageContent({navigation}) {
         </TouchableOpacity>
       </View>
       </KeyboardAvoidingView>
+      </ScrollView>
   );
 }
 

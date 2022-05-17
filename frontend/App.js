@@ -213,9 +213,6 @@ const App = () => {
 
   // 새로운 알림 왔을 때
   useEffect(() => {
-    AsyncStorage.getAllKeys((err, keys) => {
-      console.log('async Keys', keys);
-    });
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       await getAlert(remoteMessage);
       manageMessageState(remoteMessage);
