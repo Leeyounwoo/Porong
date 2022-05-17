@@ -6,6 +6,7 @@ import com.porong.common.dto.*;
 import com.porong.common.repository.FollowRepository;
 import com.porong.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import net.nurigo.sdk.NurigoApp;
@@ -124,5 +125,16 @@ public class MemberServiceImpl implements MemberService {
         member.setFcmToken(updateFCMTokenDto.getFcmToken());
 
         MEMBER_REPOSITORY.save(member);
+    }
+
+    @Override
+    public void recommend(String phoneNumber) throws Exception {
+        Message message = new Message();
+        message.setFrom("01041084206");
+        message.setTo(phoneNumber);
+        message.setText("마음 사서함을 다운 받아 주세요.");
+
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        System.out.println(response);
     }
 }
