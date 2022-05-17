@@ -85,11 +85,10 @@ public class Message {
         this.dueTime = requestCreateMessageDto.getDueTime();
         this.title = requestCreateMessageDto.getTitle();
         this.contentText = requestCreateMessageDto.getTitle();
-//        this.contentUrl = requestCreateMessageDto.getContentUrl(); // 추후 추가
+        this.contentUrl = requestCreateMessageDto.getContentUrl(); // 추후 추가
         this.createdAt = LocalDateTime.now();
         this.isChecked = false;
         this.isDeleted = false;
-
     }
 
 }
