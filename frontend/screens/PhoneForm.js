@@ -51,7 +51,7 @@ export default function PhoneForm({navigation, route}) {
             .then(res => {
               console.log(res);
               alert('회원가입 성공!');
-              navigation.navigate('Home');
+              navigation.navigate('Main');
             })
             .catch(err => {
               console.log(err);
