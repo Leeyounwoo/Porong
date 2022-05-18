@@ -89,6 +89,8 @@ public class FirebaseFCMConfig {
     public void postSatisfyMessage(Message message) throws Exception {
         if(!MEMBER_REPOSITORY.existsByMemberId(message.getReceiver().getMemberId())) throw new Exception();
 
+        message.checkMessage(); // isChecked
+
         String FCMmessage = makeSatisfyMessage(message);
 
         OkHttpClient okHttpClient = new OkHttpClient();
