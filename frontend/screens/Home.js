@@ -8,6 +8,35 @@ import axios from 'axios';
 import {positionContain} from '../reducer';
 const secret = require('../assets/icons/question.png');
 
+function displayedAt(createdAt) {
+  const duedate = new Date(
+    createdAt[0],
+    createdAt[1]-1,
+    createdAt[2],
+    createdAt[3],
+    createdAt[4],
+    createdAt[5],
+  );
+  const milliSeconds = duedate - new Date();
+  if (milliSeconds < 0) return `지남`;
+
+  const seconds = milliSeconds / 1000;
+  if (seconds < 60) return `잠시 뒤에 확인할 수 있습니다!`;
+  const minutes = seconds / 60;
+  if (minutes < 60) return `${Math.floor(minutes)}분 후 확인할 수 있습니다!`;
+  const hours = minutes / 60;
+  if (hours < 24) return `${Math.floor(hours)}시간 후 확인할 수 있습니다!`;
+  const days = hours / 24;
+  if (days < 7) return `${Math.floor(days)}일 후 확인할 수 있습니다!`;
+  const weeks = days / 7;
+  if (weeks < 5) return `${Math.floor(weeks)}주 후 확인할 수 있습니다!`;
+  const months = days / 30;
+  if (months < 12) return `${Math.floor(months)}개월 후 확인할 수 있습니다!`;
+  const years = days / 365;
+  return `${Math.floor(years)}년 후 확인할 수 있습니다!`;
+}
+
+
 const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector(state => state.posreducer);
@@ -23,14 +52,14 @@ const Home = ({navigation}) => {
       )
       .then(json => {
         let received = [];
-        // console.log("markers test : ",json);
+        console.log("markers test : ",json);
         json.data.map(single => {
           received.push(single);
         });
         setMarkers(received);
       })
       .catch(err => {
-        console.log(err);
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",err);
       });
 
     Geolocation.getCurrentPosition(
@@ -47,31 +76,14 @@ const Home = ({navigation}) => {
     );
   }, []);
 
-  function displayedAt(createdAt) {
-    const duedate = new Date(
-      createdAt[0],
-      createdAt[1],
-      createdAt[2],
-      createdAt[3],
-      createdAt[4],
-      createdAt[5],
-    );
-    const milliSeconds = duedate - new Date();
-    const seconds = milliSeconds / 1000;
-    if (seconds < 60) return `잠시 뒤에 확인할 수 있습니다!`;
-    const minutes = seconds / 60;
-    if (minutes < 60) return `${Math.floor(minutes)}분 후 확인할 수 있습니다!`;
-    const hours = minutes / 60;
-    if (hours < 24) return `${Math.floor(hours)}시간 후 확인할 수 있습니다!`;
-    const days = hours / 24;
-    if (days < 7) return `${Math.floor(days)}일 후 확인할 수 있습니다!`;
-    const weeks = days / 7;
-    if (weeks < 5) return `${Math.floor(weeks)}주 후 확인할 수 있습니다!`;
-    const months = days / 30;
-    if (months < 12) return `${Math.floor(months)}개월 후 확인할 수 있습니다!`;
-    const years = days / 365;
-    return `${Math.floor(years)}년 후 확인할 수 있습니다!`;
+  const clicktest = (e, messageId) => {
+    navigation.navigate('Temp', {
+      messageId: messageId,
+      amISend: false,
+    });
   }
+
+
   let rotateValueHolder = new Animated.Value(0);
   const RotateData = rotateValueHolder.interpolate({
     inputRange: [0, 1],
@@ -104,11 +116,11 @@ const Home = ({navigation}) => {
               <Marker
                 ref={markerRef}
                 key={idx}
-                onPress={e => {
-                  clicktest(e.currentTarget, single.messageId);
+                onPress={() => {
+                  clicktest( single.messageId);
                 }}
                 title={`제목 : ${single.title}`}
-                description={displayedAt(single.dueTime)}
+                description={displayedAt(single.dueTime) == `지남` ? `해당 위치에서 확인해주세요` : displayedAt(single.dueTime)}
                 icon={single.type == 0 ? secret : null}
                 coordinate={{
                   latitude: single.latitude,
