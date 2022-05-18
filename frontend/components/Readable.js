@@ -25,7 +25,7 @@ export default function Readable({
     time,
     place,
     context,
-    latitude,
+    typeof latitude,
     longitude,
   );
 

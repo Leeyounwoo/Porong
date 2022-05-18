@@ -8,7 +8,7 @@ import {
   MessageStackScreen,
   SendStackScreen,
 } from './Stack';
-import { CardStyleInterpolators } from '@react-navigation/stack';
+import {CardStyleInterpolators} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 
@@ -38,15 +38,15 @@ const SendButton = ({children, onPress}) => {
 
 const Tab = createBottomTabNavigator();
 const TAB_TO_RESET = 'HomeTab';
-const resetHomeStackOnTabPress = ({ navigation, route }) => ({
-  tabPress: (e) => {
+const resetHomeStackOnTabPress = ({navigation, route}) => ({
+  tabPress: e => {
     const state = navigation.getState();
     console.log(state);
     if (state) {
       // Grab all the tabs that are NOT the one we just pressed
-      const nonTargetTabs = state.routes.filter((r) => r.key !== e.target);
+      const nonTargetTabs = state.routes.filter(r => r.key !== e.target);
 
-      nonTargetTabs.forEach((tab) => {
+      nonTargetTabs.forEach(tab => {
         // Find the tab we want to reset and grab the key of the nested stack
         const tabName = tab?.name;
         const stackKey = tab?.state?.key;
@@ -96,9 +96,9 @@ const Tabs = () => {
       <Tab.Screen
         name="HomeStack"
         component={HomeStackScreen}
-        listeners={resetHomeStackOnTabPress }
+        listeners={resetHomeStackOnTabPress}
         options={{
-          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -120,9 +120,9 @@ const Tabs = () => {
       <Tab.Screen
         name="AlarmStack"
         component={AlarmStackScreen}
-        listeners={resetHomeStackOnTabPress }
+        listeners={resetHomeStackOnTabPress}
         options={{
-          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -144,9 +144,9 @@ const Tabs = () => {
       <Tab.Screen
         name="SendStack"
         component={SendStackScreen}
-        listeners={resetHomeStackOnTabPress }
+        listeners={resetHomeStackOnTabPress}
         options={{
-          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../assets/icons/send.png')}
@@ -166,9 +166,9 @@ const Tabs = () => {
       <Tab.Screen
         name="MessageStack"
         component={MessageStackScreen}
-        listeners={resetHomeStackOnTabPress }
+        listeners={resetHomeStackOnTabPress}
         options={{
-          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -190,9 +190,9 @@ const Tabs = () => {
       <Tab.Screen
         name="AccountStack"
         component={AccountStackScreen}
-        listeners={resetHomeStackOnTabPress }
+        listeners={resetHomeStackOnTabPress}
         options={{
-          cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS ,
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           tabBarIcon: ({focused}) => (
             <View
               style={{

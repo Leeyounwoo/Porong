@@ -23,7 +23,7 @@ export default function Nodereadable({
     nickName,
     time,
     place,
-    latitude,
+    typeof latitude,
     longitude,
   );
   useEffect(() => {

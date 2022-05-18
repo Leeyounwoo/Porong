@@ -79,15 +79,8 @@ const Home = ({navigation}) => {
     );
   }, [user.memberId]);
 
-  const clicktest = (e, messageId) => {
-    navigation.navigate('Temp', {
-      messageId: messageId,
-      amISend: false,
-    });
-  };
-
-  const clicktest = (e, messageId) => {
-    navigation.navigate('Temp', {
+  const clicktest = messageId => {
+    navigation.navigate('HomeTemp', {
       messageId: messageId,
       amISend: false,
     });
