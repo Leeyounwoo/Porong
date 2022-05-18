@@ -6,7 +6,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Notreadable from '../components/Notreadable';
 import Readable from '../components/Readable';
-import {useStore} from 'react-redux';
+import {useStore, useSelector} from 'react-redux';
 
 const icon = require('../assets/icons/letter.png');
 function dateTrans(day) {
@@ -17,7 +17,6 @@ function dateTrans(day) {
 export default function Temp({navigation, route}) {
   const store = useStore();
   const {messageId, amISend} = route.params;
-  console.log('amISend', amISend, messageId);
   const [flag, setFlag] = useState(false);
   const [senderNickName, setSenderNickName] = useState('');
   const [time, setTime] = useState('');
@@ -25,19 +24,34 @@ export default function Temp({navigation, route}) {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [context, setContext] = useState('');
+  const user = useSelector(state => state.userreducer);
 
-  useEffect(() => {
-    console.log('123', messageId);
+  const isAlreadyReceived = () => {
+    AsyncStorage.getItem('receivedMessages', (err, result) => {
+      const receivedMessagesSet = new Set(JSON.parse(result));
+      console.log('메세지 ID', typeof messageId, receivedMessagesSet);
+      if (receivedMessagesSet.has(String(messageId))) {
+        console.log('있음');
+        setFlag(true);
+      } else {
+        console.log('없음');
+      }
+    });
+  };
+
+  useEffect(async () => {
+    await isAlreadyReceived();
     const now = new Date();
     const time = `${now.getFullYear()}-${dateTrans(
       now.getMonth() + 1,
     )}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(
       now.getMinutes(),
     )}:${dateTrans(now.getSeconds())}`;
+    console.log('memberId', store.getState().userreducer.memberId);
     axios
       .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
-          memberId: store.getState().userreducer.memberId,
+          memberId: user.memberId,
           messageId: messageId,
           timeNow: time,
         },
@@ -59,18 +73,7 @@ export default function Temp({navigation, route}) {
         setLongitude(res.data.longitude);
         setContext(res.data.contentText);
       });
-
-    AsyncStorage.getItem('receivedMessages', (err, result) => {
-      const receivedMessagesSet = new Set(JSON.parse(result));
-      console.log(receivedMessagesSet);
-      if (receivedMessagesSet.has(messageId)) {
-        setFlag(true);
-        console.log('있음');
-      } else {
-        console.log('없음');
-      }
-    });
-  }, []);
+  }, [user.memberId]);
 
   return (
     <View>

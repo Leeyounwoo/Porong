@@ -17,6 +17,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Login from './screens/Login';
 import Signin from './screens/Signin';
 import PhoneForm from './screens/PhoneForm';
+import axios from 'axios';
 
 const store = createStore(rootReducer);
 const init = createStackNavigator();
@@ -136,20 +137,41 @@ const App = () => {
             }
           }
         });
-        console.log('거리들', messageDistances);
         const minDistance = Math.min(Object.keys(messageDistances));
-        console.log('가장 짧은 거리', minDistance);
+
         if (minDistance <= 50) {
-          console.log('50m 이내에 있습니다.');
+          const getMessages = Object.keys(messageDistances).filter(
+            distance => distance <= 50,
+          );
+          // console.log('50m이내 메세지들', getMessages);
+          getMessages.map((message, idx) => {
+            axios
+              .post(
+                'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
+                null,
+                {
+                  params: {
+                    messageId: getMessages[idx],
+                  },
+                },
+              )
+              .then(json => {
+                console.log('요청 성공');
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          });
         }
       },
       err => console.warn(err),
       {distanceFilter: 0.5},
     );
-  }, [flag]);
+  });
 
   // 메세지 위치 동기화 함수
   const updateMessageLocations = stores => {
+    console.log('stores', stores);
     stores.map((store, idx) => {
       const key = store[0];
       const value = JSON.parse(store[1]);
