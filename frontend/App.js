@@ -99,8 +99,8 @@ const App = () => {
       <Stack.Navigator
         initialRouteName={isLogin ? 'Main' : 'login'}
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Main" component={Tabs} />
         <Stack.Screen name="LoginStack" component={LoginProcess} />
+        <Stack.Screen name="Main" component={Tabs} />
       </Stack.Navigator>
     );
   };
