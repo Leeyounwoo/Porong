@@ -96,4 +96,16 @@ public class MemberController {
         return new ResponseEntity<>("FCM APP 토큰 저장 성공", HttpStatus.OK);
     }
 
+    @GetMapping("/inquire")
+    public ResponseEntity<InquireMemberDto> inquire(long memberId) {
+        InquireMemberDto inquireMemberDto = null;
+        try {
+            inquireMemberDto = memberService.inquire(memberId);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(inquireMemberDto, HttpStatus.OK);
+    }
+
 }

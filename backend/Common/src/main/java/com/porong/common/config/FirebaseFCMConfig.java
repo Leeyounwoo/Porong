@@ -69,6 +69,8 @@ public class FirebaseFCMConfig {
         dataMap.put("senderNickname", sender.getName());
         dataMap.put("place", message.getLocation());
         dataMap.put("time", time);
+        dataMap.put("latitude", String.valueOf(message.getLatitude()));
+        dataMap.put("longitude", String.valueOf(message.getLongitude()));
 
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
                                                                               .validate_only(false)

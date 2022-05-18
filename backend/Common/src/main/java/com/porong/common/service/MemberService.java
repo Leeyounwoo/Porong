@@ -12,4 +12,5 @@ public interface MemberService {
     public List<PhoneBookDto> fetchContact(List<String> phoneList) throws Exception;
     public void updateFCMToken(UpdateFCMTokenDto updateFCMTokenDto) throws Exception;
     public void recommend(String phoneNumber) throws Exception;
+    public InquireMemberDto inquire(long memberId) throws Exception;
 }
