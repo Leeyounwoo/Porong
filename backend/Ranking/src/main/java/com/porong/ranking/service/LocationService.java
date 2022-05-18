@@ -38,10 +38,6 @@ public class LocationService {
         return rankingZset.getLocation();
     }
 
-    public List<String> getTotalRanking() {
-        return rankingZset.getLocation();
-        // es
-    }
 
     public String getlocation(String coordinate) {
 
