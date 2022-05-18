@@ -74,7 +74,7 @@ const App = () => {
     return distance;
   }
 
-  const loginProcess = () => {
+  const LoginProcess = () => {
     return (
       <init.Navigator initialRouteName="Login">
         <init.Screen name="Login" component={Login} />
@@ -101,7 +101,7 @@ const App = () => {
         initialRouteName={isLogin ? 'Main' : 'login'}
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Main" component={Tabs} />
-        <Stack.Screen name="login" component={loginProcess} />
+        <Stack.Screen name="LoginStack" component={LoginProcess} />
       </Stack.Navigator>
     );
   };

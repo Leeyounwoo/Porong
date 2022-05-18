@@ -7,7 +7,7 @@ export default function Setting({navigation}) {
     AsyncStorage.removeItem('user')
       .then(sucess => {
         console.log('로그아웃 완료', sucess);
-        navigation.navigate('login');
+        navigation.navigate('LoginStack');
       })
       .catch(err => {
         console.log(err);
