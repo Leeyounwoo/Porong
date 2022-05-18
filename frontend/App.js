@@ -17,6 +17,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Login from './screens/Login';
 import Signin from './screens/Signin';
 import PhoneForm from './screens/PhoneForm';
+import axios from 'axios';
 
 const store = createStore(rootReducer);
 const init = createStackNavigator();
@@ -108,6 +109,9 @@ const App = () => {
   // 사용자가 50m 이동할 때마다 거리 계산
   // 메세지와의 거리가 50m 이내인 경우, 메세지 받기 API 호출 + Async Storage 에서 삭제 + 받은 메세지 Set에 추가
   useEffect(() => {
+    console.log('메세지 ID', messageIdList);
+    console.log('메세지 위치', messageLocations);
+
     const watchID = Geolocation.watchPosition(
       position => {
         const messageDistances = {};
@@ -138,9 +142,29 @@ const App = () => {
         });
         console.log('거리들', messageDistances);
         const minDistance = Math.min(Object.keys(messageDistances));
-        console.log('가장 짧은 거리', minDistance);
+
         if (minDistance <= 50) {
-          console.log('50m 이내에 있습니다.');
+          const getMessages = Object.keys(messageDistances).filter(
+            distance => distance <= 50,
+          );
+          console.log('50m이내 메세지들', getMessages);
+          // axios
+          //   .post(
+          //     'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
+          //     null,
+          //     {
+          //       params: {
+          //         messageId: messageIdList[idx],
+          //       },
+          //     },
+          //   )
+          //   .then(json => {
+          //     console.log('50m 이내에 있습니다.');
+          //     Alert.alert('50m 이내에 메세지가 있습니다.');
+          //   })
+          //   .catch(err => {
+          //     console.log(err);
+          //   });
         }
       },
       err => console.warn(err),
@@ -150,6 +174,7 @@ const App = () => {
 
   // 메세지 위치 동기화 함수
   const updateMessageLocations = stores => {
+    console.log('stores', stores);
     stores.map((store, idx) => {
       const key = store[0];
       const value = JSON.parse(store[1]);
