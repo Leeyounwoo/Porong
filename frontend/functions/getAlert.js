@@ -45,10 +45,12 @@ export function getAlert(remoteMessage) {
         }),
       )
         .then(() => {
-          console.log('time_satisfaction 메세지 저장 성공');
+          AsyncStorage.getItem(messageId, (err, result) => {
+            console.log('message_condition 메세지 저장 성공', result);
+          });
         })
         .catch(err => {
-          console.log('time_satisfaction 메세지 저장 실패', err);
+          console.log('message_condition 메세지 저장 실패', err);
         });
       break;
 

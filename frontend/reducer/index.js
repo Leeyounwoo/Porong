@@ -9,6 +9,7 @@ const POSITION = 'POSITION';
 const LOGIN = 'LOGIN';
 const ISSECRET = 'ISSECRET';
 const IMAGEUPLOAD = 'IMAGEUPLOAD';
+const MEMBERID = 'MEMBERID';
 //action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
 export const personContain = (sender, receiver) => {
   return {type: PERSON, sender, receiver};
@@ -39,7 +40,7 @@ export const userContain = (memberid, img, kakaoid, nickname) => {
 export const secretContain = () => {
   return {type: ISSECRET};
 };
-
+export const memberidContain = (member) => { return { type: MEMBERID, member } };
 
 //store
 const init = {
@@ -101,12 +102,6 @@ const position = {
   lng: 0,
 };
 
-const imagereducer = (state = '', action) => {
-  if (action.type) {
-    
-  }
-}
-
 const posreducer = (state = position, action) => {
   switch (action.type) {
     case 'POSITION':
@@ -137,6 +132,11 @@ const userreducer = (state = userinfo, action) => {
         profileUrl: action.img,
         nickname: action.nickname,
       };
+    case MEMBERID:
+      return {
+        ...state,
+        memberId: action.member,
+      }
     default:
       return state;
   }

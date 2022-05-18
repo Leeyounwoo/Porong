@@ -20,15 +20,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessagePerson({navigation}) {
-  const [contacts, setContacts] = useState({});
-  const [fetchedItem, setFetchedItem] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [phoneNum, setPhoneNum] = useState([]);
-  const [isFetch, setIsFetch] = useState(false);
   const store = useStore();
 
   let rotateValueHolder = new Animated.Value(0);
 
+  // animation 함수
   const startImageRotateFunction = () => {
     rotateValueHolder.setValue(0);
     Animated.timing(rotateValueHolder, {
@@ -46,6 +44,7 @@ export default function MessagePerson({navigation}) {
     outputRange: ['0deg', '360deg'],
   });
 
+  // Header에 버튼 추가
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -75,24 +74,46 @@ export default function MessagePerson({navigation}) {
         title: 'Contacts',
         message: '마음 사서함이 회원님의 연락처에 접근하려고 합니다.',
       })
-        .then(result => {
-          console.log(result);
+        // 연략처 접근 성공시
+        .then(_ => {
           Contacts.getAll()
+            // Phone에 저장되어 있는 모든 연락처에 접근
             .then(res => {
-              console.log(res);
               const temp = [];
-              for (let i = 0; i < res.length; i++) {
-                if (res[i].phoneNumbers[0]) {
+              const numData = [];
+              res.map(contact => {
+                if (contact.phoneNumbers[0]) {
+                  let num = contact.phoneNumbers[0].number;
+                  num = num.replace(/-/g, '');
+                  num = num.replace(/ /g, '');
+                  numData.push(num);
                   temp.push({
-                    name: res[i].displayName,
-                    phoneNumber: res[i].phoneNumbers[0].number,
+                    name: contact.displayName,
+                    phoneNumber: num,
                     signup: false,
                     profileUrl: null,
                     memberId: -1,
                   });
                 }
-              }
-              setContacts(temp);
+              });
+              axios({
+                url: 'http://k6c102.p.ssafy.io:8080/v1/member/fetchContact',
+                method: 'post',
+                data: numData,
+              })
+                .then(result => {
+                  const numArr = result.data.map(d => d.phoneNumber);
+                  const notIn = [];
+                  for (let i = 0; i < temp.length; i++) {
+                    if (!numArr.includes(temp[i].phoneNumber)) {
+                      notIn.push(temp[i]);
+                    }
+                  }
+                  setContacts([...result.data, ...notIn]);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
             })
             .catch(err => {
               console.log('cannot access', err);
@@ -102,19 +123,9 @@ export default function MessagePerson({navigation}) {
           console.log(err);
         });
     } else if (Platform.OS === 'ios') {
-      getList();
+      console.log('지원하지 않는 os입니다.');
     }
   }, []);
-
-  const getList = () => {
-    Contacts.getAll()
-      .then(res => {
-        setContacts(res);
-      })
-      .catch(err => {
-        console.log('cannot access', err);
-      });
-  };
 
   const next = (id, isSignin, phoneNumber) => {
     if (isSignin) {
@@ -129,31 +140,36 @@ export default function MessagePerson({navigation}) {
       navigation.navigate('Time');
     } else {
       axios({
-        url: 'http://k6c102.p.ssafy.io:8080/v1/member/recommend/',
+        url: `http://k6c102.p.ssafy.io:8080/v1/member/recommend?phoneNumber=${phoneNumber}`,
         method: 'post',
-        params: phoneNumber,
-      });
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
 
   function fetch() {
     Contacts.getAll()
       .then(res => {
-        const contactData = [];
+        const numData = [];
         res.map(contact => {
           if (contact.phoneNumbers[0]) {
             let num = contact.phoneNumbers[0].number;
             num = num.replace(/-/g, '');
             num = num.replace(/ /g, '');
-            contactData.push(num);
+            numData.push(num);
           } else {
-            contactData.push('');
+            numData.push('');
           }
         });
         axios({
           url: 'http://k6c102.p.ssafy.io:8080/v1/member/fetchContact',
           method: 'post',
-          data: contactData,
+          data: numData,
         })
           .then(result => {
             console.log('from server', result);

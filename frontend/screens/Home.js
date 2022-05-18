@@ -1,23 +1,23 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
 import {StyleSheet, Text, View, Image, Animated} from 'react-native';
 
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {useSelector, useStore} from 'react-redux';
 import axios from 'axios';
-import {positionContain} from '../reducer';
+import {memberidContain, positionContain, userContain} from '../reducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const secret = require('../assets/icons/question.png');
 
 function displayedAt(createdAt) {
   const duedate = new Date(
     createdAt[0],
-    createdAt[1]-1,
+    createdAt[1] - 1,
     createdAt[2],
     createdAt[3],
     createdAt[4],
     createdAt[5],
   );
-  console.log(duedate);
   const milliSeconds = duedate - new Date();
   if (milliSeconds < 0) return `지남`;
 
@@ -37,26 +37,50 @@ function displayedAt(createdAt) {
   return `${Math.floor(years)}년 후 확인할 수 있습니다!`;
 }
 
-
 const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector(state => state.posreducer);
   const [markers, setMarkers] = useState([]);
   const markerRef = useRef();
-  
-  const user = useSelector(state => state.userreducer);
-  
-  
+  const [memberId, setMemberId] = useState(null);
+  const user = store.getState().userreducer;
+  console.log('check');
+  useLayoutEffect( () => {
+    let temp = null;
+    let test = null;
+    let memberid = null;
+    AsyncStorage.getItem('user').then(res => {
+      temp = JSON.parse(res);
+      
+      test = temp.data.authMember;
+      if (test != null) {
+        store.dispatch(userContain(memberid, test.imageUrl,test.kakaoId,test.nickName));
+      } else {
+        navigation.navigate('Login');
+      }
+    });
+
+  }, [])
+
   useEffect(() => {
-    axios
-      .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          user.memberId
-        }/fetchUncheckedMesaages`,
-      )
+    console.log(user.kakaoId);
+    axios.get(`http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${ user.kakaoId }`)
+      .then(res => {
+        console.log(res);
+        store.dispatch(memberidContain(res.data));
+        setMemberId(res.data);
+    }).catch(err => {
+      console.log(err)
+    })
+
+    console.log(user);
+  },[user])
+  useEffect(() => {
+    console.log("memberId check : ", memberId);
+    if (memberId) {
+      axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/fetchUncheckedMesaages`,)
       .then(json => {
         let received = [];
-        console.log("markers test : ",json);
         json.data.map(single => {
           received.push(single);
         });
@@ -66,7 +90,13 @@ const Home = ({navigation}) => {
       .catch(err => {
         console.log("axios error at home didmount",err);
       });
+    }
 
+  },[memberId])
+
+  useEffect(() => {
+      
+    
     Geolocation.getCurrentPosition(
       position => {
         store.dispatch(
@@ -79,27 +109,26 @@ const Home = ({navigation}) => {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-  }, [user.memberId]);
+  }, []);
 
-  const clicktest = (e, messageId) => {
-    navigation.navigate('Temp', {
+
+
+  const clicktest = messageId => {
+    navigation.navigate('HomeTemp', {
       messageId: messageId,
       amISend: false,
     });
-  }
-
-
-  let rotateValueHolder = new Animated.Value(0);
-  const RotateData = rotateValueHolder.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+  };
 
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
-      {user ?  <Image style={styles.imgstyle} source={{ uri:user.profileUrl }} />: null}
-        <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user? user.nickname : `로그인 처리가 안됬습니다.`}</Text>
+        {user ? (
+          <Image style={styles.imgstyle} source={{uri: user.profileUrl}} />
+        ) : null}
+        <Text style={{marginTop: 5, alignSelf: 'center'}}>
+          {user ? user.nickname : `로그인 처리가 안됬습니다.`}
+        </Text>
       </View>
 
       <View style={styles.mapcontainer}>
@@ -122,10 +151,14 @@ const Home = ({navigation}) => {
                 ref={markerRef}
                 key={idx}
                 onPress={() => {
-                  clicktest( single.messageId);
+                  clicktest(single.messageId);
                 }}
                 title={`제목 : ${single.title}`}
-                description={displayedAt(single.dueTime) == `지남` ? `해당 위치에서 확인해주세요` : displayedAt(single.dueTime)}
+                description={
+                  displayedAt(single.dueTime) == `지남`
+                    ? `해당 위치에서 확인해주세요`
+                    : displayedAt(single.dueTime)
+                }
                 icon={single.type == 0 ? secret : null}
                 coordinate={{
                   latitude: single.latitude,
