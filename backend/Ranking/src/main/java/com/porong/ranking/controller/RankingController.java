@@ -42,11 +42,11 @@ public class RankingController {
         return locations.stream().map(LocationVo::new).collect(Collectors.toList());
     }
 
-    @GetMapping("/total")
-    public List<LocationVo> fetchTotalRanking() {
-        List<String> locations = locationService.getTotalRanking();
-        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
-    }
+//    @GetMapping("/total")
+//    public List<LocationVo> fetchTotalRanking() {
+//        List<String> locations = locationService.getTotalRanking();
+//        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
+//    }
 
     @DeleteMapping("/clear")
     public void clearAll(){
