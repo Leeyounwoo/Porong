@@ -57,5 +57,4 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Post> postList = new ArrayList<>();
-
 }

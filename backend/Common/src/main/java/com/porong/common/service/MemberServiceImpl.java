@@ -108,6 +108,7 @@ public class MemberServiceImpl implements MemberService {
                 Member signUpEdMember = MEMBER_REPOSITORY.findByPhoneNumber(phoneNumber);
                 tempBookDto.setSignup(true);
                 tempBookDto.setMemberId(signUpEdMember.getMemberId());
+                tempBookDto.setName(signUpEdMember.getName());
                 tempBookDto.setPhoneNumber(signUpEdMember.getPhoneNumber());
                 tempBookDto.setProfileUrl(signUpEdMember.getProfileUrl());
                 tempBookDto.setEmail(signUpEdMember.getEmail());
@@ -136,5 +137,18 @@ public class MemberServiceImpl implements MemberService {
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         System.out.println(response);
+    }
+
+    @Override
+    public InquireMemberDto inquire(long memberId) throws Exception {
+        if(!MEMBER_REPOSITORY.existsByMemberId(memberId)) throw new Exception();
+
+        Member member = MEMBER_REPOSITORY.findByMemberId(memberId);
+        InquireMemberDto inquireMemberDto = new InquireMemberDto();
+
+        inquireMemberDto.setName(member.getName());
+        inquireMemberDto.setProfileUrl(member.getProfileUrl());
+
+        return inquireMemberDto;
     }
 }
