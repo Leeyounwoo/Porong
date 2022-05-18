@@ -120,6 +120,7 @@ public class FirebaseFCMConfig {
         dataMap.put("messageId", String.valueOf(message.getMessageId()));
         dataMap.put("alertType", "message_receive");
         dataMap.put("senderNickname", message.getSender().getName());
+        dataMap.put("senderProfileUrl", message.getSender().getProfileUrl());
         dataMap.put("place", message.getLocation());
 
         FcmNormalNotifyMessage fcmNormalNotifyMessage = FcmNormalNotifyMessage.builder()
