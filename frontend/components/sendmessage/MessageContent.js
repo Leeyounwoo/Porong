@@ -23,7 +23,7 @@ export default function MessageContent({navigation}) {
   const [pic, setPic] = useState('');
   const next = () => {
     store.dispatch(messageContain(title, content, pic));
-    navigation.navigate('Type');
+    navigation.navigate('Total');
   };
   const uploadPicture = () => {
     launchImageLibrary().then(res => {
