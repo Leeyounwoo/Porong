@@ -123,19 +123,9 @@ export default function MessagePerson({navigation}) {
           console.log(err);
         });
     } else if (Platform.OS === 'ios') {
-      getList();
+      console.log('지원하지 않는 os입니다.');
     }
   }, []);
-
-  const getList = () => {
-    Contacts.getAll()
-      .then(res => {
-        setContacts(res);
-      })
-      .catch(err => {
-        console.log('cannot access', err);
-      });
-  };
 
   const next = (id, isSignin, phoneNumber) => {
     if (isSignin) {
@@ -150,10 +140,15 @@ export default function MessagePerson({navigation}) {
       navigation.navigate('Time');
     } else {
       axios({
-        url: 'http://k6c102.p.ssafy.io:8080/v1/member/recommend/',
+        url: `http://k6c102.p.ssafy.io:8080/v1/member/recommend?phoneNumber=${phoneNumber}`,
         method: 'post',
-        params: phoneNumber,
-      });
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
 
