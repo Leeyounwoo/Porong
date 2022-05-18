@@ -11,7 +11,7 @@ const secret = require('../assets/icons/question.png');
 function displayedAt(createdAt) {
   const duedate = new Date(
     createdAt[0],
-    createdAt[1]-1,
+    createdAt[1] - 1,
     createdAt[2],
     createdAt[3],
     createdAt[4],
@@ -36,30 +36,33 @@ function displayedAt(createdAt) {
   return `${Math.floor(years)}년 후 확인할 수 있습니다!`;
 }
 
-
 const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector(state => state.posreducer);
   const [markers, setMarkers] = useState([]);
   const markerRef = useRef();
+
   const user = useSelector(state => state.userreducer);
+
   useEffect(() => {
     axios
       .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
-        }/fetchUncheckedMesaages`,
+        `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/fetchUncheckedMesaages`,
       )
       .then(json => {
         let received = [];
-        console.log("markers test : ",json);
+        console.log('markers test : ', json);
         json.data.map(single => {
           received.push(single);
         });
+        console.log(received);
         setMarkers(received);
       })
       .catch(err => {
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",err);
+        console.log(
+          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+          err,
+        );
       });
 
     Geolocation.getCurrentPosition(
@@ -74,15 +77,14 @@ const Home = ({navigation}) => {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-  }, []);
+  }, [user.memberId]);
 
-  const clicktest = (e, messageId) => {
-    navigation.navigate('Temp', {
+  const clicktest = messageId => {
+    navigation.navigate('HomeTemp', {
       messageId: messageId,
       amISend: false,
     });
-  }
-
+  };
 
   let rotateValueHolder = new Animated.Value(0);
   const RotateData = rotateValueHolder.interpolate({
@@ -93,8 +95,12 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
-      {user ?  <Image style={styles.imgstyle} source={{ uri:user.profileUrl }} />: null}
-        <Text style={{marginTop: 5,alignSelf: 'center'}}>{ user? user.nickname : `로그인 처리가 안됬습니다.`}</Text>
+        {user ? (
+          <Image style={styles.imgstyle} source={{uri: user.profileUrl}} />
+        ) : null}
+        <Text style={{marginTop: 5, alignSelf: 'center'}}>
+          {user ? user.nickname : `로그인 처리가 안됬습니다.`}
+        </Text>
       </View>
 
       <View style={styles.mapcontainer}>
@@ -117,10 +123,14 @@ const Home = ({navigation}) => {
                 ref={markerRef}
                 key={idx}
                 onPress={() => {
-                  clicktest( single.messageId);
+                  clicktest(single.messageId);
                 }}
                 title={`제목 : ${single.title}`}
-                description={displayedAt(single.dueTime) == `지남` ? `해당 위치에서 확인해주세요` : displayedAt(single.dueTime)}
+                description={
+                  displayedAt(single.dueTime) == `지남`
+                    ? `해당 위치에서 확인해주세요`
+                    : displayedAt(single.dueTime)
+                }
                 icon={single.type == 0 ? secret : null}
                 coordinate={{
                   latitude: single.latitude,

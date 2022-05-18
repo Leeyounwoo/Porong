@@ -7,12 +7,12 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
-
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import ModalDropdown from 'react-native-modal-dropdown';
 import axios from 'axios';
-import {useStore} from 'react-redux';
+import {useStore, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ReceivedBox({navigation}) {
   const store = useStore();
@@ -20,6 +20,7 @@ export default function ReceivedBox({navigation}) {
   const [receivedMessagesKeys, setReceivedMessagesKeys] = useState([]);
   const [sendedMessages, setSendedMessages] = useState({});
   const [sendedMessagesKeys, setSendedMessagesKeys] = useState([]);
+  const user = useSelector(state => state.userreducer);
 
   const [singlePos, setSinglePos] = useState({
     lat: 37.5665,
@@ -33,27 +34,25 @@ export default function ReceivedBox({navigation}) {
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
   // 받은 메세지 클릭시 상세 페이지로 이동
   const goToMessageDetail1 = messageId => {
-    navigation.push('Temp', {
+    navigation.push('MessageTemp', {
       messageId: messageId,
       amISend: false,
     });
   };
-  
+
   // 보낸 메세지 클릭시 상세 디테일로 이동
   const goToMessageDetail2 = messageId => {
-    navigation.push('Temp', {
+    navigation.push('MessageTemp', {
       messageId: messageId,
       amISend: true,
     });
   };
-  
+
   useEffect(() => {
-    if (label1 =='보낸 메세지' ) {
+    if (label1 === '보낸 메세지') {
       axios
-      .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
-        }/getsentmessages`,
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getsentmessages`,
         )
         .then(res => {
           let temp = res.data;
@@ -67,86 +66,79 @@ export default function ReceivedBox({navigation}) {
         .catch(err => {
           console.log(err);
         });
-      } else if (label1 == '받은 메세지') {
-        axios
+    } else if (label1 === '받은 메세지') {
+      axios
         .get(
-          `http://k6c102.p.ssafy.io:8080/v1/message/${
-            store.getState().userreducer.memberId
-          }/getreceivedmessages`,
-          )
-          .then(res => {
-            let temp = res.data;
-            let show = [];
-            temp.map((single, idx) => {
-              show.push(single);
-            });
-            console.log(show);
-            setMarkers(show);
-          })
-          .catch(err => {
-            console.log(err);
+          `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
+        )
+        .then(res => {
+          let temp = res.data;
+          let show = [];
+          temp.map((single, idx) => {
+            show.push(single);
           });
-          
-        }
-    }, [label1]);
-      
-      const btnClick = () => {
-        setUlFlag(true);
-      };
-      
-      const seeMap = () => {
-        setDisplayMap(true);
-        setUlFlag(false);
-      };
-      
-      const seeList = () => {
-        setDisplayMap(false);
-        setUlFlag(false);
-      };
-      
-      useEffect(() => {
-        console.log('memberId', store.getState().userreducer.memberId);
-        // 받은 메세지
-        axios
-        .get(
-          `http://k6c102.p.ssafy.io:8080/v1/message/${
-            store.getState().userreducer.memberId
-          }/getreceivedmessages`,
-          )
-          .then(res => {
-            const tmessages = res.data;
-            tmessages.map(async (message, midx) => {
-              await setReceivedMessages(prev => {
-                return {
-                  ...prev,
-                  [tmessages[midx]['messageId']]: {
-                    lat: tmessages[midx]['latitude'],
-                    lng: tmessages[midx]['longitude'],
-                    title: tmessages[midx]['title'],
-                    sender: tmessages[midx]['senderName'],
-                    profileImgUrl: tmessages[midx]['senderProfileUrl'],
-                  },
-                };
-              });
-              setReceivedMessagesKeys(prev => [
-                ...prev,
-                tmessages[midx]['messageId'],
-              ]);
-            });
-          })
-          .catch(err => {
-            console.log(err);
+          console.log(show);
+          setMarkers(show);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [label1, user.memberId]);
+
+  const btnClick = () => {
+    setUlFlag(true);
+  };
+
+  const seeMap = () => {
+    setDisplayMap(true);
+    setUlFlag(false);
+  };
+
+  const seeList = () => {
+    setDisplayMap(false);
+    setUlFlag(false);
+  };
+
+  useEffect(() => {
+    console.log('memberId', user.memberId);
+    // 받은 메세지
+    axios
+      .get(
+        `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
+      )
+      .then(res => {
+        const tmessages = res.data;
+        tmessages.map(async (message, midx) => {
+          await setReceivedMessages(prev => {
+            return {
+              ...prev,
+              [tmessages[midx]['messageId']]: {
+                lat: tmessages[midx]['latitude'],
+                lng: tmessages[midx]['longitude'],
+                title: tmessages[midx]['title'],
+                sender: tmessages[midx]['senderName'],
+                profileImgUrl: tmessages[midx]['senderProfileUrl'],
+              },
+            };
           });
-          // 보낸 메세지
-          axios
-          .get(
-            `http://k6c102.p.ssafy.io:8080/v1/message/${
-              store.getState().userreducer.memberId
-            }/getsentmessages`,
-            )
-            .then(res => {
-              const tmessages = res.data;
-              tmessages.map(async (message, midx) => {
+          setReceivedMessagesKeys(prev => [
+            ...prev,
+            tmessages[midx]['messageId'],
+          ]);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    // 보낸 메세지
+    axios
+      .get(
+        `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getsentmessages`,
+      )
+      .then(res => {
+        const tmessages = res.data;
+        tmessages.map(async (message, midx) => {
           await setSendedMessages(prev => {
             return {
               ...prev,
@@ -168,20 +160,16 @@ export default function ReceivedBox({navigation}) {
       .catch(err => {
         console.log(err);
       });
-    }, []);
-    
-    useEffect(() => {
-      
-    }, [label1]);
-    
-    useEffect(() => {
-      Geocoder.from(singlePos).then(json => {
-        setTransPos(json.results[0].formatted_address);
-      });
-    }, []);
-    
-    return (
-      <View style={styles.allcontainer}>
+  }, [user.memberId]);
+
+  useEffect(() => {
+    Geocoder.from(singlePos).then(json => {
+      setTransPos(json.results[0].formatted_address);
+    });
+  }, []);
+
+  return (
+    <View style={styles.allcontainer}>
       <View
         style={{
           justifyContent: 'space-evenly',
@@ -240,7 +228,7 @@ export default function ReceivedBox({navigation}) {
             provider={PROVIDER_GOOGLE}
             minZoomLevel={7}
             maxZoomLevel={7}
-            style={{ width: 350, height: 350 }}
+            style={{width: 350, height: 350}}
             toolbarEnabled={false}
             initialRegion={{
               latitude: 35.9255,
@@ -253,19 +241,29 @@ export default function ReceivedBox({navigation}) {
                   return (
                     <Marker
                       key={idx}
-                      title={`${single.senderName}의 메세지` }
-                      onPress={() => { goToMessageDetail2(single.messageId) }}
+                      title={`${single.senderName}의 메세지`}
+                      onPress={() => {
+                        if (label1 === '받은 메세지') {
+                          goToMessageDetail1(single.messageId);
+                        } else {
+                          goToMessageDetail2(single.messageId);
+                        }
+                      }}
                       coordinate={{
                         latitude: single.latitude,
                         longitude: single.longitude,
                       }}>
-                      { label1=='받은 메세지' ?<Image
-                        source={{ uri: single.senderProfileUrl }}
-                        style={{ height: 35, width: 35, borderRadius: 100 }}
-                      /> : <Image
-                      source={{ uri: single.receiverProfileUrl }}
-                      style={{ height: 35, width: 35, borderRadius: 100 }}
-                    /> }
+                      {label1 === '받은 메세지' ? (
+                        <Image
+                          source={{uri: single.senderProfileUrl}}
+                          style={{height: 35, width: 35, borderRadius: 100}}
+                        />
+                      ) : (
+                        <Image
+                          source={{uri: single.receiverProfileUrl}}
+                          style={{height: 35, width: 35, borderRadius: 100}}
+                        />
+                      )}
                     </Marker>
                   );
                 })
