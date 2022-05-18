@@ -171,7 +171,7 @@ public class MessageService {
 
        if (requestMessageDto.getTimeNow().isAfter(message.getDueTime()) || requestMessageDto.getTimeNow().isEqual(message.getDueTime()) ) {
 
-           message.checkMessage(); // isChecked = 0 -> isChecked = 1
+           // message.checkMessage(); // isChecked = 0 -> isChecked = 1  postsatisfy로 옮김
 
            ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
 
