@@ -143,8 +143,8 @@ export default function MessagePerson({navigation}) {
         url: `http://k6c102.p.ssafy.io:8080/v1/member/recommend?phoneNumber=${phoneNumber}`,
         method: 'post',
       })
-        .then(res => {
-          console.log(res);
+        .then(_ => {
+          alert('추천 메세지를 발송했습니다.');
         })
         .catch(err => {
           console.log(err);
