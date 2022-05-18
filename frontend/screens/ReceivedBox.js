@@ -166,6 +166,8 @@ export default function ReceivedBox({navigation}) {
       });
   }, []);
 
+  useEffect(() => {}, [label1]);
+
   useEffect(() => {
     Geocoder.from(singlePos).then(json => {
       setTransPos(json.results[0].formatted_address);

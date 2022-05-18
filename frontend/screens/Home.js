@@ -17,7 +17,6 @@ function displayedAt(createdAt) {
     createdAt[4],
     createdAt[5],
   );
-  console.log(duedate);
   const milliSeconds = duedate - new Date();
   if (milliSeconds < 0) return `지남`;
 
@@ -60,7 +59,10 @@ const Home = ({navigation}) => {
         setMarkers(received);
       })
       .catch(err => {
-        console.log('axios error at home didmount', err);
+        console.log(
+          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+          err,
+        );
       });
 
     Geolocation.getCurrentPosition(
@@ -76,6 +78,13 @@ const Home = ({navigation}) => {
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   }, [user.memberId]);
+
+  const clicktest = (e, messageId) => {
+    navigation.navigate('Temp', {
+      messageId: messageId,
+      amISend: false,
+    });
+  };
 
   const clicktest = (e, messageId) => {
     navigation.navigate('Temp', {
