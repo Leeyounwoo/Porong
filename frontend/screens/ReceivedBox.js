@@ -11,7 +11,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import ModalDropdown from 'react-native-modal-dropdown';
 import axios from 'axios';
-import {useStore} from 'react-redux';
+import {useStore, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ReceivedBox({navigation}) {
@@ -20,6 +20,7 @@ export default function ReceivedBox({navigation}) {
   const [receivedMessagesKeys, setReceivedMessagesKeys] = useState([]);
   const [sendedMessages, setSendedMessages] = useState({});
   const [sendedMessagesKeys, setSendedMessagesKeys] = useState([]);
+  const user = useSelector(state => state.userreducer);
 
   const [singlePos, setSinglePos] = useState({
     lat: 37.5665,
@@ -51,9 +52,7 @@ export default function ReceivedBox({navigation}) {
     if (label1 === '보낸 메세지') {
       axios
         .get(
-          `http://k6c102.p.ssafy.io:8080/v1/message/${
-            store.getState().userreducer.memberId
-          }/getsentmessages`,
+          `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getsentmessages`,
         )
         .then(res => {
           let temp = res.data;
@@ -70,9 +69,7 @@ export default function ReceivedBox({navigation}) {
     } else if (label1 === '받은 메세지') {
       axios
         .get(
-          `http://k6c102.p.ssafy.io:8080/v1/message/${
-            store.getState().userreducer.memberId
-          }/getreceivedmessages`,
+          `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
         )
         .then(res => {
           let temp = res.data;
@@ -87,7 +84,7 @@ export default function ReceivedBox({navigation}) {
           console.log(err);
         });
     }
-  }, [label1]);
+  }, [label1, user.memberId]);
 
   const btnClick = () => {
     setUlFlag(true);
@@ -104,13 +101,11 @@ export default function ReceivedBox({navigation}) {
   };
 
   useEffect(() => {
-    console.log('memberId', store.getState().userreducer.memberId);
+    console.log('memberId', user.memberId);
     // 받은 메세지
     axios
       .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
-        }/getreceivedmessages`,
+        `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
       )
       .then(res => {
         const tmessages = res.data;
@@ -139,9 +134,7 @@ export default function ReceivedBox({navigation}) {
     // 보낸 메세지
     axios
       .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
-        }/getsentmessages`,
+        `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getsentmessages`,
       )
       .then(res => {
         const tmessages = res.data;
@@ -167,9 +160,7 @@ export default function ReceivedBox({navigation}) {
       .catch(err => {
         console.log(err);
       });
-  }, []);
-
-  useEffect(() => {}, [label1]);
+  }, [user.memberId]);
 
   useEffect(() => {
     Geocoder.from(singlePos).then(json => {
