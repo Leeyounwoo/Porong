@@ -93,7 +93,7 @@ export default function Alarm({navigation}) {
     });
   };
   return (
-    <ScrollView style={{marginBottom: 170}}>
+    <ScrollView style={{marginBottom: 130}}>
       <View style={styles.allcontainer}>
         {/* <Button onPress={deleteAll} title={'지우기'}></Button> */}
 
