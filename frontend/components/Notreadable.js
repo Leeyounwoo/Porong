@@ -57,7 +57,7 @@ export default function Nodereadable({
           minZoomLevel={18}
           maxZoomLevel={18}
           style={{width: 350, height: 200}}
-          initialRegion={{
+          region={{
             latitude: latitude,
             longitude: longitude,
             latitudeDelta: 0.015,

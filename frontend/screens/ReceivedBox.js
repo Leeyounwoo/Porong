@@ -20,7 +20,9 @@ export default function ReceivedBox({navigation}) {
   const [receivedMessagesKeys, setReceivedMessagesKeys] = useState([]);
   const [sendedMessages, setSendedMessages] = useState({});
   const [sendedMessagesKeys, setSendedMessagesKeys] = useState([]);
-
+  const [memberId, setMemberId] = useState(
+    store.getState().userreducer.memberId,
+  );
   const [singlePos, setSinglePos] = useState({
     lat: 37.5665,
     lng: 126.978,
@@ -30,8 +32,11 @@ export default function ReceivedBox({navigation}) {
   const [markers, setMarkers] = useState(null);
   const [label1, setLabel1] = useState('받은 메세지');
 
-  Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
+  useEffect(() => {
+    setMemberId(store.getState().userreducer.memberId);
+  }, []);
 
+  Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
   // 받은 메세지 클릭시 상세 페이지로 이동
   const goToMessageDetail1 = messageId => {
     navigation.push('Temp', {
@@ -48,28 +53,6 @@ export default function ReceivedBox({navigation}) {
     });
   };
 
-  useEffect(() => {
-    if (label == '지도로 보기') {
-      axios
-        .get(
-          `http://k6c102.p.ssafy.io:8080/v1/message/${
-            store.getState().userreducer.memberId
-          }/getsentmessages`,
-        )
-        .then(res => {
-          let temp = res.data;
-          let show = [];
-          temp.map((single, idx) => {
-            show.push(single);
-          });
-          setMarkers(show);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  }, [label]);
-
   const btnClick = () => {
     setUlFlag(true);
   };
@@ -85,13 +68,48 @@ export default function ReceivedBox({navigation}) {
   };
 
   useEffect(() => {
-    console.log('memberId', store.getState().userreducer.memberId);
+    if (label1 == '보낸 메세지') {
+      axios
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/getsentmessages`,
+        )
+        .then(res => {
+          let temp = res.data;
+          let show = [];
+          temp.map((single, idx) => {
+            show.push(single);
+          });
+          console.log(show);
+          setMarkers(show);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else if (label1 == '받은 메세지') {
+      axios
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/getreceivedmessages`,
+        )
+        .then(res => {
+          let temp = res.data;
+          let show = [];
+          temp.map((single, idx) => {
+            show.push(single);
+          });
+          console.log(show);
+          setMarkers(show);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [label1, memberId]);
+
+  useEffect(() => {
     // 받은 메세지
     axios
       .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
-        }/getreceivedmessages`,
+        `http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/getreceivedmessages`,
       )
       .then(res => {
         const tmessages = res.data;
@@ -120,9 +138,7 @@ export default function ReceivedBox({navigation}) {
     // 보낸 메세지
     axios
       .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
-        }/getsentmessages`,
+        `http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/getsentmessages`,
       )
       .then(res => {
         const tmessages = res.data;
@@ -210,31 +226,81 @@ export default function ReceivedBox({navigation}) {
           />
         </View>
       </View>
-      {label === '지도로 보기' && (
+      {label === '지도로 보기' && label1 === '받은 메세지' && (
         <View style={styles.map}>
           <MapView
             provider={PROVIDER_GOOGLE}
             minZoomLevel={7}
             maxZoomLevel={7}
             style={{width: 350, height: 350}}
+            toolbarEnabled={false}
             initialRegion={{
               latitude: 35.9255,
               longitude: 127.861,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
-            {markers != null
-              ? markers.map((single, idx) => {
+            {receivedMessagesKeys !== null
+              ? receivedMessagesKeys.map((key, idx) => {
                   return (
                     <Marker
                       key={idx}
-                      title={`${single.latitude}, ${single.longitude}`}
+                      title={`${receivedMessagesKeys[idx].senderName}의 메세지`}
+                      onPress={() => {
+                        goToMessageDetail1(receivedMessagesKeys[idx].messageId);
+                      }}
                       coordinate={{
-                        latitude: single.latitude,
-                        longitude: single.longitude,
+                        latitude: receivedMessagesKeys[idx].latitude,
+                        longitude: receivedMessagesKeys[idx].longitude,
                       }}>
                       <Image
-                        source={{uri: single.receiverProfileUrl}}
+                        source={{
+                          uri: receivedMessagesKeys[idx].senderProfileUrl,
+                        }}
+                        style={{height: 35, width: 35, borderRadius: 100}}
+                      />
+                      {/* <Image
+                          source={{uri: receivedMessagesKeys[idx].receiverProfileUrl}}
+                          style={{height: 35, width: 35, borderRadius: 100}}
+                        /> */}
+                    </Marker>
+                  );
+                })
+              : null}
+          </MapView>
+        </View>
+      )}
+      {label === '지도로 보기' && label1 === '보낸 메세지' && (
+        <View style={styles.map}>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            minZoomLevel={7}
+            maxZoomLevel={7}
+            style={{width: 350, height: 350}}
+            toolbarEnabled={false}
+            initialRegion={{
+              latitude: 35.9255,
+              longitude: 127.861,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}>
+            {sendedMessagesKeys !== null
+              ? sendedMessagesKeys.map((key, idx) => {
+                  return (
+                    <Marker
+                      key={idx}
+                      title={`${sendedMessagesKeys[idx].senderName}의 메세지`}
+                      onPress={() => {
+                        goToMessageDetail1(sendedMessagesKeys[idx].messageId);
+                      }}
+                      coordinate={{
+                        latitude: sendedMessagesKeys[idx].latitude,
+                        longitude: sendedMessagesKeys[idx].longitude,
+                      }}>
+                      <Image
+                        source={{
+                          uri: sendedMessagesKeys[idx].receiverProfileUrl,
+                        }}
                         style={{height: 35, width: 35, borderRadius: 100}}
                       />
                     </Marker>
@@ -253,7 +319,7 @@ export default function ReceivedBox({navigation}) {
               return (
                 <TouchableHighlight
                   onPress={() => {
-                    goToMessageDetail1(receivedMessagesKeys[keyidx]);
+                    goToMessageDetail2(receivedMessagesKeys[keyidx]);
                   }}
                   key={keyidx}>
                   <View style={styles.alarmcontainer}>
