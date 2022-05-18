@@ -69,11 +69,9 @@ export default function MessagePlace({ navigation}) {
             <View style={styles.searchboxContainer}>
                 <TextInput onChangeText={text => setAddress(text)} value={address}></TextInput>
             </View>
-            
             <View style={styles.searchbtnContainer}>
                 <Button  title="검색" onPress={searchAddress}></Button>
             </View>
-
             <View
                 style={{
                 flex: 1.1,

@@ -17,6 +17,7 @@ export default function Nodereadable({
   longitude,
 }) {
   const [toFrom, setToFrom] = useState('false');
+  const [data, setData] = useState(null);
   console.log(
     'Notreadable',
     amISend,
@@ -26,16 +27,15 @@ export default function Nodereadable({
     latitude,
     longitude,
   );
-  useEffect(() => {
+  useLayoutEffect(() => {
+    console.log("notreadable 페이지 열림");
+
     if (amISend === true) {
       setToFrom('에게');
     } else {
       setToFrom('님이');
     }
   }, []);
-
-  console.log(toFrom);
-
   return (
     <View>
       <View
@@ -46,18 +46,18 @@ export default function Nodereadable({
           alignSelf: 'baseline',
         }}>
         <Text style={{fontSize: 15, color: 'black'}}>
-          <Text style={{color: '#0075FF', fontWeight: 'bold'}}>{nickName}</Text>
+          <Text style={{color: '#0075FF', fontWeight: 'bold'}}>{nickName }</Text>
           {toFrom}
         </Text>
       </View>
       <View
         style={{alignItems: 'center', borderRadius: 15, overflow: 'hidden'}}>
-        <MapView
+         <MapView
           provider={PROVIDER_GOOGLE}
           minZoomLevel={18}
           maxZoomLevel={18}
           style={{width: 350, height: 200}}
-          initialRegion={{
+          region={{
             latitude: latitude,
             longitude: longitude,
             latitudeDelta: 0.015,
@@ -71,11 +71,8 @@ export default function Nodereadable({
           />
         </MapView>
       </View>
-      <View style={{marginTop: 15, marginLeft: 20, alignSelf: 'baseline'}}>
-        <Text style={{color: 'black'}}>
-          <Text style={{color: '#0075FF', fontWeight: 'bold'}}>{time}</Text>{' '}
-          확인 가능합니다
-        </Text>
+      <View style={{ marginTop: 15, marginLeft: 20, alignSelf: 'baseline' }}>
+        <Text style={{color: 'black'}}><Text style={{color: '#0075FF', fontWeight: 'bold'}}>{time}</Text>확인 가능합니다</Text>
         <Text style={{color: 'black'}}>
           <Text
             style={{

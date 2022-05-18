@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import {StyleSheet, View, Text, Button} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
@@ -25,15 +25,16 @@ export default function Temp({navigation, route}) {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [context, setContext] = useState('');
-
-  useEffect(() => {
+  const [contentUrl, setContentUrl] = useState('');
+  useLayoutEffect(() => {
     console.log('123', messageId);
     const now = new Date();
     const time = `${now.getFullYear()}-${dateTrans(
       now.getMonth() + 1,
     )}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(
       now.getMinutes(),
-    )}:${dateTrans(now.getSeconds())}`;
+      )}:${dateTrans(now.getSeconds())}`;
+    console.log("temp axios params data : ",store.getState().userreducer.memberId, " ", messageId, "     ", time);
     axios
       .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
@@ -58,6 +59,9 @@ export default function Temp({navigation, route}) {
         setLatitude(res.data.latitude);
         setLongitude(res.data.longitude);
         setContext(res.data.contentText);
+        setContentUrl(res.data.contentUrl);
+      }).catch(err => {
+        console.log("axios temp error    ",err);
       });
 
     AsyncStorage.getItem('receivedMessages', (err, result) => {
@@ -83,6 +87,7 @@ export default function Temp({navigation, route}) {
           context={context}
           latitude={latitude}
           longitude={longitude}
+          contentUrl={ contentUrl}
         />
       )}
       {amISend === false && flag === false && (

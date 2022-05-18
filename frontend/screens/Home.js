@@ -17,6 +17,7 @@ function displayedAt(createdAt) {
     createdAt[4],
     createdAt[5],
   );
+  console.log(duedate);
   const milliSeconds = duedate - new Date();
   if (milliSeconds < 0) return `지남`;
 
@@ -42,12 +43,15 @@ const Home = ({navigation}) => {
   const position = useSelector(state => state.posreducer);
   const [markers, setMarkers] = useState([]);
   const markerRef = useRef();
+  
   const user = useSelector(state => state.userreducer);
+  
+  
   useEffect(() => {
     axios
       .get(
         `http://k6c102.p.ssafy.io:8080/v1/message/${
-          store.getState().userreducer.memberId
+          user.memberId
         }/fetchUncheckedMesaages`,
       )
       .then(json => {
@@ -56,10 +60,11 @@ const Home = ({navigation}) => {
         json.data.map(single => {
           received.push(single);
         });
+        console.log(received);
         setMarkers(received);
       })
       .catch(err => {
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",err);
+        console.log("axios error at home didmount",err);
       });
 
     Geolocation.getCurrentPosition(
@@ -74,7 +79,7 @@ const Home = ({navigation}) => {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-  }, []);
+  }, [user.memberId]);
 
   const clicktest = (e, messageId) => {
     navigation.navigate('Temp', {
