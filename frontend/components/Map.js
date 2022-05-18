@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet,Dimensions, View, Text,Button } from 'react-native';
+import {StyleSheet,Dimensions, View, Text,Button,Image } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -21,7 +21,7 @@ export default function MapTest({ totalpos, mark }) {
                 }}
                 onPress={checkreceive}
             > 
-                {totalpos ?    <Marker coordinate={{ latitude: totalpos.lat, longitude: totalpos.lng }} /> : null}
+                {totalpos ? <Marker coordinate={{ latitude: totalpos.lat, longitude: totalpos.lng }} ></Marker> : null}
             </MapView> 
         </View>
     )

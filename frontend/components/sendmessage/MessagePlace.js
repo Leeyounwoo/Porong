@@ -66,10 +66,10 @@ export default function MessagePlace({ navigation}) {
             </View>
 
             <MapTest totalpos={totalpos} mark={mark} />
-            
             <View style={styles.searchboxContainer}>
                 <TextInput onChangeText={text => setAddress(text)} value={address}></TextInput>
             </View>
+            
             <View style={styles.searchbtnContainer}>
                 <Button  title="검색" onPress={searchAddress}></Button>
             </View>
@@ -101,17 +101,17 @@ export default function MessagePlace({ navigation}) {
 
 const styles = StyleSheet.create({
     dateBtn: {
-        height: 35,
-        width: 100,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      dateText: {
-        color: 'white',
-      },
+    height: 35,
+    width: 100,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    },
+    dateText: {
+    color: 'white',
+    },
     selectPositionContainer: {
-        marginTop: 40,
+        marginTop: 40
     },
     textContainer: {
       alignSelf:'center'  
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     searchboxContainer: {
         position: 'absolute',
         left: 30,
-        bottom: 300,
+        bottom: 380,
         borderColor: 'grey',
         borderWidth: 1,
         backgroundColor: 'white',
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     searchbtnContainer: {
         position: 'absolute',
         right: 30,
-        bottom: 305
+        bottom: 385
     }
 
 })
