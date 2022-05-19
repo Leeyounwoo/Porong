@@ -227,7 +227,7 @@ const Home = ({navigation}) => {
                   ref={markerRef}
                   key={idx}
                   onPress={() => {
-                    clicktest(newMarkersKey);
+                    clicktest(newMarkersKey[idx]);
                   }}
                   coordinate={{
                     latitude: parseFloat(newMarkers[single]['latitude']),
