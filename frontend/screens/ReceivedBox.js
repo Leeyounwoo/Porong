@@ -1,18 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   Image,
-  TouchableHighlight,
+  TouchableOpacity,
   ScrollView,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
-import ModalDropdown from 'react-native-modal-dropdown';
 import axios from 'axios';
 import {useStore, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NativeBaseProvider, Select, Box, CheckIcon} from 'native-base';
 
 export default function ReceivedBox({navigation}) {
   const store = useStore();
@@ -27,9 +26,9 @@ export default function ReceivedBox({navigation}) {
     lng: 126.978,
   });
   const [transPos, setTransPos] = useState('ee');
-  const [label, setLabel] = useState('목록으로 보기');
+  const [label, setLabel] = useState('list');
   const [markers, setMarkers] = useState(null);
-  const [label1, setLabel1] = useState('받은 메세지');
+  const [label1, setLabel1] = useState('receive');
 
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
   // 받은 메세지 클릭시 상세 페이지로 이동
@@ -49,62 +48,49 @@ export default function ReceivedBox({navigation}) {
   };
 
   useEffect(() => {
-    if (label1 === '보낸 메세지') {
+    if (label1 === 'send') {
       axios
         .get(
           `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getsentmessages`,
         )
         .then(res => {
-          let temp = res.data;
-          let show = [];
-          temp.map((single, idx) => {
-            show.push(single);
-          });
-          setMarkers(show);
+          // let temp = res.data;
+          // let show = [];
+          // temp.map((single, idx) => {
+          //   show.push(single);
+          // });
+          setMarkers(res.data);
         })
         .catch(err => {
-          console.log("getsentmessages error",err);
+          console.log('getsentmessages error', err);
         });
-    } else if (label1 === '받은 메세지') {
+    } else if (label1 === 'receive') {
       axios
         .get(
           `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
         )
         .then(res => {
-          let temp = res.data;
-          let show = [];
-          temp.map((single, idx) => {
-            show.push(single);
-          });
-          setMarkers(show);
+          // let temp = res.data;
+          // let show = [];
+          // temp.map((single, idx) => {
+          //   show.push(single);
+          // });
+          setMarkers(res.data);
         })
         .catch(err => {
-          console.log("getreceivedmessage error",err);
+          console.log('getreceivedmessage error', err);
         });
     }
   }, [label1, user.memberId]);
 
-  const btnClick = () => {
-    setUlFlag(true);
-  };
-
-  const seeMap = () => {
-    setDisplayMap(true);
-    setUlFlag(false);
-  };
-
-  const seeList = () => {
-    setDisplayMap(false);
-    setUlFlag(false);
-  };
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     // 받은 메세지
     axios
       .get(
         `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
       )
       .then(res => {
+        console.log(res);
         const tmessages = res.data;
         tmessages.map(async (message, midx) => {
           await setReceivedMessages(prev => {
@@ -126,7 +112,7 @@ export default function ReceivedBox({navigation}) {
         });
       })
       .catch(err => {
-        console.log("getreceivedmessages set error",err);
+        console.log('getreceivedmessages set error', err);
       });
     // 보낸 메세지
     axios
@@ -155,9 +141,9 @@ export default function ReceivedBox({navigation}) {
         });
       })
       .catch(err => {
-        console.log("sentmessages set error",err);
+        console.log('sentmessages set error', err);
       });
-  }, [user.memberId]);
+  }, []);
 
   useEffect(() => {
     Geocoder.from(singlePos).then(json => {
@@ -166,216 +152,212 @@ export default function ReceivedBox({navigation}) {
   }, []);
 
   return (
-    <View style={styles.allcontainer}>
-      <View
-        style={{
-          justifyContent: 'space-evenly',
-          flexDirection: 'row',
-          marginHorizontal: '20%',
-        }}>
+    <NativeBaseProvider>
+      <View style={styles.allcontainer}>
+        {/* dropdown 메뉴 */}
         <View
           style={{
-            marginVertical: 50,
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: 'black',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: 5,
           }}>
-          <ModalDropdown
-            style={{
-              alignItems: 'center',
-              width: 100,
-              fontWeight: 'bold',
-            }}
-            defaultValue="받은 메세지"
-            options={['받은 메세지', '보낸 메세지']}
-            dropdownStyle={{
-              height: 70,
-            }}
-            textStyle={{color: 'black', fontWeight: '900'}}
-            onSelect={(idx, value) => setLabel1(value)}
-          />
+          <Box w="3/4" maxW="160">
+            <Select
+              selectedValue={label1}
+              minWidth="90"
+              accessibilityLabel="Choose Service"
+              placeholder={label1}
+              color="black"
+              backgroundColor="white"
+              _selectedItem={{
+                bg: 'white',
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={itemValue => {
+                setLabel1(itemValue);
+              }}>
+              <Select.Item label="받은 메세지함" value="receive" />
+              <Select.Item label="보낸 메세지함" value="send" />
+            </Select>
+          </Box>
+          <Box w="3/4" maxW="160">
+            <Select
+              selectedValue={label}
+              minWidth="90"
+              accessibilityLabel="Choose Service"
+              placeholder={label}
+              color="black"
+              backgroundColor="white"
+              _selectedItem={{
+                bg: 'white',
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={itemValue => {
+                setLabel(itemValue);
+              }}>
+              <Select.Item label="목록으로 보기" value="list" />
+              <Select.Item label="지도로 보기" value="map" />
+            </Select>
+          </Box>
         </View>
-        <View
-          style={{
-            marginLeft: 100,
-            marginVertical: 50,
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: 'black',
-          }}>
-          <ModalDropdown
-            style={{
-              alignItems: 'center',
-              width: 100,
-              fontWeight: 'bold',
-            }}
-            defaultValue="목록으로 보기"
-            options={['지도로 보기', '목록으로 보기']}
-            dropdownStyle={{
-              height: 70,
-            }}
-            textStyle={{color: 'black', fontWeight: '900'}}
-            onSelect={(idx, value) => setLabel(value)}
-          />
-        </View>
-      </View>
-      {label === '지도로 보기' && (
-        <View style={styles.map}>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            minZoomLevel={7}
-            maxZoomLevel={7}
-            style={{width: 350, height: 350}}
-            toolbarEnabled={false}
-            initialRegion={{
-              latitude: 35.9255,
-              longitude: 127.861,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}>
-            {markers != null
-              ? markers.map((single, idx) => {
-                  return (
-                    <Marker
-                      key={idx}
-                      title={`${single.senderName}의 메세지`}
-                      onPress={() => {
-                        if (label1 === '받은 메세지') {
-                          goToMessageDetail1(single.messageId);
-                        } else {
-                          goToMessageDetail2(single.messageId);
-                        }
-                      }}
-                      coordinate={{
-                        latitude: single.latitude,
-                        longitude: single.longitude,
-                      }}>
-                      {label1 === '받은 메세지' ? (
-                        <Image
-                          source={{uri: single.senderProfileUrl}}
-                          style={{height: 35, width: 35, borderRadius: 100}}
-                        />
-                      ) : (
-                        <Image
-                          source={{uri: single.receiverProfileUrl}}
-                          style={{height: 35, width: 35, borderRadius: 100}}
-                        />
-                      )}
-                    </Marker>
-                  );
-                })
-              : null}
-          </MapView>
-        </View>
-      )}
+        {label === 'map' && (
+          <View style={styles.mapcontainer}>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              minZoomLevel={7}
+              maxZoomLevel={7}
+              toolbarEnabled={false}
+              initialRegion={{
+                latitude: 35.9255,
+                longitude: 127.861,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}>
+              {markers != null
+                ? markers.map((single, idx) => {
+                    return (
+                      <Marker
+                        key={idx}
+                        title={`${single.senderName}의 메세지`}
+                        onPress={() => {
+                          if (label1 === 'receive') {
+                            goToMessageDetail1(single.messageId);
+                          } else {
+                            goToMessageDetail2(single.messageId);
+                          }
+                        }}
+                        coordinate={{
+                          latitude: single.latitude,
+                          longitude: single.longitude,
+                        }}>
+                        {label1 === 'receive' ? (
+                          <Image
+                            source={{uri: single.senderProfileUrl}}
+                            style={{height: 35, width: 35, borderRadius: 100}}
+                          />
+                        ) : (
+                          <Image
+                            source={{uri: single.receiverProfileUrl}}
+                            style={{height: 35, width: 35, borderRadius: 100}}
+                          />
+                        )}
+                      </Marker>
+                    );
+                  })
+                : null}
+            </MapView>
+          </View>
+        )}
 
-      <ScrollView style={{marginBottom: 33}}>
-        {label === '목록으로 보기' &&
-          label1 === '받은 메세지' &&
-          receivedMessagesKeys.map((key, keyidx) => {
-            if (receivedMessages[receivedMessagesKeys[keyidx]] !== undefined) {
-              return (
-                <TouchableHighlight
-                  onPress={() => {
-                    goToMessageDetail1(receivedMessagesKeys[keyidx]);
-                  }}
-                  key={keyidx}>
-                  <View style={styles.alarmcontainer}>
-                    <View style={styles.profilebox}>
-                      <Image
-                        source={{
-                          uri: receivedMessages[receivedMessagesKeys[keyidx]]
-                            .profileImgUrl,
-                        }}
-                        style={styles.profileimage}
-                      />
+        <ScrollView style={{marginBottom: 150}}>
+          {label === 'list' &&
+            label1 === 'receive' &&
+            receivedMessagesKeys.map((key, keyidx) => {
+              if (
+                receivedMessages[receivedMessagesKeys[keyidx]] !== undefined
+              ) {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      goToMessageDetail1(receivedMessagesKeys[keyidx]);
+                    }}
+                    key={keyidx}>
+                    <View style={styles.alarmcontainer}>
+                      <View style={styles.profilebox}>
+                        <Image
+                          source={{
+                            uri: receivedMessages[receivedMessagesKeys[keyidx]]
+                              .profileImgUrl,
+                          }}
+                          style={styles.profileimage}
+                        />
+                      </View>
+                      <View style={styles.textbox}>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            marginBottom: 5,
+                            color: 'black',
+                          }}>{`${
+                          receivedMessages[receivedMessagesKeys[keyidx]].sender
+                        }`}</Text>
+                        <Text>
+                          {receivedMessages[receivedMessagesKeys[keyidx]].title}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={styles.textbox}>
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          fontWeight: 'bold',
-                          marginBottom: 5,
-                          color: 'black',
-                        }}>{`${
-                        receivedMessages[receivedMessagesKeys[keyidx]].sender
-                      }`}</Text>
-                      <Text>
-                        {receivedMessages[receivedMessagesKeys[keyidx]].title}
-                      </Text>
+                  </TouchableOpacity>
+                );
+              }
+            })}
+          {label === 'list' &&
+            label1 === 'send' &&
+            sendedMessagesKeys.map((key, keyidx) => {
+              if (sendedMessages[sendedMessagesKeys[keyidx]] !== undefined) {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      goToMessageDetail2(sendedMessagesKeys[keyidx]);
+                    }}
+                    key={keyidx}>
+                    <View style={styles.alarmcontainer}>
+                      <View style={styles.profilebox}>
+                        <Image
+                          source={{
+                            uri: sendedMessages[sendedMessagesKeys[keyidx]]
+                              .profileImgUrl,
+                          }}
+                          style={styles.profileimage}
+                        />
+                      </View>
+                      <View style={styles.textbox}>
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            marginBottom: 5,
+                            color: 'black',
+                          }}>{`${
+                          sendedMessages[sendedMessagesKeys[keyidx]].sender
+                        }`}</Text>
+                        <Text>
+                          {sendedMessages[sendedMessagesKeys[keyidx]].title}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableHighlight>
-              );
-            }
-          })}
-        {label === '목록으로 보기' &&
-          label1 === '보낸 메세지' &&
-          sendedMessagesKeys.map((key, keyidx) => {
-            if (sendedMessages[sendedMessagesKeys[keyidx]] !== undefined) {
-              return (
-                <TouchableHighlight
-                  onPress={() => {
-                    goToMessageDetail2(sendedMessagesKeys[keyidx]);
-                  }}
-                  key={keyidx}>
-                  <View style={styles.alarmcontainer}>
-                    <View style={styles.profilebox}>
-                      <Image
-                        source={{
-                          uri: sendedMessages[sendedMessagesKeys[keyidx]]
-                            .profileImgUrl,
-                        }}
-                        style={styles.profileimage}
-                      />
-                    </View>
-                    <View style={styles.textbox}>
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          fontWeight: 'bold',
-                          marginBottom: 5,
-                          color: 'black',
-                        }}>{`${
-                        sendedMessages[sendedMessagesKeys[keyidx]].sender
-                      }`}</Text>
-                      <Text>
-                        {sendedMessages[sendedMessagesKeys[keyidx]].title}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableHighlight>
-              );
-            }
-          })}
-      </ScrollView>
-    </View>
+                  </TouchableOpacity>
+                );
+              }
+            })}
+        </ScrollView>
+      </View>
+    </NativeBaseProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  allcontainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
+  allcontainer: {},
   btnrow: {
     flexWrap: 'nowrap',
     alignItems: 'center',
   },
   alarmcontainer: {
+    alignSelf: 'center',
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: 300,
+    width: 350,
     marginBottom: 10,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#0075FF',
   },
   profilebox: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     margin: 5,
     borderRadius: 70,
     overflow: 'hidden',
@@ -394,5 +376,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: '#4385E0',
     alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  mapcontainer: {
+    height: 510,
+    width: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: 'black',
   },
 });
