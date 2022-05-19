@@ -29,10 +29,22 @@ export default function MessageContent({navigation}) {
   const [transferred, setTransferred] = useState(0);
   const [imageurl, setImageurl] = useState(null);
   const [flag, setFlag] = useState(false);
+  const [uploadText, setUploadText] = useState('사진 업로드');
+  const [background, setBackground] = useState('#335342');
+  const [colors, setColors] = useState(0);
   const next = () => {
-    store.dispatch(messageContain(title, content, imageurl));
+    store.dispatch(messageContain(title, content, imageurl,colors));
     navigation.navigate('Total');
   };
+
+  const nextColor = () => {
+    if (colors < 4) {
+      console.log(colors);
+      return setColors(colors + 1);
+    }  
+    setColors(0);
+  }
+
   const getdownload = (get) => {
 
     get.getDownloadURL().then(res => {
@@ -40,7 +52,9 @@ export default function MessageContent({navigation}) {
     }).catch(err => {
         console.log("download data error : ", err);
       });
-  
+    setUploadText('업로드 완료!')
+    
+    
   }
 
   const uploadImage = async () => {
@@ -62,69 +76,84 @@ export default function MessageContent({navigation}) {
       setFlag(true);
     });
   }
-  return (
-    <ScrollView style={{ flex: 1, }}>
-    <KeyboardAvoidingView
-    behavior="height"
-    style={{
-      flex: 1,
-      backgroundColor: 'white',
-    }}>
-      <View
-        style={{
-          flex: 0.7,
-          marginHorizontal: 10,
-            marginTop: 10,
-        }}>
-        <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
-          메세지 제목
-        </Text>
-        <TextInput style={{borderWidth: 1, borderRadius: 10, marginTop: 10}} onChangeText={text=> { setTitle(text)}} />
-      </View>
-        
-      <View style={{ flex: 3, margin: 10 }}>
 
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>
-          메세지 내용
-        </Text>
-        <View>
-          {image ? <Image source={{uri:image}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
-          </View>
-          {!flag ? <Pressable onPress={uploadPicture} style={{ width: 100, alignSelf: 'flex-end' }}><Text>사진 올리기</Text></Pressable> : <Pressable onPress={uploadImage} style={{ width: 100, alignSelf: 'flex-end' }}><Text>사진 업로드</Text></Pressable>}
-          <TextInput
-            multiline={ true}
-            style={{
-            borderWidth: 1,
-            borderRadius: 10,
-            marginTop: 10,
-            height:100,
-          }}
-          onChangeText={text=> { setContent(text)}}
-        />
-       
-      </View>
-      <View
+  
+
+  return (
+    <View style={{flex:1, backgroundColor: '#fbfaf4'}}>
+      <ScrollView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+        behavior="height"
         style={{
-          flex: 1.1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginHorizontal: 10,
-          marginBottom: 10,
+          flex: 1,
         }}>
-        <TouchableOpacity
-          style={{...styles.dateBtn, backgroundColor: 'grey'}}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.dateText}>이전</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{...styles.dateBtn, backgroundColor: '#4385E0'}}
-          onPress={next}>
-          <Text style={styles.dateText}>다음</Text>
-        </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.7,
+              marginHorizontal: 10,
+                marginTop: 10,
+            }}>
+            <Text style={{fontSize: 18, fontWeight: 'bold', color: '#595959'}}>
+              메세지 제목
+            </Text>
+          </View>
+            <TextInput style={{height:40, margin: 5,borderWidth: 1, borderColor:'#595959', borderRadius: 10, marginTop: 10}} onChangeText={text=> { setTitle(text)}} />
+            
+          <View style={{ flex: 1, margin: 10,justifyContent: 'space-between', alignItems:'flex-start' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#595959', alignSelf:'flex-start' }}>
+              메세지 내용 </Text>
+            <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start'  }}>
+            <Pressable onPress={nextColor} style={{ width: 100,  borderRadius: 5, backgroundColor: '#7aaf91' }}><Text style={{ color: 'white', alignSelf: 'center', justifyContent: 'center' }}>색상변경</Text></Pressable>
+            {!flag ? <Pressable onPress={uploadPicture} style={{ width: 100, marginLeft:'auto',borderRadius:5, backgroundColor:'#7aaf91'}}><Text style={{ color: 'white', alignSelf: 'center', justifyContent: 'center' }}>사진 첨부</Text></Pressable>
+              : <Pressable onPress={uploadImage} style={{ width: 100,borderRadius:5, backgroundColor:'#7aaf91'}}><Text style={{ color: 'white', alignSelf: 'center', justifyContent: 'center'}}>{uploadText}</Text></Pressable>}
+            </View>
+            
+          
+          </View>
+
+          <View style={{...styles.letterback, ...styles.backgroundSelect(colors)}}>
+            <View style={{ alignSelf: 'center' }}>
+              {image ? <Image source={{uri:image}} style={{marginTop:15, marginBottom:10, width: 200, height:200, }}></Image> : null }
+            </View>
+              <TextInput
+                multiline={ true}
+                style={{
+                borderWidth: 1,
+                borderRadius: 10,
+                margin: 20,
+                marginTop: 10,
+                marginBottom:5,
+                borderColor: '#FFEFBF',
+                textDecorationLine:'underline',
+                height: 100,
+                backgroundColor: '#fbfaf4'
+              }}
+              onChangeText={text=> { setContent(text)}}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1.1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginHorizontal: 10,
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              style={{...styles.dateBtn, backgroundColor: 'grey'}}
+              onPress={() => navigation.goBack()}>
+              <Text style={styles.dateText}>이전</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{...styles.dateBtn, backgroundColor: '#7aaf91'}}
+              onPress={next}>
+              <Text style={styles.dateText}>다음</Text>
+            </TouchableOpacity>
+          </View>
+          </KeyboardAvoidingView>
+        </ScrollView>
       </View>
-      </KeyboardAvoidingView>
-      </ScrollView>
   );
 }
 
@@ -135,6 +164,34 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  letterback:{
+    borderRadius: 10,
+    margin: 10,
+    flex: 0.5,
+  }, 
+  backgroundSelect : select => {
+    if (select == 0) {
+      return {
+        backgroundColor:'#335342'
+      }
+    } else if(select == 1){
+      return {
+        backgroundColor:'#333333'
+      }
+    } else if(select == 2){
+      return {
+        backgroundColor:'#444444'
+      }
+    } else if(select == 3){
+      return {
+        backgroundColor:'#555555'
+      }
+    } else if(select == 4){
+      return {
+        backgroundColor:'#666666'
+      }
+    }
   },
   dateText: {
     color: 'white',

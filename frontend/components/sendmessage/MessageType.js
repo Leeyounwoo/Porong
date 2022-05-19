@@ -107,12 +107,11 @@ export default function MessageType({navigation}) {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <TouchableOpacity style={styles.btn} onPress={normal}>
-          <Text style={{color: 'white', fontSize: 18}}>일반메시지</Text>
+        <TouchableOpacity style={{...styles.btn, backgroundColor:'#7aaf91'}} onPress={normal}>
+          <Text style={{color: 'white', fontSize: 20}}>일반메시지</Text>
         </TouchableOpacity>
-        <Text style={{fontSize: 16, marginLeft: 10, marginTop: 10}}>
-          비밀 메시지는 회원님이{'\n'} 선택한 조건을 만족하기 전까지{'\n'}내용을
-          확인할 수 없어요!
+        <Text style={{fontSize: 14, marginLeft: 10, marginTop: 10}}>
+          상대방이 정해진 조건을 볼 수 있습니다
         </Text>
       </View>
       <View
@@ -122,11 +121,10 @@ export default function MessageType({navigation}) {
           justifyContent: 'flex-start',
         }}>
         <TouchableOpacity style={styles.btn} onPress={secret}>
-          <Text style={{color: 'white', fontSize: 18}}>비밀메시지</Text>
+          <Text style={{color: 'white', fontSize: 20}}>비밀메시지</Text>
         </TouchableOpacity>
-        <Text style={{fontSize: 16, marginLeft: 10, marginTop: 10}}>
-          비밀 메시지는 회원님이 선택한 조건을 만족하기 전까지{'\n'}내용을
-          확인할 수 없어요!
+        <Text style={{fontSize: 14, marginLeft: 10, marginTop: 5, color:'#FD8787'}}>
+          조건이 맞춰지기 전까지 메세지를 볼 수 없습니다
         </Text>
       </View>
       <View
@@ -160,9 +158,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   btn: {
-    backgroundColor: '#4385E0',
-    width: 150,
-    height: 50,
+    backgroundColor: '#335342',
+    width: 300,
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
