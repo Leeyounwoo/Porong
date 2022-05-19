@@ -31,7 +31,7 @@ export default function MessagePlace({navigation}) {
       },
       error => {
         // See error code charts below.
-        console.log(error.code, error.message);
+        console.log("currentPosition error", error);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -44,7 +44,7 @@ export default function MessagePlace({navigation}) {
           setAddress(json.results[0].formatted_address);
         })
         .catch(err => {
-          console.log('find? ====================================', err);
+          console.log('trans error', err);
         });
     }
   }, [totalpos]);

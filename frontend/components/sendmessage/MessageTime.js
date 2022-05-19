@@ -15,7 +15,6 @@ export default function MessageTime({navigation}) {
     ).slice(-2)}:${('00' + date.getMinutes().toString()).slice(-2)}:${(
       '00' + date.getSeconds().toString()
     ).slice(-2)}Z`;
-    console.log(temp);
     store.dispatch(timeContain(temp));
     navigation.navigate('Place');
   };

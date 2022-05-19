@@ -40,7 +40,7 @@ export default function Signin({navigation, route}) {
         }
       })
       .catch(err => {
-        console.log(err);
+        console.log("authentication error ",err);
       });
   };
 

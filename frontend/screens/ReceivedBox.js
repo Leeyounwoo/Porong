@@ -60,11 +60,10 @@ export default function ReceivedBox({navigation}) {
           temp.map((single, idx) => {
             show.push(single);
           });
-          console.log(show);
           setMarkers(show);
         })
         .catch(err => {
-          console.log(err);
+          console.log("getsentmessages error",err);
         });
     } else if (label1 === '받은 메세지') {
       axios
@@ -77,11 +76,10 @@ export default function ReceivedBox({navigation}) {
           temp.map((single, idx) => {
             show.push(single);
           });
-          console.log(show);
           setMarkers(show);
         })
         .catch(err => {
-          console.log(err);
+          console.log("getreceivedmessage error",err);
         });
     }
   }, [label1, user.memberId]);
@@ -101,7 +99,6 @@ export default function ReceivedBox({navigation}) {
   };
 
   useEffect(() => {
-    console.log('memberId', user.memberId);
     // 받은 메세지
     axios
       .get(
@@ -129,7 +126,7 @@ export default function ReceivedBox({navigation}) {
         });
       })
       .catch(err => {
-        console.log(err);
+        console.log("getreceivedmessages set error",err);
       });
     // 보낸 메세지
     axios
@@ -158,7 +155,7 @@ export default function ReceivedBox({navigation}) {
         });
       })
       .catch(err => {
-        console.log(err);
+        console.log("sentmessages set error",err);
       });
   }, [user.memberId]);
 

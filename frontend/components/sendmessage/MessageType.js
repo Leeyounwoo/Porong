@@ -14,9 +14,6 @@ import axios from 'axios';
 import storage from '@react-native-firebase/storage';
 export default function MessageType({navigation}) {
   const store = useStore();
-  const [picturedata, setPicturedata] = useState(null);
-  const image = store.getState().reducer.contentUrl;
-
   const normal = () => {
     Alert.alert('Alert', '일반 메시지로 보내시겠습니까?', [
       {
@@ -38,7 +35,7 @@ export default function MessageType({navigation}) {
           //     console.log('FCM 토큰 저장 성공');
           //   })
           //   .catch(err => console.log(err));
-          alert('전송 완료! \n메인 페이지로 이동합니다.');
+          alert('전송 완료!');
 
           axios
             .post(
@@ -46,12 +43,12 @@ export default function MessageType({navigation}) {
               store.getState().reducer,
             )
             .then(res => {
-              console.log(res);
+              console.log("success test : ",res);
+              navigation.navigate('Main');
             })
             .catch(err => {
-              console.log(err);
+              console.log("fail test : ",err);
             });
-          navigation.navigate('Main');
         },
       },
     ]);
@@ -69,15 +66,24 @@ export default function MessageType({navigation}) {
       {
         text: 'Ok',
         onPress: () => {
-          alert('전송 완료! \n메인 페이지로 이동합니다.');
+          alert('전송 완료!');
           store.dispatch(typeContain());
-          navigation.navigate('Main');
+          axios
+            .post(
+              'http://k6c102.p.ssafy.io:8080/v1/message/',
+              store.getState().reducer,
+            )
+            .then(res => {
+              console.log(res);
+              navigation.navigate('Main');
+            })
+            .catch(err => {
+              console.log(err);
+            });
+
         },
       },
     ]);
-  };
-  const prev = () => {
-    navigation.navigate('Content');
   };
   return (
     <View
@@ -93,20 +99,21 @@ export default function MessageType({navigation}) {
         <Text style={{fontSize: 18, fontWeight: 'bold', alignSelf: 'center'}}>
           메세지 유형을 선택해주세요
         </Text>
-        <Text style={{fontSize: 16, marginLeft: 10, marginTop: 10}}>
-          비밀 메시지는 회원님이 선택한 조건을 만족하기 전까지{'\n'}내용을
-          확인할 수 없어요!
-        </Text>
+
       </View>
       <View
         style={{
-          flex: 0.8,
+          flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
         }}>
         <TouchableOpacity style={styles.btn} onPress={normal}>
           <Text style={{color: 'white', fontSize: 18}}>일반메시지</Text>
         </TouchableOpacity>
+        <Text style={{fontSize: 16, marginLeft: 10, marginTop: 10}}>
+          비밀 메시지는 회원님이{'\n'} 선택한 조건을 만족하기 전까지{'\n'}내용을
+          확인할 수 없어요!
+        </Text>
       </View>
       <View
         style={{
@@ -117,6 +124,10 @@ export default function MessageType({navigation}) {
         <TouchableOpacity style={styles.btn} onPress={secret}>
           <Text style={{color: 'white', fontSize: 18}}>비밀메시지</Text>
         </TouchableOpacity>
+        <Text style={{fontSize: 16, marginLeft: 10, marginTop: 10}}>
+          비밀 메시지는 회원님이 선택한 조건을 만족하기 전까지{'\n'}내용을
+          확인할 수 없어요!
+        </Text>
       </View>
       <View
         style={{

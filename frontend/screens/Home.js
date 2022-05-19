@@ -44,7 +44,6 @@ const Home = ({navigation}) => {
   const markerRef = useRef();
   const [memberId, setMemberId] = useState(null);
   const user = store.getState().userreducer;
-  console.log('check');
   useLayoutEffect( () => {
     let temp = null;
     let test = null;
@@ -63,20 +62,16 @@ const Home = ({navigation}) => {
   }, [])
 
   useEffect(() => {
-    console.log(user.kakaoId);
+
     axios.get(`http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${ user.kakaoId }`)
       .then(res => {
-        console.log(res);
         store.dispatch(memberidContain(res.data));
         setMemberId(res.data);
     }).catch(err => {
-      console.log(err)
+      console.log("kakaoId error",err)
     })
-
-    console.log(user);
   },[user])
   useEffect(() => {
-    console.log("memberId check : ", memberId);
     if (memberId) {
       axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/fetchUncheckedMesaages`,)
       .then(json => {
@@ -84,7 +79,6 @@ const Home = ({navigation}) => {
         json.data.map(single => {
           received.push(single);
         });
-        console.log(received);
         setMarkers(received);
       })
       .catch(err => {
@@ -123,7 +117,7 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
-        {user ? (
+        {user !=null ? (
           <Image style={styles.imgstyle} source={{uri: user.profileUrl}} />
         ) : null}
         <Text style={{marginTop: 5, alignSelf: 'center'}}>

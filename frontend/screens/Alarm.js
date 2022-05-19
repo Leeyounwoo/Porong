@@ -18,8 +18,6 @@ export default function Alarm({navigation}) {
   const [alertKeys, setAlertKeys] = useState([]);
   const [alertLocations, setAlertLocations] = useState({});
   const [ready, setReady] = useState(false);
-  console.log(alertKeys);
-  console.log(alertLocations);
 
   const updateChecked = async key => {
     // alertLocations[alertKeys[idx]]['isChecked']
@@ -34,7 +32,6 @@ export default function Alarm({navigation}) {
   // 알림 클릭시 메세지 디테일로 이동
   const goToMessageDetail = async key => {
     await updateChecked(key);
-    console.log(alertLocations[key]['messageId']);
     navigation.push('Temp', {
       messageId: alertLocations[key]['messageId'],
       amISend: false,
@@ -75,8 +72,6 @@ export default function Alarm({navigation}) {
         await updateAlertKeys(talertKeys);
       });
     });
-    console.log('상태', alertLocations);
-    console.log('상태 키', alertKeys);
   }, []);
 
   const deleteAll = () => {
@@ -84,11 +79,10 @@ export default function Alarm({navigation}) {
       AsyncStorage.multiRemove(tkeys)
         .then(res => {
           AsyncStorage.getAllKeys((err, alertKeys) => {
-            console.log('삭제 후', alertKeys);
           });
         })
         .catch(err => {
-          console.log(err);
+          console.log("Async mutiRemove error",err);
         });
     });
   };

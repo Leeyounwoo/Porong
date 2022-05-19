@@ -18,22 +18,11 @@ export default function Nodereadable({
 }) {
   const [toFrom, setToFrom] = useState('false');
   const [data, setData] = useState(null);
-  console.log(
-    'Notreadable',
-    amISend,
-    nickName,
-    time,
-    place,
-    typeof latitude,
-    longitude,
-  );
   useLayoutEffect(() => {
-    console.log("notreadable 페이지 열림");
-
     if (amISend === true) {
       setToFrom('에게');
     } else {
-      setToFrom('님이');
+      setToFrom('님이 보낸 메세지를');
     }
   }, []);
   return (

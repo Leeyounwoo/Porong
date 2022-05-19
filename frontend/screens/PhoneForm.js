@@ -35,7 +35,6 @@ export default function PhoneForm({navigation, route}) {
       },
     })
       .then(res => {
-        console.log(res);
         if (res.status == 200) {
           axios({
             url: 'http://k6c102.p.ssafy.io:8080/v1/oauth/signup',
@@ -49,7 +48,6 @@ export default function PhoneForm({navigation, route}) {
             },
           })
             .then(res => {
-              console.log(res);
               alert('회원가입 성공!');
               navigation.navigate('Main');
             })
