@@ -37,13 +37,8 @@ public class RankingController {
 
     @GetMapping("/location")
     public List<LocationVo> fetchRanking() {
-<<<<<<< HEAD
-        List<String> locations = locationService.getRanking();
-        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
-=======
         List<LocationVo> locations = locationService.getRanking();
         return locations;
->>>>>>> 02b33bbcffdf2db226c8bbf8a2aae824c1cea950
     }
 
     @DeleteMapping("/clear")

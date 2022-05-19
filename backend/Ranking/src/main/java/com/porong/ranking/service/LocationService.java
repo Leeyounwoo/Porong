@@ -45,10 +45,7 @@ public class LocationService {
 
         }
 
-<<<<<<< HEAD
-    public List<String> getRanking() {
-        return rankingZset.getLocation();
-=======
+
     public List<LocationVo> getRanking() {
 
         List<String> locations = rankingZset.getLocation();
@@ -63,7 +60,6 @@ public class LocationService {
         }
 
         return locationsList;
->>>>>>> 02b33bbcffdf2db226c8bbf8a2aae824c1cea950
     }
 
 
