@@ -119,6 +119,11 @@ export default function PhoneForm({navigation, route}) {
             setFive(text);
             if (text.length === 1) sixth.current.focus();
           }}
+          // onKeyPress={({nativeEvent}) => {
+          //   if (nativeEvent.key === 'Backspace') {
+          //     fourth.current.focus();
+          //   }
+          // }}
         />
         <TextInput
           ref={sixth}
@@ -139,7 +144,7 @@ export default function PhoneForm({navigation, route}) {
         }}>
         <TouchableOpacity
           style={{
-            backgroundColor: '#4385E0',
+            backgroundColor: '#7aaf91',
             width: 180,
             height: 40,
             borderRadius: 10,
@@ -148,7 +153,7 @@ export default function PhoneForm({navigation, route}) {
           }}
           onPress={checkPhone}>
           <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
-            인증번호 확인하기
+            가입하기
           </Text>
         </TouchableOpacity>
       </View>
@@ -161,9 +166,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     height: 40,
     width: 40,
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: '#4385E0',
+    borderBottomWidth: 2,
+    borderColor: '#595959',
     padding: 10,
     fontSize: 20,
   },
