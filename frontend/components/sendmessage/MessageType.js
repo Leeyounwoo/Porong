@@ -89,7 +89,7 @@ export default function MessageType({navigation}) {
     <View
       style={{
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#fbfaf4',
       }}>
       <View
         style={{

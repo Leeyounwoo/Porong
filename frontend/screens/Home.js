@@ -5,7 +5,7 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {useSelector, useStore} from 'react-redux';
 import axios from 'axios';
-import {memberidContain, positionContain, userContain} from '../reducer';
+import {markerContain, memberidContain, positionContain, userContain} from '../reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const secret = require('../assets/icons/question.png');
 
@@ -40,7 +40,8 @@ function displayedAt(createdAt) {
 const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector(state => state.posreducer);
-  const [markers, setMarkers] = useState([]);
+  const markers = useSelector(state => state.messages.markers);
+  console.log(markers);
   const markerRef = useRef();
   const [memberId, setMemberId] = useState(null);
   const user = store.getState().userreducer;
@@ -63,17 +64,19 @@ const Home = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    axios
+    if (user) {
+      axios
       .get(
         `http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${user.kakaoId}`,
-      )
-      .then(res => {
+        )
+        .then(res => {
         store.dispatch(memberidContain(res.data));
         setMemberId(res.data);
       })
       .catch(err => {
         console.log('kakaoId error', err);
       });
+    }
   }, [user]);
   useEffect(() => {
     if (memberId) {
@@ -86,7 +89,7 @@ const Home = ({navigation}) => {
           json.data.map(single => {
             received.push(single);
           });
-          setMarkers(received);
+          store.dispatch(markerContain(received));
         })
         .catch(err => {
           console.log('axios error at home didmount', err);

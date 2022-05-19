@@ -7,7 +7,7 @@ import {createStore} from 'redux';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {reducer} from './reducer';
+import {markerContain, reducer} from './reducer';
 import {Notifications} from 'react-native-notifications';
 import {getAlert} from './functions/getAlert';
 import rootReducer from './reducer/index';
@@ -158,17 +158,32 @@ const App = () => {
       {distanceFilter: 0.5},
     );
   }, []);
-
+  
   // 새로운 알림 왔을 때
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       await getAlert(remoteMessage);
 
+      if (store.getState().userreducer.memberId) {
+        axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${store.getState().userreducer.memberId}/fetchUncheckedMesaages`)
+        .then(json => {
+          let received = [];
+          console.log(json);
+          json.data.map(single => {
+            received.push(single);
+          });
+          store.dispatch(markerContain(received));
+        }).catch(err => {
+          console.log("data error ",err);
+        }) 
+      }
       // Show an alert to the user
       Alert.alert(
         remoteMessage.notification.title,
         remoteMessage.notification.body,
       );
+
+
     });
     return unsubscribe;
   }, []);
