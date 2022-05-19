@@ -24,7 +24,7 @@ public class RankingZset {
         zSetOperations.incrementScore("locationcount", String.valueOf(locationName), 1);
     }
     public List<String> getLocation() {
-        return new ArrayList<>(zSetOperations.reverseRange("ramenviewcount", 0,2));
+        return new ArrayList<>(zSetOperations.reverseRange("locationcount", 0,2));
     }
 
 }
