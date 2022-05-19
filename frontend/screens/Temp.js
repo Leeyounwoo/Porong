@@ -1,4 +1,7 @@
-import React, {useEffect, useState, useLayoutEffect} from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 import {StyleSheet, View, Text, Button} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
@@ -30,46 +33,37 @@ export default function Temp({navigation, route}) {
   const isAlreadyReceived = () => {
     AsyncStorage.getItem('receivedMessages', (err, result) => {
       const receivedMessagesSet = new Set(JSON.parse(result));
-      console.log('메세지 ID', typeof messageId, receivedMessagesSet);
       if (receivedMessagesSet.has(String(messageId))) {
-        console.log('있음');
         setFlag(true);
-      } else {
-        console.log('없음');
       }
     });
   };
 
   useEffect(async () => {
-    console.log(user);
+    
     await isAlreadyReceived();
+    
     const now = new Date();
-    const time = `${now.getFullYear()}-${dateTrans(
-      now.getMonth() + 1,
-    )}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(
-      now.getMinutes(),
-    )}:${dateTrans(now.getSeconds())}`;
-    console.log('memberId', user.memberId);
-    console.log('mesageId ', messageId);
-    console.log('time : ', time);
-    axios
-      .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
+    
+    const time = `${now.getFullYear()}-${dateTrans(now.getMonth() + 1)}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(now.getMinutes())}:${dateTrans(now.getSeconds())}`;
+    
+    console.log("memberId : ", user.memberId, " messageId : ", messageId, "timeNow : ", time);
+     
+    axios.post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
           memberId: user.memberId,
           messageId: messageId,
           timeNow: time,
         },
-      })
+      }) 
       .then(res => {
-        console.log('getMessage 요청 성공', res);
-        const date = `${parseInt(res.data.dueTime[0])}년${parseInt(
-          res.data.dueTime[1],
-        )}월${parseInt(res.data.dueTime[2])}일${parseInt(
+        const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
+          res.data.dueTime[1]-1,
+        )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
           res.data.dueTime[3],
-        )}시${parseInt(res.data.dueTime[4])}분${parseInt(
+        )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
           res.data.dueTime[5],
-        )}초`;
-        console.log('date', date);
+        )}초 `;
         setTime(date);
         setSenderNickName(res.data.senderName);
         setPlace(res.data.location);
@@ -78,9 +72,9 @@ export default function Temp({navigation, route}) {
         setContext(res.data.contentText);
         setContentUrl(res.data.contentUrl);
       }).catch(err => {
-        console.log("axios temp error    ",err);
+        console.log("axios temp error ",err);
       });
-  }, [user.memberId]);
+  }, []);
 
   return (
     <View>

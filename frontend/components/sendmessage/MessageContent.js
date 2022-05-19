@@ -38,7 +38,7 @@ export default function MessageContent({navigation}) {
     get.getDownloadURL().then(res => {
         setImageurl(res);
     }).catch(err => {
-        console.log("check", err);
+        console.log("download data error : ", err);
       });
   
   }
@@ -57,15 +57,11 @@ export default function MessageContent({navigation}) {
 
     launchImageLibrary().then(res => {
       setImage(res.assets[0].uri);
-    
+      store.dispatch(imageContain(res.assets[0].uri));
     }).then(() => {
       setFlag(true);
     });
   }
-  useEffect(() => {
-    console.log(flag);
-  },[flag])
-
   return (
     <ScrollView style={{ flex: 1, }}>
     <KeyboardAvoidingView

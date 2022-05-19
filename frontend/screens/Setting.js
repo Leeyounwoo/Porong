@@ -16,26 +16,13 @@ export default function Setting({navigation}) {
   const logout = () => {
     AsyncStorage.removeItem('user')
       .then(sucess => {
-        console.log('로그아웃 완료', sucess);
         navigation.navigate('LoginStack');
       })
       .catch(err => {
-        console.log(err);
+        console.log("remove user error",err);
       });
   };
 
-  // useLayoutEffect(() => {
-  //   axios({
-  //     url: `http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${user.kakaoId}`,
-  //     method: 'get',
-  //   })
-  //     .then(res => {
-  //       console.log(res);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }, []);
 
   return (
     <KeyboardAvoidingView
@@ -55,7 +42,7 @@ export default function Setting({navigation}) {
             marginTop: 30,
           }}>
           <TouchableOpacity>
-            <Image
+            {user ? <Image
               source={{uri: user.profileUrl}}
               style={{
                 height: 150,
@@ -63,7 +50,7 @@ export default function Setting({navigation}) {
                 borderRadius: 100,
                 margin: 10,
               }}
-            />
+            /> : null  }
           </TouchableOpacity>
         </View>
         <View style={{flex: 2}}>

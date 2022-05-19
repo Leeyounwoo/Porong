@@ -14,7 +14,6 @@ export default function MessageDetail({
   messageText,
   istype,
 }) {
-  console.log('윤우', sender);
   const [senderName, setSenderName] = useState('sender');
 
   const [receiverName, setReceiverName] = useState('receiver');
@@ -40,9 +39,6 @@ export default function MessageDetail({
     });
   }, []);
 
-  const btnClick = () => {
-    console.log('to ' + senderName + 'resend');
-  };
   return (
     <View style={styles.allcontainer}>
       {type == 'resend' ? (

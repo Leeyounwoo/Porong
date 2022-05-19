@@ -96,7 +96,7 @@ const App = () => {
         }
       })
       .catch(err => {
-        console.log('err', err);
+        console.log('AsyncStorage getUser err', err);
       });
 
     return (

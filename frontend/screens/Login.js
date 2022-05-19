@@ -29,7 +29,6 @@ export default function Login({navigation}) {
           `http://k6c102.p.ssafy.io:8080/v1/oauth/login?token=${tokens.access_token}`,
         )
         .then(res => {
-          console.log(res);
           store.dispatch(
             userContain(
               res.data.memberId,
