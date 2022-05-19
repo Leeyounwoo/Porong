@@ -228,10 +228,14 @@ const Home = ({navigation}) => {
                   }}
                   coordinate={{
                     latitude: newMarkers[single]['latitude'],
-                    longitude: newMarkers[single]['latitude'],
+                    longitude: newMarkers[single]['longitude'],
                   }}>
                   <Image
-                    source={{uri: newMarkers[single]['latitude']}}
+                    source={
+                      newMarkers[single]['senderProfile'] === undefined
+                        ? require('../assets/icons/user.png')
+                        : {uri: newMargkers[single]['senderProfile']}
+                    }
                     style={{height: 35, width: 35, borderRadius: 100}}
                   />
                 </Marker>

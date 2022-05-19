@@ -14,6 +14,7 @@ export default function Nodereadable({
   time,
   place,
   latitude,
+  senderUrl,
   longitude,
 }) {
   const [toFrom, setToFrom] = useState('false');
