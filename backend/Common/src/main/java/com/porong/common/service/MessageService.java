@@ -169,7 +169,7 @@ public class MessageService {
         // 메세지 위치 정보 파악은 프론트랑 협의 후 로직 구성
         // 시간 비교, 실제 로직에서 시간 찍어보기
 
-       /*if (requestMessageDto.getTimeNow().isAfter(message.getDueTime()) || requestMessageDto.getTimeNow().isEqual(message.getDueTime()) ) {
+       if (requestMessageDto.getTimeNow().isAfter(message.getDueTime()) || requestMessageDto.getTimeNow().isEqual(message.getDueTime()) ) {
 
            // message.checkMessage(); // isChecked = 0 -> isChecked = 1  postsatisfy로 옮김
 
@@ -178,9 +178,8 @@ public class MessageService {
            return responseCheckedMessageDto;
        }
 
-        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto();*/
-
-        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
+       // senderId, name, url, lat, long, duetime, location, paperType 추가
+        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto();
 
        return responseCheckedMessageDto; // 해당 없으면 빈 값 반환
 
