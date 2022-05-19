@@ -227,25 +227,16 @@ const Home = ({navigation}) => {
                   ref={markerRef}
                   key={idx}
                   onPress={() => {
-                    clicktest(newMarkersKey);
+                    clicktest(newMarkersKey[idx]);
                   }}
                   coordinate={{
-<<<<<<< HEAD
-                    latitude: newMarkers[single]['latitude'],
-                    longitude: newMarkers[single]['longitude'],
-=======
                     latitude: parseFloat(newMarkers[single]['latitude']),
                     longitude: parseFloat(newMarkers[single]['longitude']),
->>>>>>> 0588cd43c3cd932e03b0a5f3025fcd5a33d55d37
                   }}>
                   <Image
                     source={
                       newMarkers[single]['senderProfile'] === undefined
-<<<<<<< HEAD
-                        ? require('../../assets/icons/user.png')
-=======
                         ? require('../assets/icons/user.png')
->>>>>>> 0588cd43c3cd932e03b0a5f3025fcd5a33d55d37
                         : {uri: newMarkers[single]['senderProfile']}
                     }
                     style={{height: 35, width: 35, borderRadius: 100}}
