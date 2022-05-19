@@ -23,7 +23,7 @@ export default function Login({navigation}) {
       await KakaoSDK.init('066f28139628e8b5440363889440f7be');
       const tokens = await KakaoSDK.login();
       const profile = await KakaoSDK.getProfile();
-      
+
       axios
         .get(
           `http://k6c102.p.ssafy.io:8080/v1/oauth/login?token=${tokens.access_token}`,
@@ -48,6 +48,10 @@ export default function Login({navigation}) {
             })
             .catch(err => console.log(err));
 
+          // navigation.navigate('Signin', {
+          //   properties: profile.properties,
+          //   id: res.data.authMember.kakaoId,
+          // });
           if (res.data.firstCheck) {
             alert('회원가입을 위해 새로운 페이지로 이동합니다.');
             navigation.navigate('Signin', {
