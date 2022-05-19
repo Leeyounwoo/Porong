@@ -135,22 +135,20 @@ const App = () => {
                   longitude,
                 );
 
-                if (distance <= 35500) {
-                  axios
-                    .post(
-                      'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
-                      null,
-                      {
-                        params: {
-                          messageId: parseInt(key),
-                        },
+                axios
+                  .post(
+                    'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
+                    null,
+                    {
+                      params: {
+                        messageId: parseInt(key),
                       },
-                    )
+                    },
+                  )
 
-                    .catch(err => {
-                      console.log(err);
-                    });
-                }
+                  .catch(err => {
+                    console.log(err);
+                  });
               }
             });
           });
