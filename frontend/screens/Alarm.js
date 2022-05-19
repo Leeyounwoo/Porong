@@ -78,17 +78,16 @@ export default function Alarm({navigation}) {
     AsyncStorage.getAllKeys((err, tkeys) => {
       AsyncStorage.multiRemove(tkeys)
         .then(res => {
-          AsyncStorage.getAllKeys((err, alertKeys) => {
-          });
+          AsyncStorage.getAllKeys((err, alertKeys) => {});
         })
         .catch(err => {
-          console.log("Async mutiRemove error",err);
+          console.log('Async mutiRemove error', err);
         });
     });
   };
   return (
-    <ScrollView style={{marginBottom: 130}}>
-      <View style={styles.allcontainer}>
+    <View style={styles.allcontainer}>
+      <ScrollView style={{flex: 1, marginBottom: 90}}>
         {/* <Button onPress={deleteAll} title={'지우기'}></Button> */}
 
         {alertKeys.map((key, idx) => {
@@ -139,8 +138,8 @@ export default function Alarm({navigation}) {
             );
           }
         })}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

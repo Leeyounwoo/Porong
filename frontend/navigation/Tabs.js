@@ -205,7 +205,7 @@ const Tabs = () => {
                   height: 30,
                   tintColor: focused ? '#7aaf91' : 'grey',
                 }}
-                source={require('../assets/icons/enter.png')}
+                source={require('../assets/icons/profile.png')}
               />
             </View>
           ),
