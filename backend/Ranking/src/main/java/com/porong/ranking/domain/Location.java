@@ -20,5 +20,4 @@ public class Location implements Serializable {
     @Indexed
     private String locationName;
 
-
 }
