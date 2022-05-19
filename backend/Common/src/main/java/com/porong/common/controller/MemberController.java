@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "v1/member")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MemberController {
 
     private final MemberServiceImpl memberService;

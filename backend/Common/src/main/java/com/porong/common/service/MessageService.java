@@ -2,6 +2,7 @@ package com.porong.common.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.porong.common.config.FirebaseFCMConfig;
 import com.porong.common.domain.Member;
 import com.porong.common.domain.Message;
@@ -12,6 +13,7 @@ import com.porong.common.exception.MessageNotFoundException;
 import com.porong.common.repository.MemberRepository;
 import com.porong.common.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class MessageService {
 
     private final MemberRepository memberRepository;
@@ -56,7 +59,14 @@ public class MessageService {
 
         String coordinate =  requestCreateMessageDto.getLongitude() +","+ requestCreateMessageDto.getLatitude();
 
+
         String location = "";
+
+        if (get(coordinate) == null) {
+            location = "";
+        } else {
+            location = get(coordinate);
+        }
 
         Message message = new Message(requestCreateMessageDto, sender, receiver, location); // location 추가
 
@@ -71,6 +81,13 @@ public class MessageService {
             new MemberNotFoundException();
         }
         // FCM 알림 로직 끝
+
+        // log
+        if (!location.equals("")) {
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(location);
+            log.info(jsonString);
+        }
 
         return messageId;
     }
@@ -299,33 +316,6 @@ public class MessageService {
         return responseUnCheckedMessageDtos.get(0).getDueTime();
 
     }
-
-    // 보류
-    // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회 // 체크 필요
-//    public List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
-//        // 두명의 member 가져온 후
-//        // 각각 sender, reciever 바꾸면서 메세지들 가져온 다음에 createdAt? dueTime 순으로 정렬
-//        // 모두 합치고 반환
-//
-//        Long senderId = requestCreateMessageDto.getSenderId();
-//
-//        Optional<Member> optionalSender = memberRepository.findById(senderId);
-//        if (optionalSender.isEmpty()) {
-//            throw new MemberNotFoundException();
-//        }
-//        Member sender = optionalSender.get();
-//
-//        Long receiverId = requestCreateMessageDto.getReceiverId();
-//
-//        Optional<Member> optionalReceiver = memberRepository.findById(receiverId);
-//        if (optionalReceiver.isEmpty()) {
-//            throw new MemberNotFoundException();
-//        }
-//        Member receiver = optionalReceiver.get();
-//
-//        return messageId;
-//    }
-
 
     class MessageComparator implements Comparator<Message> {
         @Override
