@@ -196,7 +196,7 @@ public class MessageService {
        }
 
        // senderId, name, url, lat, long, duetime, location, paperType 추가
-        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto();
+        ResponseCheckedMessageDto responseCheckedMessageDto = new ResponseCheckedMessageDto(message);
 
        return responseCheckedMessageDto; // 해당 없으면 빈 값 반환
 
