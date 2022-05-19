@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/message")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MessageController {
 
     private final MessageService messageService;
@@ -89,16 +89,5 @@ public class MessageController {
         }
         return new ResponseEntity<>("요청 완료", HttpStatus.OK);
     }
-
-    // 보류
-    // 해당 멤버와 주고 받은 (확인한? 확인안한것들까지?) 메세지들을 조회
-//    @ResponseStatus(HttpStatus.OK)
-//    @PostMapping("/fetchmessagesbymember")
-//    @ApiOperation(value = "확인 안한 메세지들 중 가장 빠른 시간 조건 조회")
-//    List<ResponseMessageDto> fetchMessagesByMember(RequestBetweenMessagesDto RequestBetweenMessagesDto) {
-//        return messageService.fetchMessagesByMember(RequestBetweenMessagesDto);
-//
-//    }
-
 
 }
