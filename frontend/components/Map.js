@@ -24,12 +24,16 @@ export default function MapTest({ totalpos, mark }) {
                 {totalpos ? <Marker coordinate={{ latitude: totalpos.lat, longitude: totalpos.lng }} ></Marker> : null}
             </MapView> 
         </View>
-    )
 
+)
 }
 const styles = StyleSheet.create({
     mapContainer: {
-        marginTop: 50
+        marginTop: 50,
+        borderRadius: 20,
+        overflow: 'hidden',
+        margin: 10,
+        marginBottom:60,
     },
     mapview: {
         alignSelf: 'center',

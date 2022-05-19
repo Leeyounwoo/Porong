@@ -14,6 +14,7 @@ export default function MessageTotal({navigation ,route }) {
   const image = useSelector(state => state.reducer.contentUrl);
   const dueTime = useSelector(state => state.reducer.dueTime);
   const messageContent = useSelector(state => state.reducer.contentText);
+  const papertype = useSelector(state => state.reducer.paperType);
 
   const [converttime, setConvertTime] = useState('');
   const [receiver, setRecevier] = useState('');
@@ -21,6 +22,7 @@ export default function MessageTotal({navigation ,route }) {
   const [transPos, setTransPos] = useState('');
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
   const store = useStore();
+  console.log(image);
   useLayoutEffect(() => {
     
     let tempTime = new Date(dueTime);
@@ -47,19 +49,25 @@ export default function MessageTotal({navigation ,route }) {
         navigation.navigate('Type');
     };
   return (
-    <View style={styles.allcontainer}>
-      <ScrollView>
-      {receiverProfile ?<View style={styles.fromtoContainer}>
-           <Image source={{ uri: receiverProfile }} style={{width:35, height:35, borderRadius:30}}/><Text style={styles.textContainer('blue')}>{receiver}</Text> 
-          <Text style={styles.textContainer('black')}> 님에게</Text>
+    <View style={{flex:1, backgroundColor: '#fbfaf4'}}>
+      <ScrollView style={{flex:1}}>
+        {receiverProfile ? <View style={{marginTop:10, ...styles.fromtoContainer }}>
+          <Image source={{ uri: receiverProfile }} style={{ width: 35, height: 35, borderRadius: 30 }} /><Text style={{marginTop:10, fontSize:18, fontWeight:'bold', color:'#335342' }}>{receiver}</Text> 
+          <Text style={{marginTop:12, fontSize: 14, color:'#595959'}}> 님에게</Text>
         </View>: null}
 
-      <View>
+      <View style={{       
+        marginTop: 20,
+        borderRadius: 20,
+  
+        overflow: 'hidden',
+        margin: 10,
+        marginBottom:20,}}>
         <MapView
           provider={PROVIDER_GOOGLE}
           minZoomLevel={18}
           maxZoomLevel={18}
-          style={{width: 350, height: 350}}
+          style={{width: 350, height: 300, alignSelf: 'center'}}
           initialRegion={{
             latitude: latitude,
             longitude: longitude,
@@ -71,41 +79,53 @@ export default function MessageTotal({navigation ,route }) {
             coordinate={{latitude: latitude, longitude: longitude}}
           />
         </MapView>
+        </View> 
+        <View style={{marginHorizontal: 10}}>
+          <Text style={{ fontSize:16, color:'#335342', fontWeight:'bold'}}>{converttime}<Text style={{fontSize:14, color:'#595959'}}> 해당 시간에</Text></Text>
+          <Text style={{ fontSize:16, color:'#335342', fontWeight:'bold'}}>{transPos}<Text style={{fontSize:14, color:'#595959'}}> 에서 확인할 수 있습니다!</Text></Text>
         </View>
-        <View style={styles.fromtoContainer}>
-          <Text style={styles.textContainer('blue')}>'{converttime}' 해당 시간에</Text>
-        </View>
-      <View style={styles.positionContainer}>
-        <Text style={styles.textContainer('blue')}>{transPos}</Text>
-          <Text style={styles.textContainer('black')}> 에서 확인할 수 있습니다!</Text>
+      <View style={{margin:10}}>
+        <Text style={{fontSize:18}}>메세지 내용</Text>
       </View>
-      <View style={styles.messageTitle}>
-        <Text style={styles.textContainer('black')}>메세지 내용</Text>
+        <View style={{...styles.messageContent, ...styles.backgroundSelect(papertype)}}>
+        {image != null ? <Image source={{uri:image}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
+        <Text
+          multiline={ true}
+          style={{
+          borderWidth: 1,
+          borderRadius: 10,
+          margin: 20,
+          marginTop: 0,
+          marginBottom:5,
+          borderColor: '#FFEFBF',
+          height: 100,
+          backgroundColor: '#fbfaf4'
+          }}
+        >{ messageContent}</Text>
       </View>
-      {image != null ? <Image source={{uri:image}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
-      <View style={styles.messageContent}>
-        <Text>{messageContent}</Text>
-      </View>
-      </ScrollView>
+
       <View
         style={{
+          flex: 1.1,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           marginHorizontal: 10,
-          marginBottom: 100,
+            marginBottom: 10,
+          marginBottom:100,
         }}>
         <TouchableOpacity
-          style={{ ...styles.dateBtn, alignSelf:'flex-start', backgroundColor: 'grey'}}
+          style={{...styles.dateBtn, backgroundColor: 'grey'}}
           onPress={() => navigation.goBack()}>
           <Text style={styles.dateText}>이전</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{...styles.dateBtn,alignSelf:'flex-end', backgroundColor: '#4385E0'}}
+          style={{...styles.dateBtn, backgroundColor: '#7aaf91'}}
           onPress={next}>
           <Text style={styles.dateText}>다음</Text>
         </TouchableOpacity>
-      </View>
+        </View>
+        </ScrollView>
     </View>
   );
 }
@@ -113,9 +133,8 @@ const styles = StyleSheet.create({
   dateBtn: {
     height: 35,
     width: 100,
-    bottom:50,
     borderRadius: 10,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   dateText: {
@@ -123,12 +142,35 @@ const styles = StyleSheet.create({
   },
   allcontainer: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: '#fbfaf4'
   },
   fromtoContainer: {
     marginLeft: 10,
     flexDirection: 'row',
     alignSelf: 'flex-start',
+  },
+  backgroundSelect : select => {
+    if (select == 0) {
+      return {
+        backgroundColor:'#335342'
+      }
+    } else if(select == 1){
+      return {
+        backgroundColor:'#333333'
+      }
+    } else if(select == 2){
+      return {
+        backgroundColor:'#444444'
+      }
+    } else if(select == 3){
+      return {
+        backgroundColor:'#555555'
+      }
+    } else if(select == 4){
+      return {
+        backgroundColor:'#666666'
+      }
+    }
   },
   positionContainer: {
     flexWrap: 'nowrap',
@@ -140,10 +182,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   messageContent: {
-    marginTop: 5,
-    height: 150,
-    width: 400,
-    borderWidth: 1,
+    margin: 10,
+    borderRadius: 10,
     borderColor: 'black',
   },
   buttonContainer: {
@@ -154,7 +194,6 @@ const styles = StyleSheet.create({
     return {
       fontWeight: 'bold',
       color: mycolor,
-      fontSize: 15,
     };
   },
 });

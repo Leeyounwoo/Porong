@@ -206,7 +206,7 @@ export default function MessagePerson({navigation}) {
 
   const PhoneBook = ({item}) => {
     return (
-      <View style={{flex: 1, flexDirection: 'row', margin: 10}}>
+      <View style={{flex: 1, flexDirection: 'row', margin: 3, backgroundColor: '#ffffff',height: 60, borderRadius: 10,elevation:3 }}>
         <View
           style={{
             flex: 1,
@@ -262,7 +262,7 @@ export default function MessagePerson({navigation}) {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor:'#fbfaf4'}}>
       <FlatList
         style={{flex: 1}}
         data={contacts}

@@ -74,35 +74,38 @@ export default function MessagePlace({navigation}) {
   return (
     <View style={styles.selectPositionContainer}>
       <View style={styles.textContainer}>
-        <Text>상대가 메세지를 확인할 수 있는 장소를 선택해주세요!</Text>
+        <Text style={{fontSize: 16, color: '#595959'}}>상대가 메세지를 확인할 수 있는 장소를 선택해주세요!</Text>
       </View>
       <View style={styles.textContainer}>
-        <Text>선택한 장소에서 메세지 열람이 가능해요!</Text>
+        <Text style={{fontSize: 16, color:'#595959'}}>선택한 장소에서 메세지 열람이 가능해요!</Text>
       </View>
 
-            <MapTest totalpos={totalpos} mark={mark} />
-            <View style={styles.searchboxContainer}>
-                <TextInput onChangeText={text => setAddress(text)} value={address}></TextInput>
-            </View>
-            <View style={styles.searchbtnContainer}>
-                <Button  title="검색" onPress={searchAddress}></Button>
-            </View>
-            <View
-                style={{
-                flex: 1.1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginHorizontal: 10,
-                marginBottom: 10,
-            }}>
-            <TouchableOpacity
+      <MapTest totalpos={totalpos} mark={mark} />
+
+      <View style={styles.searchboxContainer}>
+          <TextInput onChangeText={text => setAddress(text)} value={address}></TextInput>
+      </View>
+      <View style={styles.searchbtnContainer}>
+        <TouchableOpacity style={{ backgroundColor: '#7aaf91', width:50, height:30, borderRadius:5 }} onPress={() => { searchAddress }}>
+          <Text style={{fontSize:18, color:'white', alignSelf: 'center', justifyContent: 'center' }}>검색</Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+        flex: 0.1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginHorizontal: 10,
+        marginBottom: 10,
+      }}>
+        <TouchableOpacity
           style={{...styles.dateBtn, backgroundColor: 'grey'}}
           onPress={() => navigation.goBack()}>
           <Text style={styles.dateText}>이전</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{...styles.dateBtn, backgroundColor: '#4385E0'}}
+          style={{...styles.dateBtn, backgroundColor: '#7aaf91'}}
           onPress={next}>
           <Text style={styles.dateText}>다음</Text>
         </TouchableOpacity>
@@ -123,10 +126,14 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   selectPositionContainer: {
-    marginTop: 40,
+    flex:1,
+    backgroundColor:'#fbfaf4'
   },
   textContainer: {
+    marginTop: 20,
+    
     alignSelf: 'center',
+    color:'#595959'
   },
   inputbox: {
     position: 'absolute',
@@ -136,7 +143,7 @@ const styles = StyleSheet.create({
   searchboxContainer: {
     position: 'absolute',
     left: 30,
-    bottom: 380,
+    bottom: 510,
     borderColor: 'grey',
     borderWidth: 1,
     backgroundColor: 'white',
@@ -148,6 +155,6 @@ const styles = StyleSheet.create({
   searchbtnContainer: {
     position: 'absolute',
     right: 30,
-    bottom: 385,
+    bottom: 518,
   },
 });

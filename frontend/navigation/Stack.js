@@ -51,7 +51,7 @@ function AlarmStackScreen() {
     <AlarmStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#867AE9',
+          backgroundColor: '#335342',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
@@ -67,7 +67,7 @@ function SendStackScreen() {
     <SendStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#867AE9',
+          backgroundColor: '#335342',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
@@ -88,7 +88,7 @@ function MessageStackScreen() {
     <MessageStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#867AE9',
+          backgroundColor: '#335342',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
@@ -104,7 +104,7 @@ function AccountStackScreen() {
     <AccountStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#867AE9',
+          backgroundColor: '#335342',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
