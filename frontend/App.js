@@ -79,7 +79,9 @@ const App = () => {
 
   const LoginProcess = () => {
     return (
-      <init.Navigator initialRouteName="Login">
+      <init.Navigator
+        initialRouteName="Login"
+        screenOptions={{headerShown: false}}>
         <init.Screen name="Login" component={Login} />
         <init.Screen name="Signin" component={Signin} />
         <init.Screen name="Phone" component={PhoneForm} />
