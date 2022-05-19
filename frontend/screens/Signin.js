@@ -10,9 +10,10 @@ import {
   ScrollView,
   Button,
 } from 'react-native';
+import axios from 'axios';
 
 export default function Signin({navigation, route}) {
-  const {properties} = route.params;
+  const {properties, id} = route.params;
 
   const [first, setFirst] = useState('');
   const [second, setSecond] = useState('');
@@ -23,7 +24,29 @@ export default function Signin({navigation, route}) {
   const thirdRef = useRef(null);
 
   const signin = () => {
-    console.log(first + second + third);
+    navigation.navigate('Phone', {
+      id,
+      phoneNumber: first + second + third,
+      properties,
+    });
+    axios
+      .post('http://k6c102.p.ssafy.io:8080/v1/member/authentication', {
+        kakaoId: id,
+        phoneNumber: first + second + third,
+      })
+      .then(res => {
+        if (res.status == 200) {
+          alert('인증번호 발송 성공!');
+          navigation.navigate('Phone', {
+            id,
+            phoneNumber: first + second + third,
+            properties,
+          });
+        }
+      })
+      .catch(err => {
+        console.log('authentication error ', err);
+      });
   };
 
   return (
@@ -61,7 +84,7 @@ export default function Signin({navigation, route}) {
               alignSelf: 'center',
               fontSize: 24,
               fontWeight: 'bold',
-              color: 'black',
+              color: '#595959',
               marginTop: 10,
             }}>
             안녕하세요 {properties.nickname}님!
@@ -70,7 +93,8 @@ export default function Signin({navigation, route}) {
             style={{
               alignSelf: 'center',
               fontSize: 16,
-              color: 'grey',
+              fontWeight: '300',
+              color: '#595959',
               marginTop: 10,
             }}>
             회원가입을 위해 휴대폰 번호를 입력해주세요.
@@ -90,9 +114,8 @@ export default function Signin({navigation, route}) {
                 width: 60,
                 height: 40,
                 margin: 12,
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor: '#4385E0',
+                borderBottomWidth: 2,
+                borderColor: '#595959',
                 padding: 10,
                 fontSize: 20,
               }}
@@ -113,9 +136,8 @@ export default function Signin({navigation, route}) {
                 height: 40,
                 width: 80,
                 margin: 12,
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor: '#4385E0',
+                borderBottomWidth: 2,
+                borderColor: '#595959',
                 padding: 10,
                 fontSize: 20,
               }}
@@ -136,9 +158,8 @@ export default function Signin({navigation, route}) {
                 height: 40,
                 width: 80,
                 margin: 12,
-                borderWidth: 2,
-                borderRadius: 10,
-                borderColor: '#4385E0',
+                borderBottomWidth: 2,
+                borderColor: '#595959',
                 padding: 10,
                 fontSize: 20,
               }}
@@ -158,18 +179,20 @@ export default function Signin({navigation, route}) {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
+          marginBottom: 120,
         }}>
         <TouchableOpacity
           style={{
-            backgroundColor: '#4385E0',
+            backgroundColor: '#7aaf91',
             width: 180,
             height: 40,
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={signin}>
           <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
-            회원가입
+            인증번호 발송
           </Text>
         </TouchableOpacity>
       </View>

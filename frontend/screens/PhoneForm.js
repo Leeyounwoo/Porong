@@ -1,20 +1,64 @@
 import React, {useState, useRef} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import axios from 'axios';
 
-export default function PhoneForm() {
+export default function PhoneForm({navigation, route}) {
+  const {id, phoneNumber, properties} = route.params;
   const first = useRef(null);
   const second = useRef(null);
   const third = useRef(null);
   const fourth = useRef(null);
+  const fifth = useRef(null);
+  const sixth = useRef(null);
 
   const [one, setOne] = useState('');
   const [two, setTwo] = useState('');
   const [three, setThree] = useState('');
   const [four, setFour] = useState('');
+  const [five, setFive] = useState('');
+  const [six, setSix] = useState('');
 
   const checkPhone = () => {
-    const code = one + two + three + four;
-    console.log(code);
+    const code = one + two + three + four + five + six;
+    axios({
+      url: 'http://k6c102.p.ssafy.io:8080/v1/member/verify',
+      method: 'post',
+      data: {
+        kakaoId: id,
+        number: code,
+      },
+    })
+      .then(res => {
+        if (res.status == 200) {
+          axios({
+            url: 'http://k6c102.p.ssafy.io:8080/v1/oauth/signup',
+            method: 'post',
+            data: {
+              kakaoId: id,
+              phoneNumber,
+              imageUrl: properties.profile_image,
+              nickName: properties.nickname,
+              firstCheck: true,
+            },
+          })
+            .then(res => {
+              alert('회원가입 성공!');
+              navigation.navigate('Main');
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
@@ -33,16 +77,7 @@ export default function PhoneForm() {
         }}>
         <TextInput
           ref={first}
-          style={{
-            textAlign: 'center',
-            height: 50,
-            width: 60,
-            borderWidth: 2,
-            borderRadius: 10,
-            borderColor: '#4385E0',
-            padding: 10,
-            fontSize: 20,
-          }}
+          style={styles.textInput}
           keyboardType="phone-pad"
           onChangeText={text => {
             setOne(text);
@@ -51,16 +86,7 @@ export default function PhoneForm() {
         />
         <TextInput
           ref={second}
-          style={{
-            textAlign: 'center',
-            height: 50,
-            width: 60,
-            borderWidth: 2,
-            borderRadius: 10,
-            borderColor: '#4385E0',
-            padding: 10,
-            fontSize: 20,
-          }}
+          style={styles.textInput}
           keyboardType="phone-pad"
           onChangeText={text => {
             setTwo(text);
@@ -69,16 +95,7 @@ export default function PhoneForm() {
         />
         <TextInput
           ref={third}
-          style={{
-            textAlign: 'center',
-            height: 50,
-            width: 60,
-            borderWidth: 2,
-            borderRadius: 10,
-            borderColor: '#4385E0',
-            padding: 10,
-            fontSize: 20,
-          }}
+          style={styles.textInput}
           keyboardType="phone-pad"
           onChangeText={text => {
             setThree(text);
@@ -87,20 +104,35 @@ export default function PhoneForm() {
         />
         <TextInput
           ref={fourth}
-          style={{
-            textAlign: 'center',
-            height: 50,
-            width: 60,
-            borderWidth: 2,
-            borderRadius: 10,
-            borderColor: '#4385E0',
-            padding: 10,
-            fontSize: 20,
-          }}
+          style={styles.textInput}
           keyboardType="phone-pad"
           onChangeText={text => {
             setFour(text);
+            if (text.length === 1) fifth.current.focus();
           }}
+        />
+        <TextInput
+          ref={fifth}
+          style={styles.textInput}
+          keyboardType="phone-pad"
+          onChangeText={text => {
+            setFive(text);
+            if (text.length === 1) sixth.current.focus();
+          }}
+          // onKeyPress={({nativeEvent}) => {
+          //   if (nativeEvent.key === 'Backspace') {
+          //     fourth.current.focus();
+          //   }
+          // }}
+        />
+        <TextInput
+          ref={sixth}
+          style={styles.textInput}
+          keyboardType="phone-pad"
+          onChangeText={text => {
+            setSix(text);
+          }}
+          onSubmitEditing={checkPhone}
         />
       </View>
       <View
@@ -112,7 +144,7 @@ export default function PhoneForm() {
         }}>
         <TouchableOpacity
           style={{
-            backgroundColor: '#4385E0',
+            backgroundColor: '#7aaf91',
             width: 180,
             height: 40,
             borderRadius: 10,
@@ -121,10 +153,22 @@ export default function PhoneForm() {
           }}
           onPress={checkPhone}>
           <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
-            인증번호 확인하기
+            가입하기
           </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textInput: {
+    textAlign: 'center',
+    height: 40,
+    width: 40,
+    borderBottomWidth: 2,
+    borderColor: '#595959',
+    padding: 10,
+    fontSize: 20,
+  },
+});

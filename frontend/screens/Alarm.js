@@ -1,57 +1,144 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Text, Button, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  TouchableHighlight,
+  ScrollView,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MessageReceiveAlert from '../components/alert/MessageReceiveAlert';
+import MessageConditionAlert from '../components/alert/MessageConditionAlert';
 
-export default function Alarm(navigation) {
-  const [alarms, setAlarms] = useState({
-    alarmcode1: {
-      alarmType: 'condition',
-      profileImageUrl:
-        'https://namu.wiki/jump/7A3wXEd3D%2BOBAt7GFPJVY5shxo%2BU9y9ogf9dpQppCeVy4zJ3lJHgTnsemMUmSYJ8Sjsssa5DlhRPfupGdkgzCS%2B%2FYhREcen24GMFTIWLUZI%3D',
-      time: '2022년 04월 30일',
-      place: '장덕동 1333',
-      username: '윤설',
-      check: false,
-    },
-    alarmcode2: {
-      alarmType: 'condition',
-      profileImageUrl:
-        'https://namu.wiki/jump/7A3wXEd3D%2BOBAt7GFPJVY5shxo%2BU9y9ogf9dpQppCeVy4zJ3lJHgTnsemMUmSYJ8Sjsssa5DlhRPfupGdkgzCS%2B%2FYhREcen24GMFTIWLUZI%3D',
-      time: '2022년 04월 30일',
-      place: '장덕동 1333',
-      username: '윤설',
-      check: false,
-    },
-  });
+export default function Alarm({navigation}) {
+  const [alertKeys, setAlertKeys] = useState([]);
+  const [alertLocations, setAlertLocations] = useState({});
+  const [ready, setReady] = useState(false);
 
-  const alarmsKeys = Object.keys(alarms);
+  const updateChecked = async key => {
+    // alertLocations[alertKeys[idx]]['isChecked']
+    let value = alertLocations[key];
+    value['isChecked'] = true;
+    AsyncStorage.setItem(key, JSON.stringify(value));
+    setAlertLocations(prev => {
+      return {...prev, [key]: value};
+    });
+  };
 
+  // 알림 클릭시 메세지 디테일로 이동
+  const goToMessageDetail = async key => {
+    await updateChecked(key);
+    navigation.push('Temp', {
+      messageId: alertLocations[key]['messageId'],
+      amISend: false,
+    });
+  };
+
+  // 알림 객체 업데이트
+  const updateAlertLocations = stores => {
+    stores.map((store, idx) => {
+      const key = store[0];
+      const value = JSON.parse(store[1]);
+      setAlertLocations(prevAlertLocations => {
+        return {...prevAlertLocations, [key]: value};
+      });
+    });
+  };
+
+  // 알림ID 배열 업데이트
+  const updateAlertKeys = keys => {
+    keys.map((key, idx) => {
+      if (alertKeys.includes(keys[idx]) === false) {
+        setAlertKeys(prev => [...prev, keys[idx]]);
+      }
+    });
+  };
+
+  // Async Storage에 있는 데이터 가져오기
+  useEffect(() => {
+    AsyncStorage.getAllKeys((err, keys) => {
+      const talertKeys = [];
+      keys.map((key, idx) => {
+        if (keys[idx][0] === 'A') {
+          talertKeys.push(keys[idx]);
+        }
+      });
+      AsyncStorage.multiGet(talertKeys, async (err, stores) => {
+        await updateAlertLocations(stores);
+        await updateAlertKeys(talertKeys);
+      });
+    });
+  }, []);
+
+  const deleteAll = () => {
+    AsyncStorage.getAllKeys((err, tkeys) => {
+      AsyncStorage.multiRemove(tkeys)
+        .then(res => {
+          AsyncStorage.getAllKeys((err, alertKeys) => {});
+        })
+        .catch(err => {
+          console.log('Async mutiRemove error', err);
+        });
+    });
+  };
   return (
     <View style={styles.allcontainer}>
-      {alarmsKeys.map((key, keyidx) => {
-        return (
-          <View style={styles.alarmcontainer}>
-            <View style={styles.profilebox}>
-              <Image
-                source={{uri: 'https://reactjs.org/logo-og.png'}}
-                style={styles.profileimage}
-              />
-            </View>
-            <View style={styles.textbox}>
-              <Text>{alarms[alarmsKeys[keyidx]].alarmType}</Text>
-              <Text>{`${alarms[alarmsKeys[keyidx]].username}님이 [${
-                alarms[alarmsKeys[keyidx]].time
-              }] [${alarms[alarmsKeys[keyidx]].place}] 에서`}</Text>
-              <Text>볼 수 있는 메세지를 보냈습니다.</Text>
-            </View>
-            <View style={styles.circle}></View>
-          </View>
-        );
-      })}
-      <Button
-        title="메세지 보내기"
-        onPress={() => navigation.navigate('Messege')}></Button>
+      <ScrollView style={{flex: 1, marginBottom: 90}}>
+        {/* <Button onPress={deleteAll} title={'지우기'}></Button> */}
+
+        {alertKeys.map((key, idx) => {
+          if (
+            alertLocations[alertKeys[idx]] !== undefined &&
+            alertLocations[alertKeys[idx]]['alertType'] === 'message_condition'
+          ) {
+            return (
+              <TouchableHighlight
+                onPress={() => {
+                  goToMessageDetail(alertKeys[idx]);
+                }}
+                key={idx}>
+                <MessageConditionAlert
+                  senderNickname={
+                    alertLocations[alertKeys[idx]]['senderNickname']
+                  }
+                  time={alertLocations[alertKeys[idx]]['time']}
+                  place={alertLocations[alertKeys[idx]]['place']}
+                  isChecked={alertLocations[alertKeys[idx]]['isChecked']}
+                  senderProfile={
+                    alertLocations[alertKeys[idx]]['senderProfile']
+                  }
+                />
+              </TouchableHighlight>
+            );
+          } else if (
+            alertLocations[alertKeys[idx]] !== undefined &&
+            alertLocations[alertKeys[idx]]['alertType'] === 'message_receive'
+          ) {
+            return (
+              <TouchableHighlight
+                onPress={() => {
+                  goToMessageDetail(alertKeys[idx]);
+                }}
+                key={idx}>
+                <MessageReceiveAlert
+                  senderNickname={
+                    alertLocations[alertKeys[idx]]['senderNickname']
+                  }
+                  place={alertLocations[alertKeys[idx]]['place']}
+                  isChecked={alertLocations[alertKeys[idx]]['isChecked']}
+                  senderProfile={
+                    alertLocations[alertKeys[idx]]['senderProfile']
+                  }
+                />
+              </TouchableHighlight>
+            );
+          }
+        })}
+      </ScrollView>
     </View>
   );
 }
@@ -61,32 +148,48 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  alarmcompletion: {
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
   alarmcontainer: {
+    paddingLeft: 8,
+    paddingRight: 20,
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    // backgroundColor: 'red',
   },
   profilebox: {
     width: 70,
+    backgroundColor: 'blue',
     height: 70,
     borderRadius: 70,
+    marginLeft: 12,
     overflow: 'hidden',
   },
   profileimage: {
     width: '100%',
     height: '100%',
-    'object-fit': 'cover',
+    // 'object-fit': 'cover',
   },
   textbox: {
-    marginHorizontal: 10,
+    width: '80%',
+    padding: 20,
+    marginHorizontal: 20,
+  },
+  text: {
+    // whiteSpace: 'nowrap',
+  },
+  textbold: {
+    fontWeight: 'bold',
+    color: '#FF9292',
   },
   circle: {
     width: 10,
     height: 10,
     borderRadius: 50,
-    backgroundColor: '#4385E0',
+    backgroundColor: '#FF9292',
     alignItems: 'center',
   },
 });
