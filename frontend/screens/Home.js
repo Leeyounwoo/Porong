@@ -5,7 +5,12 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {useSelector, useStore} from 'react-redux';
 import axios from 'axios';
-import {markerContain, memberidContain, positionContain, userContain} from '../reducer';
+import {
+  markerContain,
+  memberidContain,
+  positionContain,
+  userContain,
+} from '../reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const secret = require('../assets/icons/question.png');
 
@@ -41,9 +46,15 @@ const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector(state => state.posreducer);
   const markers = useSelector(state => state.messages.markers);
+  const rankIcon = [
+    require('../assets/icons/first.png'),
+    require('../assets/icons/second.png'),
+    require('../assets/icons/third.png'),
+  ];
   console.log(markers);
   const markerRef = useRef();
   const [memberId, setMemberId] = useState(null);
+  const [ranks, setRank] = useState([]);
   const user = store.getState().userreducer;
   useLayoutEffect(() => {
     let temp = null;
@@ -61,21 +72,28 @@ const Home = ({navigation}) => {
         navigation.navigate('Login');
       }
     });
+    axios({
+      url: 'http://k6c102.p.ssafy.io:8085/v1/ranking/location',
+      method: 'get',
+    }).then(res => {
+      console.log(res);
+      setRank(res.data);
+    });
   }, []);
 
   useEffect(() => {
     if (user) {
       axios
-      .get(
-        `http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${user.kakaoId}`,
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${user.kakaoId}`,
         )
         .then(res => {
-        store.dispatch(memberidContain(res.data));
-        setMemberId(res.data);
-      })
-      .catch(err => {
-        console.log('kakaoId error', err);
-      });
+          store.dispatch(memberidContain(res.data));
+          setMemberId(res.data);
+        })
+        .catch(err => {
+          console.log('kakaoId error', err);
+        });
     }
   }, [user]);
   useEffect(() => {
@@ -143,12 +161,32 @@ const Home = ({navigation}) => {
           region={{
             latitude: position.lat,
             longitude: position.lng,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
+            // latitudeDelta: 0.015,
+            // longitudeDelta: 0.0121,
+            latitudeDelta: 3.5,
+            longitudeDelta: 3.5,
           }}
           showsUserLocation={true}
           followsUserLocation={true}
           toolbarEnabled={false}>
+          {ranks.map((rank, idx) => {
+            return (
+              <Marker
+                ref={markerRef}
+                key={idx}
+                title={`제목 : ${rank.location}`}
+                // icon={single.type == 0 ? secret : null}
+                coordinate={{
+                  latitude: rank.latitude,
+                  longitude: rank.longitude,
+                }}>
+                <Image
+                  source={rankIcon[idx]}
+                  style={{height: 35, width: 35, borderRadius: 100}}
+                />
+              </Marker>
+            );
+          })}
           {markers.map((single, idx) => {
             //제약 시간 - 현재 시간을 표시
             return (
