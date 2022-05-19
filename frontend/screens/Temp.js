@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { LogBox } from 'react-native';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
+import {LogBox} from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
 import {StyleSheet, View, Text, Button} from 'react-native';
@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Notreadable from '../components/Notreadable';
 import Readable from '../components/Readable';
 import {useStore, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 const icon = require('../assets/icons/letter.png');
 function dateTrans(day) {
@@ -30,7 +31,9 @@ export default function Temp({navigation, route}) {
   const [contentUrl, setContentUrl] = useState('');
   const [receiverUrl, setReceiverUrl] = useState('');
   const [papertype, setPapertype] = useState(0);
+  const [senderUrl, setSenderUrl] = useState('');
   const user = store.getState().userreducer;
+  const isFocused = useIsFocused();
 
   const isAlreadyReceived = () => {
     AsyncStorage.getItem('receivedMessages', (err, result) => {
@@ -41,27 +44,37 @@ export default function Temp({navigation, route}) {
     });
   };
 
-  useEffect(async () => {
-    
-    await isAlreadyReceived();
-    
+  useEffect(() => {
+    isAlreadyReceived();
+
     const now = new Date();
-    
-    const time = `${now.getFullYear()}-${dateTrans(now.getMonth() + 1)}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(now.getMinutes())}:${dateTrans(now.getSeconds())}`;
-    
-    console.log("memberId : ",  user.memberId, " messageId : ", messageId, "timeNow : ",  time);
-     
-    axios.post('http://k6c102.p.ssafy.io:8888/v1/message/getmessage', null, {
+
+    const time = `${now.getFullYear()}-${dateTrans(
+      now.getMonth() + 1,
+    )}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(
+      now.getMinutes(),
+    )}:${dateTrans(now.getSeconds())}`;
+
+    console.log(
+      'memberId ',
+      user.memberId,
+      'messageId:',
+      parseInt(messageId),
+      'time : ',
+      time,
+    );
+    axios
+      .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
           memberId: user.memberId,
           messageId: parseInt(messageId),
           timeNow: time,
         },
-      }) 
+      })
       .then(res => {
-        console.log(res.data);
+        console.log('성공', res.data);
         const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
-          res.data.dueTime[1]+1,
+          res.data.dueTime[1],
         )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
           res.data.dueTime[3],
         )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
@@ -76,10 +89,12 @@ export default function Temp({navigation, route}) {
         setContentUrl(res.data.contentUrl);
         setReceiverUrl(res.data.receiverUrl);
         setPapertype(res.data.papertype);
+        setSenderUrl(res.data.senderUrl);
+        setReceiver
       }).catch(err => {
         console.log("axios temp error ",err);
       });
-  }, []);
+  }, [isFocused]);
 
   return (
     <View>
@@ -93,8 +108,9 @@ export default function Temp({navigation, route}) {
           context={context}
           latitude={latitude}
           longitude={longitude}
+          senderUrl={senderUrl}
           contentUrl={contentUrl}
-          papertype={papertype }
+          papertype={papertype}
         />
       )}
       {amISend === false && flag === false && (
@@ -104,6 +120,7 @@ export default function Temp({navigation, route}) {
           time={time}
           place={place}
           latitude={latitude}
+          senderUrl={senderUrl}
           longitude={longitude}
         />
       )}
