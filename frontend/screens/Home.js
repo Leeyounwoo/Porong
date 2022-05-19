@@ -181,7 +181,7 @@ const Home = ({navigation}) => {
             확인 안한 메세지가 {markers.length}개 있습니다
           </Text>
         ) : (
-          <Text style={{alignSelf: 'center', marginTop: 5}}>
+          <Text style={{alignSelf: 'center', marginTop: 5, color: 'white'}}>
             메세지를 기다리는 중이에요
           </Text>
         )}
@@ -198,12 +198,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fbfaf4',
   },
   mapcontainer: {
-    height: 300,
-    width: 350,
+    height: 350,
+    width: 360,
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: 30,
-    borderRadius: 20,
+    borderRadius: 5,
     overflow: 'hidden',
   },
   map: {
