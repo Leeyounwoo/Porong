@@ -33,7 +33,6 @@ async function requestCameraPermission() {
   );
 }
 
-
 // 지도상의 두 좌표간의 거리 계산
 function calDistance(lat1, long1, lat2, long2) {
   // var startLatRads = degreesToRadians(lat1);
@@ -41,19 +40,20 @@ function calDistance(lat1, long1, lat2, long2) {
   // var destLatRads = degreesToRadians(lat2);
   // var destLongRads = degreesToRadians(long2);
 
-  
   var Radius = 6371; //지구의 반경(km)
 
   var dLat = degreesToRadians(lat1 - lat2);
   var dLng = degreesToRadians(long1 - long2);
 
-  var a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(degreesToRadians(lat1)) * Math.cos(degreesToRadians(lat2)) * 
-    Math.sin(dLng/2) * Math.sin(dLng/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(degreesToRadians(lat1)) *
+      Math.cos(degreesToRadians(lat2)) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = Radius * c; // Distance in km
-  return d *1000;
+  return d * 1000;
 
   // var distance =
   //   Math.acos(Math.sin(startLatRads) * Math.sin(destLatRads) + Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads),
@@ -64,7 +64,6 @@ function degreesToRadians(degrees) {
   radians = degrees * (Math.PI / 180);
   return radians;
 }
-
 
 requestCameraPermission();
 Geolocation.watchPosition(
@@ -86,11 +85,11 @@ const App = () => {
   const [flag, setFlag] = useState(false);
   const [updateCnt, setUpdateCnt] = useState(0);
   const pos = null;
-  const  [userLat, setUserLat] = useState(0); // 위도
+  const [userLat, setUserLat] = useState(0); // 위도
   const [userLng, setUserLng] = useState(0); // 경도
-  
+
   useEffect(() => {
-    console.log("position test ", userLat, userLng);
+    console.log('position test ', userLat, userLng);
 
     // if (userLat && userLng) {
     //   console.log("check11");
@@ -98,22 +97,17 @@ const App = () => {
       const messageKeys = keys.filter(key => key[0] !== 'A');
       AsyncStorage.multiGet(messageKeys, async (err, results) => {
         results.map((result, idx) => {
-          console.log("yrdy :        ",result);
+          console.log('yrdy :        ', result);
           const key = results[idx][0];
           const value = JSON.parse(results[idx][1]);
 
           if (key !== 'user' && key !== 'receivedMessages') {
             const latitude = parseFloat(value['latitude']);
             const longitude = parseInt(value['longitude']);
-            const distance = calDistance(
-              userLat,
-              userLng,
-              latitude,
-              longitude,
-            );
-            console.log("userLat : ", userLat, "userLng : ",userLng ,"latitude : ",latitude," longitude : ", longitude, " distance : ",distance,   );
-            if (distance <= 50) {
-              console.log("check!!0");
+            const distance = calDistance(userLat, userLng, latitude, longitude);
+
+            if (distance <= 100000) {
+              console.log('check!!0');
               axios
                 .post(
                   'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
@@ -132,10 +126,9 @@ const App = () => {
         });
       });
     });
-  // }
-  },[userLat, userLng])
-  
-  
+    // }
+  }, [userLat, userLng]);
+
   const LoginProcess = () => {
     return (
       <init.Navigator
@@ -147,7 +140,6 @@ const App = () => {
       </init.Navigator>
     );
   };
-
 
   const Stacks = () => {
     const [isLogin, setIsLogin] = React.useState(false);
