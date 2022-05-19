@@ -1,3 +1,5 @@
+import { getActionFromState } from '@react-navigation/native';
+import ActivityIndicatorViewNativeComponent from 'react-native/Libraries/Components/ActivityIndicator/ActivityIndicatorViewNativeComponent';
 import {combineReducers} from 'redux';
 
 const MESSAGE = 'MESSAGE';
@@ -12,6 +14,7 @@ const IMAGEUPLOAD = 'IMAGEUPLOAD';
 const PAPERTYPE = 'PAPERTYPE';
 const MEMBERID = 'MEMBERID';
 const MESSAGEUPDATE = 'MESSAGEUPDATE';
+const RECEIVE = 'RECEIVE';
 //action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
 export const personContain = (sender, receiver) => {
   return {type: PERSON, sender, receiver};
@@ -44,7 +47,16 @@ export const secretContain = () => {
 };
 export const memberidContain = (member) => { return { type: MEMBERID, member } };
 export const markerContain = (data) => { return { type: MESSAGEUPDATE, data } };
-
+export const recevierContain = ( messageId,  senderId,  senderName,  receiverId,  receiverName,  senderProfileUrl,  latitude,  longitude,
+  dueTime,  createdAt,  title,  contentText,  location,  senderUrl,receiverUrl, paperType) => { return { type: RECEIVE,  messageId,  senderId,  senderName,  receiverId,  receiverName,  senderProfileUrl,  latitude,  longitude,
+    dueTime,
+    createdAt,
+    title,
+    contentText,
+    location,
+    senderUrl,
+    receiverUrl,
+    paperType}}
 //store
 const init = {
   dueTime: Date.now(),
@@ -142,6 +154,54 @@ const messages = (state = markerstore, action) => {
   }
 }
 
+const messageDetail = {
+  messageId: 0,
+  senderId: 0,
+  senderName: '',
+  receiverId: 0,
+  receiverName: '',
+  senderProfileUrl:'',
+  latitude: '',
+  longitude: '',
+  dueTime: '',
+  createdAt: '',
+  title: "",
+  contentText: "",
+  location: "",
+  senderUrl: "",
+  receiverUrl: "",
+  paperType: 0,
+  checked: ''
+}
+
+
+const singleMessage = (state = messageDetail, action) => {
+  switch (action.type) {
+    case RECEIVE:
+      return {
+        ...state,
+        messageId: action.messageId,
+        senderId: action.senderId,
+        senderName: action.senderName,
+        receiverId: action.receiverId,
+        receiverName: action.receiverName,
+        senderProfileUrl: action.senderProfileUrl,
+        latitude: action.latitude,
+        longitude: action.longitude,
+        dueTime: action.dueTime,
+        createdAt: action.createdAt,
+        title: action.title,
+        contentText: action.contentText,
+        location: action.location,
+        senderUrl: action.senderUrl,
+        receiverUrl: action.receiverUrl,
+        paperType: action.paperType,
+      }
+    default: return state
+  }
+}
+
+
 const userreducer = (state = userinfo, action) => {
   switch (action.type) {
     case LOGIN:
@@ -162,6 +222,6 @@ const userreducer = (state = userinfo, action) => {
   }
 };
 
-const rootReducer = combineReducers({userreducer, reducer, posreducer, messages});
+const rootReducer = combineReducers({userreducer, reducer, posreducer, messages, singleMessage});
 
 export default rootReducer;

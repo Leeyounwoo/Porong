@@ -9,7 +9,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 const icon = require('../assets/icons/letter.png');
 
 //데이터의 위치를
-export default function Readable({contentUrl, amISend,  nickName,  time,  place,  context,  latitude,  longitude,}) {
+export default function Readable({contentUrl, amISend,  nickName, papertype, time,  place,  context,  latitude,  longitude,}) {
   const [target, setTarget] = useState('');
   
   useEffect(() => {
@@ -54,13 +54,91 @@ export default function Readable({contentUrl, amISend,  nickName,  time,  place,
         <View style={{ marginBottom:10}}>
           <Text style={{fontSize:15,color:'black'}}>메세지 내용</Text>
           </View>
-        <ScrollView style={{width:350, height: 200,borderRadius:5, borderWidth:1,paddingBottom:10}}>
-            {contentUrl ? <View><Image source={{ uri: contentUrl }} style={{width:250, height: 250}}></Image></View> : null}
-          <Text style={{ marginLeft: 10, marginTop:10, marginRight:10, marginBottom:10}}>{context}</Text>
-        </ScrollView>
+          <View style={{...styles.messageContent, ...styles.backgroundSelect(papertype)}}>
+            {contentUrl ? <Image source={{uri:contentUrl}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
+            <Text
+              multiline={ true}
+              style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              margin: 20,
+              marginTop: 0,
+              marginBottom:5,
+              borderColor: '#FFEFBF',
+              height: 100,
+              backgroundColor: '#fbfaf4'
+              }}
+            >{ context}</Text>
+      </View>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  dateBtn: {
+    height: 35,
+    width: 100,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateText: {
+    color: 'white',
+  },
+  allcontainer: {
+    flex: 1,
+    backgroundColor: '#fbfaf4'
+  },
+  fromtoContainer: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+  },
+  backgroundSelect : select => {
+    if (select == 0) {
+      return {
+        backgroundColor:'#335342'
+      }
+    } else if(select == 1){
+      return {
+        backgroundColor:'#333333'
+      }
+    } else if(select == 2){
+      return {
+        backgroundColor:'#444444'
+      }
+    } else if(select == 3){
+      return {
+        backgroundColor:'#555555'
+      }
+    } else if(select == 4){
+      return {
+        backgroundColor:'#666666'
+      }
+    }
+  },
+  positionContainer: {
+    flexWrap: 'nowrap',
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+  },
+  messageTitle: {
+    marginTop: 10,
+    alignSelf: 'flex-start',
+  },
+  messageContent: {
+    margin: 10,
+    borderRadius: 10,
+    borderColor: 'black',
+  },
+  buttonContainer: {
+    marginTop: 10,
+    width: 100,
+  },
+  textContainer: mycolor => {
+    return {
+      fontWeight: 'bold',
+      color: mycolor,
+    };
+  },
+});

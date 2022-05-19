@@ -28,6 +28,8 @@ export default function Temp({navigation, route}) {
   const [longitude, setLongitude] = useState(0);
   const [context, setContext] = useState('');
   const [contentUrl, setContentUrl] = useState('');
+  const [receiverUrl, setReceiverUrl] = useState('');
+  const [papertype, setPapertype] = useState(0);
   const user = store.getState().userreducer;
 
   const isAlreadyReceived = () => {
@@ -58,20 +60,22 @@ export default function Temp({navigation, route}) {
       }) 
       .then(res => {
         console.log(res.data);
-        // const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
-        //   res.data.dueTime[1]-1,
-        // )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
-        //   res.data.dueTime[3],
-        // )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
-        //   res.data.dueTime[5],
-        // )}초 `;
-        // setTime(date);
-        // setSenderNickName(res.data.senderName);
-        // setPlace(res.data.location);
-        // setLatitude(res.data.latitude);
-        // setLongitude(res.data.longitude);
-        // setContext(res.data.contentText);
-        // setContentUrl(res.data.contentUrl);
+        const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
+          res.data.dueTime[1]+1,
+        )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
+          res.data.dueTime[3],
+        )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
+          res.data.dueTime[5],
+        )}초 `;
+        setTime(date);
+        setSenderNickName(res.data.senderName);
+        setPlace(res.data.location);
+        setLatitude(res.data.latitude);
+        setLongitude(res.data.longitude);
+        setContext(res.data.contentText);
+        setContentUrl(res.data.contentUrl);
+        setReceiverUrl(res.data.receiverUrl);
+        setPapertype(res.data.papertype);
       }).catch(err => {
         console.log("axios temp error ",err);
       });
@@ -82,13 +86,15 @@ export default function Temp({navigation, route}) {
       {(amISend === true || (amISend === false && flag === true)) && (
         <Readable
           amISend={amISend}
+          receiverUrl={receiverUrl}
           nickName={senderNickName}
           time={time}
           place={place}
           context={context}
           latitude={latitude}
           longitude={longitude}
-          contentUrl={ contentUrl}
+          contentUrl={contentUrl}
+          papertype={papertype }
         />
       )}
       {amISend === false && flag === false && (
