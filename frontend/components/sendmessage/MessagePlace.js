@@ -80,27 +80,23 @@ export default function MessagePlace({navigation}) {
         <Text>선택한 장소에서 메세지 열람이 가능해요!</Text>
       </View>
 
-      <MapTest totalpos={totalpos} mark={mark} />
-      <View style={styles.searchboxContainer}>
-        <TextInput
-          onChangeText={text => setAddress(text)}
-          value={address}></TextInput>
-      </View>
-
-      <View style={styles.searchbtnContainer}>
-        <Button title="검색" onPress={searchAddress}></Button>
-      </View>
-
-      <View
-        style={{
-          flex: 1.1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginHorizontal: 10,
-          marginBottom: 10,
-        }}>
-        <TouchableOpacity
+            <MapTest totalpos={totalpos} mark={mark} />
+            <View style={styles.searchboxContainer}>
+                <TextInput onChangeText={text => setAddress(text)} value={address}></TextInput>
+            </View>
+            <View style={styles.searchbtnContainer}>
+                <Button  title="검색" onPress={searchAddress}></Button>
+            </View>
+            <View
+                style={{
+                flex: 1.1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                marginHorizontal: 10,
+                marginBottom: 10,
+            }}>
+            <TouchableOpacity
           style={{...styles.dateBtn, backgroundColor: 'grey'}}
           onPress={() => navigation.goBack()}>
           <Text style={styles.dateText}>이전</Text>

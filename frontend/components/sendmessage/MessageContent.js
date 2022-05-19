@@ -10,33 +10,62 @@ import {
   Platform,
   ScrollView,
   Image,
-  Pressable
+  Pressable,
+  Alert
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {useStore} from 'react-redux';
 import {messageContain} from '../../reducer/index';
 import { launchImageLibrary } from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import { imageContain } from '../../reducer/index';
+import { pinchHandlerName } from 'react-native-gesture-handler/lib/typescript/handlers/PinchGestureHandler';
+import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 export default function MessageContent({navigation}) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const store = useStore();
-  const [pic, setPic] = useState('');
+  const [image, setImage] = useState(null);
+  const [transferred, setTransferred] = useState(0);
+  const [imageurl, setImageurl] = useState(null);
+  const [flag, setFlag] = useState(false);
   const next = () => {
-    store.dispatch(messageContain(title, content, pic));
+    store.dispatch(messageContain(title, content, imageurl));
     navigation.navigate('Total');
   };
-  const uploadPicture = () => {
-    launchImageLibrary().then(res => {
-    
-      setPic(res.assets[0].uri);
-      // setPic(source);
-      const formData22 = new FormData();
-      const test  =res.assets[0].type;
-      formData22.append('image', {uri : res.assets[0].uri, name: res.assets[0].fileName, test})
-      console.log(formData22);
+  const getdownload = (get) => {
 
+    get.getDownloadURL().then(res => {
+        setImageurl(res);
+    }).catch(err => {
+        console.log("check", err);
+      });
+  
+  }
+
+  const uploadImage = async () => {
+
+    const filename = image.substring(image.lastIndexOf('/') + 1);
+    const uploadUri = image;
+    const imageRef = storage().ref(filename);
+    await imageRef.putFile(uploadUri);
+    getdownload(imageRef);
+
+  }
+
+  const uploadPicture = async () => {
+
+    launchImageLibrary().then(res => {
+      setImage(res.assets[0].uri);
+    
+    }).then(() => {
+      setFlag(true);
     });
   }
+  useEffect(() => {
+    console.log(flag);
+  },[flag])
+
   return (
     <ScrollView style={{ flex: 1, }}>
     <KeyboardAvoidingView
@@ -63,9 +92,9 @@ export default function MessageContent({navigation}) {
           메세지 내용
         </Text>
         <View>
-          {pic ? <Image source={{uri:pic}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
+          {image ? <Image source={{uri:image}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
           </View>
-          <Pressable onPress={uploadPicture } style={{width: 100, alignSelf:'flex-end'}}><Text>사진 올리기</Text></Pressable>
+          {!flag ? <Pressable onPress={uploadPicture} style={{ width: 100, alignSelf: 'flex-end' }}><Text>사진 올리기</Text></Pressable> : <Pressable onPress={uploadImage} style={{ width: 100, alignSelf: 'flex-end' }}><Text>사진 업로드</Text></Pressable>}
           <TextInput
             multiline={ true}
             style={{

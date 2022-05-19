@@ -1,11 +1,12 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
 import {StyleSheet, Text, View, Image, Animated} from 'react-native';
 
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import {useSelector, useStore} from 'react-redux';
 import axios from 'axios';
-import {positionContain} from '../reducer';
+import {memberidContain, positionContain, userContain} from '../reducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const secret = require('../assets/icons/question.png');
 
 function displayedAt(createdAt) {
@@ -41,17 +42,45 @@ const Home = ({navigation}) => {
   const position = useSelector(state => state.posreducer);
   const [markers, setMarkers] = useState([]);
   const markerRef = useRef();
+  const [memberId, setMemberId] = useState(null);
+  const user = store.getState().userreducer;
+  console.log('check');
+  useLayoutEffect( () => {
+    let temp = null;
+    let test = null;
+    let memberid = null;
+    AsyncStorage.getItem('user').then(res => {
+      temp = JSON.parse(res);
+      
+      test = temp.data.authMember;
+      if (test != null) {
+        store.dispatch(userContain(memberid, test.imageUrl,test.kakaoId,test.nickName));
+      } else {
+        navigation.navigate('Login');
+      }
+    });
 
-  const user = useSelector(state => state.userreducer);
+  }, [])
 
   useEffect(() => {
-    axios
-      .get(
-        `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/fetchUncheckedMesaages`,
-      )
+    console.log(user.kakaoId);
+    axios.get(`http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${ user.kakaoId }`)
+      .then(res => {
+        console.log(res);
+        store.dispatch(memberidContain(res.data));
+        setMemberId(res.data);
+    }).catch(err => {
+      console.log(err)
+    })
+
+    console.log(user);
+  },[user])
+  useEffect(() => {
+    console.log("memberId check : ", memberId);
+    if (memberId) {
+      axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/fetchUncheckedMesaages`,)
       .then(json => {
         let received = [];
-        console.log('markers test : ', json);
         json.data.map(single => {
           received.push(single);
         });
@@ -59,12 +88,15 @@ const Home = ({navigation}) => {
         setMarkers(received);
       })
       .catch(err => {
-        console.log(
-          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
-          err,
-        );
+        console.log("axios error at home didmount",err);
       });
+    }
 
+  },[memberId])
+
+  useEffect(() => {
+      
+    
     Geolocation.getCurrentPosition(
       position => {
         store.dispatch(
@@ -77,7 +109,9 @@ const Home = ({navigation}) => {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-  }, [user.memberId]);
+  }, []);
+
+
 
   const clicktest = messageId => {
     navigation.navigate('HomeTemp', {
@@ -85,12 +119,6 @@ const Home = ({navigation}) => {
       amISend: false,
     });
   };
-
-  let rotateValueHolder = new Animated.Value(0);
-  const RotateData = rotateValueHolder.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
 
   return (
     <View style={styles.allcontainer}>

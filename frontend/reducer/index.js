@@ -8,6 +8,8 @@ const PERSON = 'PERSON';
 const POSITION = 'POSITION';
 const LOGIN = 'LOGIN';
 const ISSECRET = 'ISSECRET';
+const IMAGEUPLOAD = 'IMAGEUPLOAD';
+const MEMBERID = 'MEMBERID';
 //action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
 export const personContain = (sender, receiver) => {
   return {type: PERSON, sender, receiver};
@@ -24,6 +26,11 @@ export const typeContain = data => {
 export const messageContain = (title, content, pic) => {
   return {type: MESSAGE, title, content, pic};
 };
+
+export const imageContain = (pic) => {
+  return {type: IMAGEUPLOAD, pic};
+};
+
 export const positionContain = (lat, lng) => {
   return {type: POSITION, lat, lng};
 };
@@ -33,6 +40,8 @@ export const userContain = (memberid, img, kakaoid, nickname) => {
 export const secretContain = () => {
   return {type: ISSECRET};
 };
+export const memberidContain = (member) => { return { type: MEMBERID, member } };
+
 //store
 const init = {
   dueTime: Date.now(),
@@ -45,7 +54,6 @@ const init = {
   secret: false,
   contentUrl: '',
 };
-
 //reducer
 const reducer = (state = init, action) => {
   switch (action.type) {
@@ -71,8 +79,13 @@ const reducer = (state = init, action) => {
         ...state,
         title: action.title,
         contentText: action.content,
-        contentUrl: action.pic,
+        contentUrl: action.pic
       };
+    case 'IMAGEUPLOAD':
+      return {
+        ...state,
+        contentUrl: action.pic,
+      }
     case 'ISSECRET':
       return {
         ...state,
@@ -119,6 +132,11 @@ const userreducer = (state = userinfo, action) => {
         profileUrl: action.img,
         nickname: action.nickname,
       };
+    case MEMBERID:
+      return {
+        ...state,
+        memberId: action.member,
+      }
     default:
       return state;
   }

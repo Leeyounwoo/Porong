@@ -9,10 +9,13 @@ import {
   Alert,
 } from 'react-native';
 import {useSelector, useStore} from 'react-redux';
-import {typeContain} from '../../reducer';
+import {imageContain, typeContain} from '../../reducer';
 import axios from 'axios';
+import storage from '@react-native-firebase/storage';
 export default function MessageType({navigation}) {
   const store = useStore();
+  const [picturedata, setPicturedata] = useState(null);
+  const image = store.getState().reducer.contentUrl;
 
   const normal = () => {
     Alert.alert('Alert', '일반 메시지로 보내시겠습니까?', [
@@ -36,7 +39,7 @@ export default function MessageType({navigation}) {
           //   })
           //   .catch(err => console.log(err));
           alert('전송 완료! \n메인 페이지로 이동합니다.');
-          console.log(store.getState().reducer);
+
           axios
             .post(
               'http://k6c102.p.ssafy.io:8080/v1/message/',
