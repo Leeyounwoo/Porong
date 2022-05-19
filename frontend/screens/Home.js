@@ -44,53 +44,57 @@ const Home = ({navigation}) => {
   const markerRef = useRef();
   const [memberId, setMemberId] = useState(null);
   const user = store.getState().userreducer;
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     let temp = null;
     let test = null;
     let memberid = null;
     AsyncStorage.getItem('user').then(res => {
       temp = JSON.parse(res);
-      
+
       test = temp.data.authMember;
       if (test != null) {
-        store.dispatch(userContain(memberid, test.imageUrl,test.kakaoId,test.nickName));
+        store.dispatch(
+          userContain(memberid, test.imageUrl, test.kakaoId, test.nickName),
+        );
       } else {
         navigation.navigate('Login');
       }
     });
-
-  }, [])
+  }, []);
 
   useEffect(() => {
-
-    axios.get(`http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${ user.kakaoId }`)
+    axios
+      .get(
+        `http://k6c102.p.ssafy.io:8080/v1/oauth/convert/kakaoId/${user.kakaoId}`,
+      )
       .then(res => {
         store.dispatch(memberidContain(res.data));
         setMemberId(res.data);
-    }).catch(err => {
-      console.log("kakaoId error",err)
-    })
-  },[user])
-  useEffect(() => {
-    if (memberId) {
-      axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/fetchUncheckedMesaages`,)
-      .then(json => {
-        let received = [];
-        json.data.map(single => {
-          received.push(single);
-        });
-        setMarkers(received);
       })
       .catch(err => {
-        console.log("axios error at home didmount",err);
+        console.log('kakaoId error', err);
       });
+  }, [user]);
+  useEffect(() => {
+    if (memberId) {
+      axios
+        .get(
+          `http://k6c102.p.ssafy.io:8080/v1/message/${memberId}/fetchUncheckedMesaages`,
+        )
+        .then(json => {
+          let received = [];
+          json.data.map(single => {
+            received.push(single);
+          });
+          setMarkers(received);
+        })
+        .catch(err => {
+          console.log('axios error at home didmount', err);
+        });
     }
-
-  },[memberId])
+  }, [memberId]);
 
   useEffect(() => {
-      
-    
     Geolocation.getCurrentPosition(
       position => {
         store.dispatch(
@@ -105,8 +109,6 @@ const Home = ({navigation}) => {
     );
   }, []);
 
-
-
   const clicktest = messageId => {
     navigation.navigate('HomeTemp', {
       messageId: messageId,
@@ -117,10 +119,16 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.allcontainer}>
       <View style={styles.headcontainer}>
-        {user !=null ? (
+        {user != null ? (
           <Image style={styles.imgstyle} source={{uri: user.profileUrl}} />
         ) : null}
-        <Text style={{marginTop: 5, alignSelf: 'center'}}>
+        <Text
+          style={{
+            marginTop: 5,
+            alignSelf: 'center',
+            color: '#595959',
+            fontWeight: 'bold',
+          }}>
           {user ? user.nickname : `로그인 처리가 안됬습니다.`}
         </Text>
       </View>
@@ -169,7 +177,7 @@ const Home = ({navigation}) => {
       </View>
       <View style={styles.messageContainer}>
         {markers.length != 0 ? (
-          <Text style={{alignSelf: 'center', marginTop: 5}}>
+          <Text style={{alignSelf: 'center', marginTop: 5, color: 'white'}}>
             확인 안한 메세지가 {markers.length}개 있습니다
           </Text>
         ) : (
@@ -187,6 +195,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
+    backgroundColor: '#fbfaf4',
   },
   mapcontainer: {
     height: 300,
@@ -214,7 +223,7 @@ const styles = StyleSheet.create({
     width: 220,
     height: 30,
     top: 150,
-    backgroundColor: '#FDE1E3',
+    backgroundColor: '#595959',
   },
   imgstyle: {
     width: 80,
