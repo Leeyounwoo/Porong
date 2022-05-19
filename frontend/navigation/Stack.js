@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'react-native';
+import {Image} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../screens/Home';
@@ -24,6 +24,15 @@ const AlarmStack = createStackNavigator();
 const MessageStack = createStackNavigator();
 const SendStack = createStackNavigator();
 
+function LogoTitle() {
+  return (
+    <Image
+      style={{width: 50, height: 50}}
+      source={require('../assets/images/logo.png')}
+    />
+  );
+}
+
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator
@@ -36,13 +45,14 @@ function HomeStackScreen() {
       }}>
       <HomeStack.Screen
         name="Profile"
-        options={{
-          title: '홈',
-          headerLeft: false,
-        }}
         component={HomeScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
       />
-      <HomeStack.Screen name="HomeTemp" component={TempScreen} />
+      <HomeStack.Screen
+        name="HomeTemp"
+        component={TempScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
     </HomeStack.Navigator>
   );
 }
@@ -56,9 +66,18 @@ function AlarmStackScreen() {
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
-      }}>
-      <AlarmStack.Screen name="Alarm" component={AlarmScreen} />
-      <AlarmStack.Screen name="Temp" component={TempScreen} />
+      }}
+      options={{headerTitle: props => <LogoTitle {...props} />}}>
+      <AlarmStack.Screen
+        name="Alarm"
+        component={AlarmScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <AlarmStack.Screen
+        name="Temp"
+        component={TempScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
     </AlarmStack.Navigator>
   );
 }
@@ -74,34 +93,59 @@ function SendStackScreen() {
         headerTitleAlign: 'center',
         headerTitle: '메세지 보내기',
       }}>
-      <SendStack.Screen name="Person" component={PersonScreen} />
-      <SendStack.Screen name="Time" component={TimeScreen} />
-      <SendStack.Screen name="Place" component={PlaceScreen} />
-      <SendStack.Screen name="Content" component={ContentScreen} />
-      <SendStack.Screen name="Type" component={TypeScreen} />
-      <SendStack.Screen name="Total" component={TotalScreen} />
+      <SendStack.Screen
+        name="Person"
+        component={PersonScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <SendStack.Screen
+        name="Time"
+        component={TimeScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <SendStack.Screen
+        name="Place"
+        component={PlaceScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <SendStack.Screen
+        name="Content"
+        component={ContentScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <SendStack.Screen
+        name="Type"
+        component={TypeScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <SendStack.Screen
+        name="Total"
+        component={TotalScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
     </SendStack.Navigator>
   );
 }
-
-function logo() {
-  return (
-    <Image style={{ width: 100, height: 100, flex: 1 }} resizeMode="contain" source={require('../assets/icons/logo.png')} /> 
-  )
-}
-
 
 function MessageStackScreen() {
   return (
     <MessageStack.Navigator
       screenOptions={{
-       
         headerStyle: {
           backgroundColor: '#335342',
         },
+        headerTitleAlign: 'center',
       }}>
-      <MessageStack.Screen name="Messege"  component={ReceivedBox} />
-      <MessageStack.Screen name="MessageTemp" component={TempScreen} />
+      <MessageStack.Screen
+        name="Messege"
+        component={ReceivedBox}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
+      <MessageStack.Screen
+        name="MessageTemp"
+        component={TempScreen}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
     </MessageStack.Navigator>
   );
 }
@@ -118,8 +162,8 @@ function AccountStackScreen() {
       }}>
       <AccountStack.Screen
         name="setting"
-        options={{title: '환경설정'}}
         component={Setting}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
       />
     </AccountStack.Navigator>
   );

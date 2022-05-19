@@ -160,7 +160,9 @@ const Home = ({navigation}) => {
           setNewMarkers(prev => {
             return {...prev, [key]: value};
           });
-          setNewMarkersKey(prev => [...prev, key]);
+          if (!newMarkersKey.includes(key)) {
+            setNewMarkersKey(prev => [...prev, key]);
+          }
         });
       });
     });
@@ -217,6 +219,7 @@ const Home = ({navigation}) => {
             );
           })}
           {newMarkersKey.map((single, idx) => {
+            console.log(newMarkers);
             //제약 시간 - 현재 시간을 표시
             if (newMarkers[single] !== undefined) {
               return (
@@ -224,17 +227,17 @@ const Home = ({navigation}) => {
                   ref={markerRef}
                   key={idx}
                   onPress={() => {
-                    clicktest(single);
+                    clicktest(newMarkersKey);
                   }}
                   coordinate={{
-                    latitude: newMarkers[single]['latitude'],
-                    longitude: newMarkers[single]['longitude'],
+                    latitude: parseFloat(newMarkers[single]['latitude']),
+                    longitude: parseFloat(newMarkers[single]['longitude']),
                   }}>
                   <Image
                     source={
                       newMarkers[single]['senderProfile'] === undefined
                         ? require('../assets/icons/user.png')
-                        : {uri: newMargkers[single]['senderProfile']}
+                        : {uri: newMarkers[single]['senderProfile']}
                     }
                     style={{height: 35, width: 35, borderRadius: 100}}
                   />
