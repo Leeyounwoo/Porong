@@ -25,6 +25,7 @@ public class ResponseCheckedMessageDto implements Serializable {
     private String location;
     private String senderUrl;
     private String receiverUrl;
+    private String contentUrl;
     private int paperType;
 
 
@@ -35,7 +36,7 @@ public class ResponseCheckedMessageDto implements Serializable {
         this.senderName = message.getSender().getName();
         this.receiverId = message.getReceiver().getMemberId();
         this.receiverName = message.getReceiver().getName();
-        this.senderProfileUrl = message.getSender().getProfileUrl();
+//        this.senderProfileUrl = message.getSender().getProfileUrl();
         this.latitude = message.getLatitude();
         this.longitude = message.getLongitude();
         this.dueTime = message.getDueTime();
@@ -47,6 +48,7 @@ public class ResponseCheckedMessageDto implements Serializable {
         this.senderUrl = message.getSender().getProfileUrl();
         this.receiverUrl = message.getReceiver().getProfileUrl();
         this.paperType = message.getPaperType();
+        this.contentUrl = message.getContentUrl();
     }
 
     public ResponseCheckedMessageDto(){
