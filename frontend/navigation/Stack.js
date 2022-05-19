@@ -28,7 +28,7 @@ function HomeStackScreen() {
     <HomeStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#867AE9',
+          backgroundColor: '#335342',
         },
         headerTintColor: 'white',
         headerTitleAlign: 'center',
