@@ -133,22 +133,20 @@ const App = () => {
                   longitude,
                 );
 
-                if (distance <= 35500) {
-                  axios
-                    .post(
-                      'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
-                      null,
-                      {
-                        params: {
-                          messageId: parseInt(key),
-                        },
+                axios
+                  .post(
+                    'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
+                    null,
+                    {
+                      params: {
+                        messageId: parseInt(key),
                       },
-                    )
+                    },
+                  )
 
-                    .catch(err => {
-                      console.log(err);
-                    });
-                }
+                  .catch(err => {
+                    console.log(err);
+                  });
               }
             });
           });
@@ -158,32 +156,36 @@ const App = () => {
       {distanceFilter: 0.5},
     );
   }, []);
-  
+
   // 새로운 알림 왔을 때
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       await getAlert(remoteMessage);
 
       if (store.getState().userreducer.memberId) {
-        axios.get(`http://k6c102.p.ssafy.io:8080/v1/message/${store.getState().userreducer.memberId}/fetchUncheckedMesaages`)
-        .then(json => {
-          let received = [];
-          console.log(json);
-          json.data.map(single => {
-            received.push(single);
+        axios
+          .get(
+            `http://k6c102.p.ssafy.io:8080/v1/message/${
+              store.getState().userreducer.memberId
+            }/fetchUncheckedMesaages`,
+          )
+          .then(json => {
+            let received = [];
+            console.log(json);
+            json.data.map(single => {
+              received.push(single);
+            });
+            store.dispatch(markerContain(received));
+          })
+          .catch(err => {
+            console.log('data error ', err);
           });
-          store.dispatch(markerContain(received));
-        }).catch(err => {
-          console.log("data error ",err);
-        }) 
       }
       // Show an alert to the user
       Alert.alert(
         remoteMessage.notification.title,
         remoteMessage.notification.body,
       );
-
-
     });
     return unsubscribe;
   }, []);
