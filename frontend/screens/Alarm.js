@@ -21,9 +21,6 @@ export default function Alarm({navigation}) {
   const [ready, setReady] = useState(false);
   const isFocused = useIsFocused();
 
-  console.log(alertKeys);
-  console.log(alertLocations);
-
   const updateChecked = async key => {
     // alertLocations[alertKeys[idx]]['isChecked']
     let value = alertLocations[key];
@@ -37,7 +34,6 @@ export default function Alarm({navigation}) {
   // 알림 클릭시 메세지 디테일로 이동
   const goToMessageDetail = async key => {
     await updateChecked(key);
-    console.log(alertLocations[key]['messageId']);
     navigation.push('Temp', {
       messageId: alertLocations[key]['messageId'],
       amISend: false,
@@ -49,7 +45,6 @@ export default function Alarm({navigation}) {
     stores.map((store, idx) => {
       const key = store[0];
       const value = JSON.parse(store[1]);
-      console.log('key들 4', key, value);
       setAlertLocations(prevAlertLocations => {
         return {...prevAlertLocations, [key]: value};
       });
@@ -60,22 +55,17 @@ export default function Alarm({navigation}) {
   const updateAlertKeys = keys => {
     keys.map((key, idx) => {
       if (alertKeys.includes(keys[idx]) === false) {
-        console.log('key들 5', keys[idx]);
-
         setAlertKeys(prev => [...prev, keys[idx]]);
       }
     });
   };
 
   useEffect(() => {
-    console.log('key들', alertKeys);
     AsyncStorage.getAllKeys((err, keys) => {
       const newKeys = keys.filter(
         tempKey => !alertKeys.includes(tempKey) && tempKey[0] === 'A',
       );
-      console.log('key들 2', newKeys);
       AsyncStorage.multiGet(newKeys, async (err, stores) => {
-        console.log('key들 3', stores);
         await updateAlertLocations(stores);
         await updateAlertKeys(newKeys);
       });
@@ -84,12 +74,10 @@ export default function Alarm({navigation}) {
 
   // Async Storage에 있는 데이터 가져오기
   useEffect(() => {
-    console.log('key들', alertKeys);
     AsyncStorage.getAllKeys((err, keys) => {
       const newKeys = keys.filter(
         tempKey => !alertKeys.includes(tempKey) && tempKey[0] === 'A',
       );
-      console.log('key들 2', newKeys);
       const talertKeys = [];
       keys.map((key, idx) => {
         if (keys[idx][0] === 'A') {
@@ -99,7 +87,6 @@ export default function Alarm({navigation}) {
       AsyncStorage.multiGet(talertKeys, async (err, stores) => {
         await updateAlertLocations(stores);
         await updateAlertKeys(talertKeys);
-        console.log('상태', updateAlertKeys.length);
       });
     });
   }, []);
@@ -120,8 +107,6 @@ export default function Alarm({navigation}) {
   return (
     <ScrollView style={{marginBottom: 130}}>
       <View style={styles.allcontainer}>
-        {/* <Button onPress={deleteAll} title={'지우기'}></Button> */}
-
         {alertKeys.map((key, idx) => {
           if (
             alertLocations[alertKeys[idx]] !== undefined &&
