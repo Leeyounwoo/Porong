@@ -11,6 +11,7 @@ const ISSECRET = 'ISSECRET';
 const IMAGEUPLOAD = 'IMAGEUPLOAD';
 const PAPERTYPE = 'PAPERTYPE';
 const MEMBERID = 'MEMBERID';
+const MESSAGEUPDATE = 'MESSAGEUPDATE';
 //action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
 export const personContain = (sender, receiver) => {
   return {type: PERSON, sender, receiver};
@@ -42,6 +43,7 @@ export const secretContain = () => {
   return {type: ISSECRET};
 };
 export const memberidContain = (member) => { return { type: MEMBERID, member } };
+export const markerContain = (data) => { return { type: MESSAGEUPDATE, data } };
 
 //store
 const init = {
@@ -124,6 +126,22 @@ const userinfo = {
   nickname: '',
 };
 
+const markerstore = {
+  markers: [],
+}
+
+const messages = (state = markerstore, action) => {
+  switch (action.type) {
+    case MESSAGEUPDATE:
+      return {
+        ...state,
+        markers: action.data,
+      }
+    default:
+      return state;
+  }
+}
+
 const userreducer = (state = userinfo, action) => {
   switch (action.type) {
     case LOGIN:
@@ -144,6 +162,6 @@ const userreducer = (state = userinfo, action) => {
   }
 };
 
-const rootReducer = combineReducers({userreducer, reducer, posreducer});
+const rootReducer = combineReducers({userreducer, reducer, posreducer, messages});
 
 export default rootReducer;

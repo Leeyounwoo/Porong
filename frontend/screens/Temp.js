@@ -47,30 +47,31 @@ export default function Temp({navigation, route}) {
     
     const time = `${now.getFullYear()}-${dateTrans(now.getMonth() + 1)}-${dateTrans(now.getDate())}T${dateTrans(now.getHours())}:${dateTrans(now.getMinutes())}:${dateTrans(now.getSeconds())}`;
     
-    console.log("memberId : ", user.memberId, " messageId : ", messageId, "timeNow : ", time);
+    console.log("memberId : ",  user.memberId, " messageId : ", messageId, "timeNow : ",  time);
      
-    axios.post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
+    axios.post('http://k6c102.p.ssafy.io:8888/v1/message/getmessage', null, {
         params: {
           memberId: user.memberId,
-          messageId: messageId,
+          messageId: parseInt(messageId),
           timeNow: time,
         },
       }) 
       .then(res => {
-        const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
-          res.data.dueTime[1]-1,
-        )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
-          res.data.dueTime[3],
-        )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
-          res.data.dueTime[5],
-        )}초 `;
-        setTime(date);
-        setSenderNickName(res.data.senderName);
-        setPlace(res.data.location);
-        setLatitude(res.data.latitude);
-        setLongitude(res.data.longitude);
-        setContext(res.data.contentText);
-        setContentUrl(res.data.contentUrl);
+        console.log(res.data);
+        // const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
+        //   res.data.dueTime[1]-1,
+        // )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
+        //   res.data.dueTime[3],
+        // )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
+        //   res.data.dueTime[5],
+        // )}초 `;
+        // setTime(date);
+        // setSenderNickName(res.data.senderName);
+        // setPlace(res.data.location);
+        // setLatitude(res.data.latitude);
+        // setLongitude(res.data.longitude);
+        // setContext(res.data.contentText);
+        // setContentUrl(res.data.contentUrl);
       }).catch(err => {
         console.log("axios temp error ",err);
       });

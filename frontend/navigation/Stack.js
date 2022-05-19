@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../screens/Home';
@@ -83,17 +84,23 @@ function SendStackScreen() {
   );
 }
 
+function logo() {
+  return (
+    <Image style={{ width: 100, height: 100, flex: 1 }} resizeMode="contain" source={require('../assets/icons/logo.png')} /> 
+  )
+}
+
+
 function MessageStackScreen() {
   return (
     <MessageStack.Navigator
       screenOptions={{
+       
         headerStyle: {
           backgroundColor: '#335342',
         },
-        headerTintColor: 'white',
-        headerTitleAlign: 'center',
       }}>
-      <MessageStack.Screen name="Messege" component={ReceivedBox} />
+      <MessageStack.Screen name="Messege"  component={ReceivedBox} />
       <MessageStack.Screen name="MessageTemp" component={TempScreen} />
     </MessageStack.Navigator>
   );
