@@ -34,7 +34,7 @@ public class LocationService {
             rankingZset.locationCount(locationName);
         }
 
-    public List<String> getDaliyRanking() {
+    public List<String> getRanking() {
         return rankingZset.getLocation();
     }
 

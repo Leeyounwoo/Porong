@@ -7,10 +7,7 @@ import com.porong.ranking.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,17 +33,11 @@ public class RankingController {
         }
     }
 
-    @GetMapping("/daily")
-    public List<LocationVo> fetchDaliyRanking() {
-        List<String> locations = locationService.getDaliyRanking();
+    @GetMapping("/location")
+    public List<LocationVo> fetchRanking() {
+        List<String> locations = locationService.getRanking();
         return locations.stream().map(LocationVo::new).collect(Collectors.toList());
     }
-
-//    @GetMapping("/total")
-//    public List<LocationVo> fetchTotalRanking() {
-//        List<String> locations = locationService.getTotalRanking();
-//        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
-//    }
 
     @DeleteMapping("/clear")
     public void clearAll(){
