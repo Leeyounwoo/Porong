@@ -134,7 +134,8 @@ const App = () => {
                   latitude,
                   longitude,
                 );
-                if (distance >= 100000) {
+                console.log('거리', distance);
+                if (distance <= 100000) {
                   axios
                     .post(
                       'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',

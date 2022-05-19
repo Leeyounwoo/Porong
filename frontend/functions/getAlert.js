@@ -42,6 +42,7 @@ export function getAlert(remoteMessage) {
         JSON.stringify({
           latitude: latitude,
           longitude: longitude,
+          senderProfile: senderProfile,
         }),
       )
         .then(() => {
