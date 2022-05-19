@@ -75,10 +75,27 @@ export default function Login({navigation}) {
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#335342',
       }}>
-      <TouchableOpacity onPress={Login}>
+      <View
+        style={{
+          flex: 1.1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={require('../assets/images/logo.png')}
+          style={{width: 300, height: 300}}
+        />
+      </View>
+      <View style={{flex: 0.4, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{color: '#fbfaf4', fontSize: 18, fontWeight: 'bold'}}>
+          마음 사서함에 오신걸 환영합니다!
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={{flex: 0.5, alignItems: 'center'}}
+        onPress={Login}>
         <Image source={require('../assets/images/kakao_login.png')} />
       </TouchableOpacity>
     </View>
