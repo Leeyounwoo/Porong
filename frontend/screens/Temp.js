@@ -29,6 +29,9 @@ export default function Temp({navigation, route}) {
   const [longitude, setLongitude] = useState(0);
   const [context, setContext] = useState('');
   const [contentUrl, setContentUrl] = useState('');
+  const [receiverUrl, setReceiverUrl] = useState('');
+  const [papertype, setPapertype] = useState(0);
+  const [senderUrl, setSenderUrl] = useState('');
   const user = store.getState().userreducer;
   const isFocused = useIsFocused();
 
@@ -71,7 +74,7 @@ export default function Temp({navigation, route}) {
       .then(res => {
         console.log('성공', res.data);
         const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
-          res.data.dueTime[1] - 1,
+          res.data.dueTime[1],
         )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(
           res.data.dueTime[3],
         )}시 ${parseInt(res.data.dueTime[4])}분 ${parseInt(
@@ -84,9 +87,12 @@ export default function Temp({navigation, route}) {
         setLongitude(res.data.longitude);
         setContext(res.data.contentText);
         setContentUrl(res.data.contentUrl);
-      })
-      .catch(err => {
-        console.log('axios temp error  @@@@@@@@@@@@@@@', err);
+        setReceiverUrl(res.data.receiverUrl);
+        setPapertype(res.data.papertype);
+        setSenderUrl(res.data.senderUrl);
+        setReceiver
+      }).catch(err => {
+        console.log("axios temp error ",err);
       });
   }, [isFocused]);
 
@@ -95,13 +101,16 @@ export default function Temp({navigation, route}) {
       {(amISend === true || (amISend === false && flag === true)) && (
         <Readable
           amISend={amISend}
+          receiverUrl={receiverUrl}
           nickName={senderNickName}
           time={time}
           place={place}
           context={context}
           latitude={latitude}
           longitude={longitude}
+          senderUrl={senderUrl}
           contentUrl={contentUrl}
+          papertype={papertype}
         />
       )}
       {amISend === false && flag === false && (
@@ -111,6 +120,7 @@ export default function Temp({navigation, route}) {
           time={time}
           place={place}
           latitude={latitude}
+          senderUrl={senderUrl}
           longitude={longitude}
         />
       )}

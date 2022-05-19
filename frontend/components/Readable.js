@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {StyleSheet, ScrollView, View, Text, Button} from 'react-native';
+import {StyleSheet, ScrollView, View, Text, Button, Image} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useStore} from 'react-redux';
 import Geoloation from 'react-native-geolocation-service';
@@ -9,7 +9,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 const icon = require('../assets/icons/letter.png');
 
 //데이터의 위치를
-export default function Readable({contentUrl, amISend,  nickName,  time,  place,  context,  latitude,  longitude,}) {
+export default function Readable({contentUrl, amISend, senderUrl, nickName, papertype, time,  place,  context,  latitude,  longitude,}) {
   const [target, setTarget] = useState('');
   
   useEffect(() => {
@@ -22,8 +22,8 @@ export default function Readable({contentUrl, amISend,  nickName,  time,  place,
   
   return (
       <View>
-      <View style={{marginLeft: 20,marginTop:20, marginBottom:15, alignSelf:'baseline'}}>
-        <Text style={{ fontSize: 15, color: 'black' }}><Text style={{ color: '#0075FF', fontWeight: 'bold' }}>{nickName}</Text>{target}</Text>
+      <View style={{ marginLeft: 20, marginTop: 20, marginBottom: 15, alignItems: 'flex-start' }}>
+        {senderUrl ? <Image source={{uri:senderUrl}} style={{ width: 35, height: 35, borderRadius: 30, alignSelf:'flex-start' }} ></Image> : null }<Text style={{ fontSize: 15, color: '#595959' }}><Text style={{fontSize:18, color: '#335342', fontWeight: 'bold' }}>{nickName}</Text>{target}</Text>
       </View>
       <View
         style={{alignItems: 'center', borderRadius: 15, overflow: 'hidden'}}>
@@ -47,20 +47,98 @@ export default function Readable({contentUrl, amISend,  nickName,  time,  place,
         </MapView>
             </View>
         <View style={{ marginTop:15, marginLeft: 20,alignSelf:'baseline'}}>
-            <Text style={{color:'black'}}><Text style={{color:'#0075FF',fontWeight:'bold'}}>{time}</Text>에</Text>
-            <Text style={{color:'black'}}><Text style={{ color: '#0075FF', fontWeight: 'bold', alignSelf:'baseline'}}>{place}</Text><Text style={{alignSelf:'flex-end'}}>에서 확인했습니다!</Text></Text>
+            <Text style={{color:'#595959'}}><Text style={{fontSize:18, color:'#335342',fontWeight:'bold'}}>{time}</Text>에</Text>
+            <Text style={{color:'#595959'}}><Text style={{fontSize:18, color: '#335342', fontWeight: 'bold', alignSelf:'baseline'}}>{place}</Text><Text style={{alignSelf:'flex-end'}}>에서 확인했습니다!</Text></Text>
         </View>
       <View style={{ marginLeft:20, marginTop:20}}>
         <View style={{ marginBottom:10}}>
-          <Text style={{fontSize:15,color:'black'}}>메세지 내용</Text>
+          <Text style={{fontSize:18,color:'#595959'}}>메세지 내용</Text>
           </View>
-        <ScrollView style={{width:350, height: 200,borderRadius:5, borderWidth:1,paddingBottom:10}}>
-            {contentUrl ? <View><Image source={{ uri: contentUrl }} style={{width:250, height: 250}}></Image></View> : null}
-          <Text style={{ marginLeft: 10, marginTop:10, marginRight:10, marginBottom:10}}>{context}</Text>
-        </ScrollView>
+          <View style={{...styles.messageContent, ...styles.backgroundSelect(papertype)}}>
+            {(contentUrl !='string' && contentUrl)  ? <Image source={{uri:contentUrl}} style={{marginTop:15, marginBottom:10, width: 200, height:200, alignSelf:'center'}}></Image> : null }
+            <Text
+              multiline={ true}
+              style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              margin: 20,
+              marginTop: 0,
+              marginBottom: 5,
+              padding: 10,
+              borderColor: '#FFEFBF',
+              height: 100,
+              backgroundColor: '#fbfaf4'
+              }}
+            >{ context}</Text>
+      </View>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  dateBtn: {
+    height: 35,
+    width: 100,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateText: {
+    color: 'white',
+  },
+  allcontainer: {
+    flex: 1,
+    backgroundColor: '#fbfaf4'
+  },
+  fromtoContainer: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+  },
+  backgroundSelect : (select) => {
+    if (select == 0) {
+      return {
+        backgroundColor:'#335342'
+      }
+    } else if(select == 1){
+      return {
+        backgroundColor:'#333333'
+      }
+    } else if(select == 2){
+      return {
+        backgroundColor:'#444444'
+      }
+    } else if(select == 3){
+      return {
+        backgroundColor:'#555555'
+      }
+    } else if(select == 4){
+      return {
+        backgroundColor:'#666666'
+      }
+    }
+  },
+  positionContainer: {
+    flexWrap: 'nowrap',
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+  },
+  messageTitle: {
+    marginTop: 10,
+    alignSelf: 'flex-start',
+  },
+  messageContent: {
+    margin: 10,
+    borderRadius: 10,
+  },
+  buttonContainer: {
+    marginTop: 10,
+    width: 100,
+  },
+  textContainer: mycolor => {
+    return {
+      fontWeight: 'bold',
+      color: mycolor,
+    };
+  },
+});

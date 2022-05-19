@@ -12,6 +12,8 @@ import {
   userContain,
 } from '../reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
+
 const secret = require('../assets/icons/question.png');
 
 function displayedAt(createdAt) {
@@ -45,13 +47,16 @@ function displayedAt(createdAt) {
 const Home = ({navigation}) => {
   const store = useStore();
   const position = useSelector(state => state.posreducer);
+  // [{}, ]
   const markers = useSelector(state => state.messages.markers);
+  const isFocused = useIsFocused();
+  const [newMarkers, setNewMarkers] = useState({});
+  const [newMarkersKey, setNewMarkersKey] = useState([]);
   const rankIcon = [
     require('../assets/icons/first.png'),
     require('../assets/icons/second.png'),
     require('../assets/icons/third.png'),
   ];
-  console.log(markers);
   const markerRef = useRef();
   const [memberId, setMemberId] = useState(null);
   const [ranks, setRank] = useState([]);
@@ -96,6 +101,7 @@ const Home = ({navigation}) => {
         });
     }
   }, [user]);
+
   useEffect(() => {
     if (memberId) {
       axios
@@ -136,6 +142,29 @@ const Home = ({navigation}) => {
       amISend: false,
     });
   };
+
+  // [{messageId, title, dueTime, latitude, longitude, senderProfileUrl}]
+
+  useEffect(() => {
+    AsyncStorage.getAllKeys((err, keys) => {
+      const newKeys = keys.filter(
+        tempKey =>
+          tempKey[0] !== 'A' &&
+          tempKey !== 'user' &&
+          tempKey !== 'receivedMessages',
+      );
+      AsyncStorage.multiGet(newKeys, (err, results) => {
+        results.map((result, idx) => {
+          const key = parseInt(results[idx][0]);
+          const value = JSON.parse(results[idx][1]);
+          setNewMarkers(prev => {
+            return {...prev, [key]: value};
+          });
+          setNewMarkersKey(prev => [...prev, key]);
+        });
+      });
+    });
+  }, [isFocused]);
 
   return (
     <View style={styles.allcontainer}>
@@ -187,39 +216,34 @@ const Home = ({navigation}) => {
               </Marker>
             );
           })}
-          {markers.map((single, idx) => {
+          {newMarkersKey.map((single, idx) => {
             //제약 시간 - 현재 시간을 표시
-            return (
-              <Marker
-                ref={markerRef}
-                key={idx}
-                onPress={() => {
-                  clicktest(single.messageId);
-                }}
-                title={`제목 : ${single.title}`}
-                description={
-                  displayedAt(single.dueTime) == `지남`
-                    ? `해당 위치에서 확인해주세요`
-                    : displayedAt(single.dueTime)
-                }
-                icon={single.type == 0 ? secret : null}
-                coordinate={{
-                  latitude: single.latitude,
-                  longitude: single.longitude,
-                }}>
-                <Image
-                  source={{uri: single.senderProfileUrl}}
-                  style={{height: 35, width: 35, borderRadius: 100}}
-                />
-              </Marker>
-            );
+            if (newMarkers[single] !== undefined) {
+              return (
+                <Marker
+                  ref={markerRef}
+                  key={idx}
+                  onPress={() => {
+                    clicktest(single);
+                  }}
+                  coordinate={{
+                    latitude: newMarkers[single]['latitude'],
+                    longitude: newMarkers[single]['latitude'],
+                  }}>
+                  <Image
+                    source={{uri: newMarkers[single]['latitude']}}
+                    style={{height: 35, width: 35, borderRadius: 100}}
+                  />
+                </Marker>
+              );
+            }
           })}
         </MapView>
       </View>
       <View style={styles.messageContainer}>
-        {markers.length != 0 ? (
+        {newMarkersKey.length != 0 ? (
           <Text style={{alignSelf: 'center', marginTop: 5, color: 'white'}}>
-            확인 안한 메세지가 {markers.length}개 있습니다
+            확인 안한 메세지가 {newMarkersKey.length}개 있습니다
           </Text>
         ) : (
           <Text style={{alignSelf: 'center', marginTop: 5, color: 'white'}}>
