@@ -33,7 +33,7 @@ export default function MessageTotal({navigation ,route }) {
     // console.log(tempTime.getMinutes());
     // console.log(tempTime.getSeconds());
 
-    setConvertTime(`${tempTime.getFullYear()}년 ${tempTime.getMonth()}월 ${tempTime.getDate()}일 ${tempTime.getHours()}시 ${tempTime.getMinutes()}분 ${tempTime.getSeconds()}초`);
+    setConvertTime(`${tempTime.getFullYear()}년 ${tempTime.getMonth()+1}월 ${tempTime.getDate()}일 ${tempTime.getHours()}시 ${tempTime.getMinutes()}분 ${tempTime.getSeconds()}초`);
     axios.get(`http://k6c102.p.ssafy.io:8080/v1/member/inquire?memberId=${receiverName}`).then(res => { 
       setRecevier(res.data.name);
       setRecevierProfile(res.data.profileUrl);

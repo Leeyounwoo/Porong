@@ -10,10 +10,20 @@ const icon = require('../assets/icons/letter.png');
 
 //데이터의 위치를
 export default function Readable({contentUrl, amISend,  nickName,  time,  place,  context,  latitude,  longitude,}) {
-    return (
+  const [target, setTarget] = useState('');
+  
+  useEffect(() => {
+    if (amISend) {
+      setTarget('님에게 보낸 메세지를')
+    } else {
+      setTarget('님이 보낸 메세지를')
+    }
+    },[])
+  
+  return (
       <View>
       <View style={{marginLeft: 20,marginTop:20, marginBottom:15, alignSelf:'baseline'}}>
-        <Text style={{fontSize:15, color:'black'}}><Text style={{color:'#0075FF', fontWeight:'bold'}}>{nickName}</Text> 님이 보낸 메세지를</Text>
+        <Text style={{ fontSize: 15, color: 'black' }}><Text style={{ color: '#0075FF', fontWeight: 'bold' }}>{nickName}</Text>{target}</Text>
       </View>
       <View
         style={{alignItems: 'center', borderRadius: 15, overflow: 'hidden'}}>
@@ -24,7 +34,7 @@ export default function Readable({contentUrl, amISend,  nickName,  time,  place,
           style={{width: 350, height: 200}}
           region={{
             latitude: latitude,
-            longitude: latitude,
+            longitude: longitude,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}
@@ -32,7 +42,7 @@ export default function Readable({contentUrl, amISend,  nickName,  time,  place,
           <Marker
             title="test"
             icon={icon}
-            coordinate={{latitude: latitude, longitude: latitude}}
+            coordinate={{latitude: latitude, longitude: longitude}}
           />
         </MapView>
             </View>
