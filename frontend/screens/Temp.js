@@ -90,7 +90,6 @@ export default function Temp({navigation, route}) {
         setReceiverUrl(res.data.receiverUrl);
         setPapertype(res.data.papertype);
         setSenderUrl(res.data.senderUrl);
-        setReceiver
       }).catch(err => {
         console.log("axios temp error ",err);
       });
