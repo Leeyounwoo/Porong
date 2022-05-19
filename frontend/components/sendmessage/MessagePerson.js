@@ -45,28 +45,28 @@ export default function MessagePerson({navigation}) {
   });
 
   // Header에 버튼 추가
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={{marginRight: 10}}
-          onPress={() => {
-            startImageRotateFunction();
-            fetch();
-          }}>
-          <Animated.Image
-            source={require('../../assets/icons/update-arrows.png')}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: 'white',
-              transform: [{rotate: RotateData}],
-            }}
-          />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <TouchableOpacity
+  //         style={{marginRight: 10}}
+  //         onPress={() => {
+  //           startImageRotateFunction();
+  //           fetch();
+  //         }}>
+  //         <Animated.Image
+  //           source={require('../../assets/icons/update-arrows.png')}
+  //           style={{
+  //             width: 30,
+  //             height: 30,
+  //             tintColor: 'white',
+  //             transform: [{rotate: RotateData}],
+  //           }}
+  //         />
+  //       </TouchableOpacity>
+  //     ),
+  //   });
+  // }, [navigation]);
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -75,53 +75,53 @@ export default function MessagePerson({navigation}) {
         message: '마음 사서함이 회원님의 연락처에 접근하려고 합니다.',
       })
         // 연략처 접근 성공시
-      .then(_ => {
-        Contacts.getAll()
-          // Phone에 저장되어 있는 모든 연락처에 접근
-        .then(res => {
-          const temp = [];
-          const numData = [];
-          res.map(contact => {
-            if (contact.phoneNumbers[0]) {
-              let num = contact.phoneNumbers[0].number;
-              num = num.replace(/-/g, '');
-              num = num.replace(/ /g, '');
-              numData.push(num);
-              temp.push({
-                name: contact.displayName,
-                phoneNumber: num,
-                signup: false,
-                profileUrl: null,
-                memberId: -1,
+        .then(_ => {
+          Contacts.getAll()
+            // Phone에 저장되어 있는 모든 연락처에 접근
+            .then(res => {
+              const temp = [];
+              const numData = [];
+              res.map(contact => {
+                if (contact.phoneNumbers[0]) {
+                  let num = contact.phoneNumbers[0].number;
+                  num = num.replace(/-/g, '');
+                  num = num.replace(/ /g, '');
+                  numData.push(num);
+                  temp.push({
+                    name: contact.displayName,
+                    phoneNumber: num,
+                    signup: false,
+                    profileUrl: null,
+                    memberId: -1,
+                  });
+                }
               });
-            }
-          });
-          axios({
-            url: 'http://k6c102.p.ssafy.io:8080/v1/member/fetchContact',
-            method: 'post',
-            data: numData,
-          })
-          .then(result => {
-            const numArr = result.data.map(d => d.phoneNumber);
-            const notIn = [];
-            for (let i = 0; i < temp.length; i++) {
-              if (!numArr.includes(temp[i].phoneNumber)) {
-                notIn.push(temp[i]);
-              }
-            }
-            setContacts([...result.data, ...notIn]);
-          })
-          .catch(err => {
-            console.log("axios fetchContact error : ",err);
-          });
+              axios({
+                url: 'http://k6c102.p.ssafy.io:8080/v1/member/fetchContact',
+                method: 'post',
+                data: numData,
+              })
+                .then(result => {
+                  const numArr = result.data.map(d => d.phoneNumber);
+                  const notIn = [];
+                  for (let i = 0; i < temp.length; i++) {
+                    if (!numArr.includes(temp[i].phoneNumber)) {
+                      notIn.push(temp[i]);
+                    }
+                  }
+                  setContacts([...result.data, ...notIn]);
+                })
+                .catch(err => {
+                  console.log('axios fetchContact error : ', err);
+                });
+            })
+            .catch(err => {
+              console.log('cannot access', err);
+            });
         })
         .catch(err => {
-          console.log('cannot access', err);
+          console.log('contact permission error', err);
         });
-      })
-      .catch(err => {
-        console.log("contact permission error", err);
-      });
     } else if (Platform.OS === 'ios') {
       console.log('지원하지 않는 os입니다.');
     }
@@ -132,9 +132,7 @@ export default function MessagePerson({navigation}) {
       //???
       AsyncStorage.getItem('user')
         .then(res => {
-
           console.log(JSON.parse(res));
-        
         })
         .catch(err => {
           console.log(err);
@@ -196,7 +194,7 @@ export default function MessagePerson({navigation}) {
             setContacts(fetchData);
           })
           .catch(err => {
-            console.log("contact fetch error ",err);
+            console.log('contact fetch error ', err);
           });
       })
       .catch(err => {
@@ -206,7 +204,16 @@ export default function MessagePerson({navigation}) {
 
   const PhoneBook = ({item}) => {
     return (
-      <View style={{flex: 1, flexDirection: 'row', margin: 3, backgroundColor: '#ffffff',height: 60, borderRadius: 10,elevation:3 }}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          margin: 3,
+          backgroundColor: '#ffffff',
+          height: 60,
+          borderRadius: 10,
+          elevation: 3,
+        }}>
         <View
           style={{
             flex: 1,
@@ -262,7 +269,7 @@ export default function MessagePerson({navigation}) {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor:'#fbfaf4'}}>
+    <View style={{flex: 1, backgroundColor: '#fbfaf4'}}>
       <FlatList
         style={{flex: 1}}
         data={contacts}
