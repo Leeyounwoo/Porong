@@ -20,6 +20,7 @@ public class ResponseSentMessageDto implements Serializable {
     private LocalDateTime createdAt;
     private String title;
     private String location;
+    private int paperType;
 
     public ResponseSentMessageDto(Message message) {
 
@@ -34,6 +35,7 @@ public class ResponseSentMessageDto implements Serializable {
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
         this.location = message.getLocation();
+        this.paperType = message.getPaperType();
     }
 
 }

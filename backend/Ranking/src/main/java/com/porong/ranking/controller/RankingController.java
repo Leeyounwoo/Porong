@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,20 +23,27 @@ public class RankingController {
     private final ClearService clearService;
 
     @PostMapping("/postmessage")
-    public void ramenView(@RequestBody RequestDto requestDto){
+    public void location(@RequestBody RequestDto requestDto){
         String coordinate = requestDto.getLongitude() +","+ requestDto.getLatitude();
         String locationName = null;
         locationName = locationService.getlocation(coordinate);
+        double longitude = requestDto.getLongitude();
+        double latitude = requestDto.getLatitude();
         if (locationName != null) {
-            locationService.countLocation(locationName);
+            locationService.countLocation(locationName, latitude, longitude);
         }
         System.out.println(locationName);
     }
 
     @GetMapping("/location")
     public List<LocationVo> fetchRanking() {
+<<<<<<< HEAD
         List<String> locations = locationService.getRanking();
         return locations.stream().map(LocationVo::new).collect(Collectors.toList());
+=======
+        List<LocationVo> locations = locationService.getRanking();
+        return locations;
+>>>>>>> 02b33bbcffdf2db226c8bbf8a2aae824c1cea950
     }
 
     @DeleteMapping("/clear")

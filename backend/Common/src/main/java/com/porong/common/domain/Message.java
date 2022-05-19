@@ -51,6 +51,9 @@ public class Message {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
+    @Column(name = "paper_type")
+    private int paperType;
+
     @Column(length = 2200, nullable = false)
     private String title;
 
@@ -82,6 +85,7 @@ public class Message {
         this.latitude = requestCreateMessageDto.getLatitude();
         this.longitude = requestCreateMessageDto.getLongitude();
         this.location = location;
+        this.paperType = requestCreateMessageDto.getPaperType();
         this.dueTime = requestCreateMessageDto.getDueTime();
         this.title = requestCreateMessageDto.getTitle();
         this.contentText = requestCreateMessageDto.getTitle();

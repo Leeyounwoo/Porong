@@ -11,9 +11,13 @@ import java.io.Serializable;
 @RedisHash(value="location")
 public class Location implements Serializable {
 
-    @org.springframework.data.annotation.Id
+    @Id
     private Long Id;
     @Indexed
-    private String location;
+    private double latitude;
+    @Indexed
+    private double longitude;
+    @Indexed
+    private String locationName;
 
 }

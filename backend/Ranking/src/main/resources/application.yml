@@ -9,7 +9,6 @@ spring:
   cache:
     type: redis
   redis:
-    # host: host.docker.internal
     host: "k6c102.p.ssafy.io"
     #    host: localhost
     port: 6380

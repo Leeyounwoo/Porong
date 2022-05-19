@@ -3,6 +3,8 @@ package com.porong.ranking.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.porong.ranking.component.RankingZset;
+import com.porong.ranking.domain.Location;
+import com.porong.ranking.domain.LocationVo;
 import com.porong.ranking.repository.LocationRedisRepository;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,6 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,12 +33,37 @@ public class LocationService {
     RankingZset rankingZset = new RankingZset(redisTemplate);
 
     @Transactional
-    public void countLocation(String locationName) {
+    public void countLocation(String locationName, double latitude, double longitude) {
             rankingZset.locationCount(locationName);
+
+            Location location = new Location();
+            location.setLocationName(locationName);
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+
+            locationRedisRepository.save(location);
+
         }
 
+<<<<<<< HEAD
     public List<String> getRanking() {
         return rankingZset.getLocation();
+=======
+    public List<LocationVo> getRanking() {
+
+        List<String> locations = rankingZset.getLocation();
+
+        List<LocationVo> locationsList = new ArrayList<>();
+
+        Location location = new Location();
+
+        for (String locationName : locations) {
+            location = locationRedisRepository.findByLocationName(locationName);
+            locationsList.add(new LocationVo(location));
+        }
+
+        return locationsList;
+>>>>>>> 02b33bbcffdf2db226c8bbf8a2aae824c1cea950
     }
 
 

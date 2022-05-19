@@ -20,6 +20,7 @@ public class ResponseUnCheckedMessageDto implements Serializable {
     private LocalDateTime createdAt;
     private String title;
     private String location;
+    private int paperType;
 
     public ResponseUnCheckedMessageDto(Message message) {
         this.messageId = message.getMessageId();
@@ -33,6 +34,7 @@ public class ResponseUnCheckedMessageDto implements Serializable {
         this.createdAt = message.getCreatedAt();
         this.title = message.getTitle();
         this.location = message.getLocation();
+        this.paperType = message.getPaperType();
     }
 
 }

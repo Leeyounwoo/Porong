@@ -23,6 +23,7 @@ public class ResponseCheckedMessageDto implements Serializable {
     private String title;
     private String contentText;
     private String location;
+    private int paperType;
 
 
     public ResponseCheckedMessageDto(Message message){
@@ -41,6 +42,7 @@ public class ResponseCheckedMessageDto implements Serializable {
         this.title = message.getTitle();
         this.contentText = message.getContentText();
         this.location = message.getLocation();
+        this.paperType = message.getPaperType();
     }
 
     public ResponseCheckedMessageDto(){
