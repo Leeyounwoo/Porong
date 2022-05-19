@@ -12,6 +12,7 @@ import Geocoder from 'react-native-geocoding';
 import axios from 'axios';
 import {useStore, useSelector} from 'react-redux';
 import {NativeBaseProvider, Select, Box, CheckIcon} from 'native-base';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function ReceivedBox({navigation}) {
   const store = useStore();
@@ -20,6 +21,7 @@ export default function ReceivedBox({navigation}) {
   const [sendedMessages, setSendedMessages] = useState({});
   const [sendedMessagesKeys, setSendedMessagesKeys] = useState([]);
   const user = useSelector(state => state.userreducer);
+  const isFocused = useIsFocused();
 
   const [singlePos, setSinglePos] = useState({
     lat: 37.5665,
@@ -81,7 +83,7 @@ export default function ReceivedBox({navigation}) {
           console.log('getreceivedmessage error', err);
         });
     }
-  }, [label1, user.memberId]);
+  }, [label1, user.memberId, isFocused]);
 
   useLayoutEffect(() => {
     // 받은 메세지
@@ -90,7 +92,6 @@ export default function ReceivedBox({navigation}) {
         `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
       )
       .then(res => {
-        console.log(res);
         const tmessages = res.data;
         tmessages.map(async (message, midx) => {
           await setReceivedMessages(prev => {
@@ -143,7 +144,7 @@ export default function ReceivedBox({navigation}) {
       .catch(err => {
         console.log('sentmessages set error', err);
       });
-  }, []);
+  }, [label1, user.memberId, isFocused]);
 
   useEffect(() => {
     Geocoder.from(singlePos).then(json => {
