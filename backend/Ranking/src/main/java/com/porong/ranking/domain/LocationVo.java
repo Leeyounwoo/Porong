@@ -7,13 +7,12 @@ import java.io.Serializable;
 @Data
 public class LocationVo implements Serializable {
     private final String location;
-
-    public LocationVo(String locationName) {
-        this.location = locationName;
-    }
+    private final double latitude;
+    private final double longitude;
 
     public LocationVo(Location location) {
-        this.location = location.getLocation();
+        this.location = location.getLocationName();
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
-
 }

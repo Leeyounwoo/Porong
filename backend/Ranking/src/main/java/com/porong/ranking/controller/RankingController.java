@@ -24,19 +24,21 @@ public class RankingController {
     private final ClearService clearService;
 
     @PostMapping("/postmessage")
-    public void ramenView(@RequestBody RequestDto requestDto){
+    public void location(@RequestBody RequestDto requestDto){
         String coordinate = requestDto.getLongitude() +","+ requestDto.getLatitude();
         String locationName = null;
         locationName = locationService.getlocation(coordinate);
+        double longitude = requestDto.getLongitude();
+        double latitude = requestDto.getLatitude();
         if (locationName != null) {
-            locationService.countLocation(locationName);
+            locationService.countLocation(locationName, latitude, longitude);
         }
     }
 
     @GetMapping("/location")
     public List<LocationVo> fetchRanking() {
-        List<String> locations = locationService.getRanking();
-        return locations.stream().map(LocationVo::new).collect(Collectors.toList());
+        List<LocationVo> locations = locationService.getRanking();
+        return locations;
     }
 
     @DeleteMapping("/clear")
