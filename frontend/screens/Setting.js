@@ -19,10 +19,9 @@ export default function Setting({navigation}) {
         navigation.navigate('LoginStack');
       })
       .catch(err => {
-        console.log("remove user error",err);
+        console.log('remove user error', err);
       });
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -41,27 +40,30 @@ export default function Setting({navigation}) {
             justifyContent: 'center',
             marginTop: 30,
           }}>
-          <TouchableOpacity>
-            {user ? <Image
-              source={{uri: user.profileUrl}}
-              style={{
-                height: 150,
-                width: 150,
-                borderRadius: 100,
-                margin: 10,
-              }}
-            /> : null  }
-          </TouchableOpacity>
+          <View>
+            {user ? (
+              <Image
+                source={{uri: user.profileUrl}}
+                style={{
+                  height: 150,
+                  width: 150,
+                  borderRadius: 100,
+                  margin: 10,
+                }}
+              />
+            ) : null}
+          </View>
         </View>
         <View style={{flex: 2}}>
           <Text
             style={{
               alignSelf: 'center',
               fontSize: 21,
-              color: 'black',
+              color: '#595959',
               marginTop: 20,
             }}>
-            {user.nickname}
+            안녕하세요 <Text style={{fontWeight: '900'}}>{user.nickname}</Text>
+            님!
           </Text>
         </View>
       </ScrollView>
@@ -75,17 +77,27 @@ export default function Setting({navigation}) {
         }}>
         <TouchableOpacity
           style={{
-            backgroundColor: '#4385E0',
-            width: 180,
+            backgroundColor: '#7aaf91',
+            width: 160,
             height: 40,
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
+            flexDirection: 'row',
           }}
           onPress={logout}>
           <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
             로그아웃
           </Text>
+          <Image
+            source={require('../assets/icons/logout.png')}
+            style={{
+              width: 15,
+              height: 15,
+              tintColor: 'white',
+              marginLeft: 10,
+            }}
+          />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

@@ -30,6 +30,12 @@ export default function MessageReceiveAlert({
         </View>
         {!isChecked && <View style={styles.circle}></View>}
       </View>
+      {/* <View
+        style={{
+          borderBottomWidth: 0.5,
+          borderColor: 'grey',
+          marginHorizontal: 30,
+        }}></View> */}
     </View>
   );
 }
@@ -48,11 +54,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profilebox: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     borderRadius: 70,
     marginLeft: 12,
     overflow: 'hidden',
+    elevation: 5,
   },
   profileimage: {
     width: '100%',
@@ -65,17 +72,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   text: {
-    // whiteSpace: 'nowrap',
+    fontWeight: '500',
+    color: '#595959',
   },
   textbold: {
     fontWeight: 'bold',
-    color: '#FF9292',
+    color: '#335342',
   },
   circle: {
     width: 10,
     height: 10,
     borderRadius: 50,
-    backgroundColor: '#FF9292',
+    backgroundColor: 'skyblue',
     alignItems: 'center',
   },
 });
