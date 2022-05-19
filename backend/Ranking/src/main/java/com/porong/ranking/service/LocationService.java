@@ -54,7 +54,7 @@ public class LocationService {
         Location location = new Location();
 
         for (String locationName : locations) {
-            location = locationRedisRepository.findByLocation(locationName);
+            location = locationRedisRepository.findByLocationName(locationName);
             locationsList.add(new LocationVo(location));
         }
 
