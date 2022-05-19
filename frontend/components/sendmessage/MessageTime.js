@@ -27,7 +27,7 @@ export default function MessageTime({navigation}) {
     <View
       style={{
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#fbfaf4',
       }}>
       <View
         style={{
@@ -35,20 +35,22 @@ export default function MessageTime({navigation}) {
           marginHorizontal: 10,
           justifyContent: 'center',
         }}>
-        <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
+        <Text style={{fontSize: 18, fontWeight: 'bold', color: '#595959'}}>
           메세지 수신 시간을 설정해주세요!
         </Text>
-        <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
+        <Text style={{fontSize: 18, fontWeight: 'bold', color: '#595959'}}>
           선택한 시간에 메세지가 발송됩니다.
         </Text>
       </View>
-      <View style={{flex: 0.1, margin: 10}}>
+      <View style={{flex: 0.2, margin: 10, backgroundColor:'white',  borderRadius:20, elevation:5}}>
         <Text
           style={{
             fontSize: 16,
             fontWeight: 'bold',
-            color: 'grey',
-            alignSelf: 'center',
+            color: '#595959',
+            marginLeft: 15,
+            marginTop: 10,
+            alignSelf: 'flex-start',
           }}>
           며칠 후에 발송될지 선택하기
         </Text>
@@ -58,6 +60,8 @@ export default function MessageTime({navigation}) {
             flexDirection: 'row',
             justifyContent: 'space-around',
             marginTop: 30,
+            backgroundColor: 'white',
+            
           }}>
           <TouchableOpacity
             style={styles.dateBtn}
@@ -81,13 +85,18 @@ export default function MessageTime({navigation}) {
           flex: 0.5,
           alignItems: 'center',
           justifyContent: 'center',
-          marginVertical: 10,
+          margin: 10,
+          borderRadius: 20,
+          backgroundColor: 'white',
+          elevation: 5
         }}>
         <Text
           style={{
             fontSize: 16,
             fontWeight: 'bold',
-            color: 'grey',
+            color: '#595959',
+            marginLeft: 25,
+            alignSelf:'flex-start',
             marginBottom: 10,
           }}>
           혹은 시간 직접 설정하기
@@ -112,7 +121,7 @@ export default function MessageTime({navigation}) {
 
 const styles = StyleSheet.create({
   dateBtn: {
-    backgroundColor: '#4385E0',
+    backgroundColor: '#7aaf91',
     height: 35,
     width: 100,
     borderRadius: 10,

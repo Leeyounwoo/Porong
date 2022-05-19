@@ -9,6 +9,7 @@ const POSITION = 'POSITION';
 const LOGIN = 'LOGIN';
 const ISSECRET = 'ISSECRET';
 const IMAGEUPLOAD = 'IMAGEUPLOAD';
+const PAPERTYPE = 'PAPERTYPE';
 const MEMBERID = 'MEMBERID';
 //action - 순수함수로 이뤄져야된다. 일정한 리턴값을 가지는 함수.
 export const personContain = (sender, receiver) => {
@@ -23,8 +24,8 @@ export const placeContain = (lat, lng) => {
 export const typeContain = data => {
   return {type: TYPE, data};
 };
-export const messageContain = (title, content, pic) => {
-  return {type: MESSAGE, title, content, pic};
+export const messageContain = (title, content, pic, papertype) => {
+  return {type: MESSAGE, title, content, pic,papertype};
 };
 
 export const imageContain = (pic) => {
@@ -79,7 +80,8 @@ const reducer = (state = init, action) => {
         ...state,
         title: action.title,
         contentText: action.content,
-        contentUrl: action.pic
+        contentUrl: action.pic,
+        paperType:action.papertype,
       };
     case 'IMAGEUPLOAD':
       return {
