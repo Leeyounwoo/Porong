@@ -21,7 +21,8 @@ export default function Readable({contentUrl, amISend, senderUrl, nickName, pape
     },[])
   
   return (
-      <View>
+    <View>
+      <ScrollView>
       <View style={{ marginLeft: 20, marginTop: 20, marginBottom: 15, alignItems: 'flex-start' }}>
         {senderUrl ? <Image source={{uri:senderUrl}} style={{ width: 35, height: 35, borderRadius: 30, alignSelf:'flex-start' }} ></Image> : null }<Text style={{ fontSize: 15, color: '#595959' }}><Text style={{fontSize:18, color: '#335342', fontWeight: 'bold' }}>{nickName}</Text>{target}</Text>
       </View>
@@ -71,7 +72,8 @@ export default function Readable({contentUrl, amISend, senderUrl, nickName, pape
               }}
             >{ context}</Text>
       </View>
-      </View>
+        </View>
+        </ScrollView>
     </View>
   );
 }

@@ -81,7 +81,7 @@ const Home = ({navigation}) => {
       url: 'http://k6c102.p.ssafy.io:8085/v1/ranking/location',
       method: 'get',
     }).then(res => {
-      console.log(res);
+      // console.log(res);
       setRank(res.data);
     });
   }, []);
@@ -130,7 +130,7 @@ const Home = ({navigation}) => {
       },
       error => {
         // See error code charts below.
-        console.log(error.code, error.message);
+        // console.log(error.code, error.message);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -219,7 +219,7 @@ const Home = ({navigation}) => {
             );
           })}
           {newMarkersKey.map((single, idx) => {
-            console.log(newMarkers);
+            // console.log(newMarkers);
             //제약 시간 - 현재 시간을 표시
             if (newMarkers[single] !== undefined) {
               return (

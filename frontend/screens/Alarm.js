@@ -96,7 +96,7 @@ export default function Alarm({navigation}) {
       AsyncStorage.multiRemove(tkeys)
         .then(res => {
           AsyncStorage.getAllKeys((err, alertKeys) => {
-            console.log('삭제 후', alertKeys);
+            // console.log('삭제 후', alertKeys);
           });
         })
         .catch(err => {
