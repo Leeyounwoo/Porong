@@ -107,7 +107,7 @@ export default function Alarm({navigation}) {
   };
   return (
     <ScrollView style={{marginBottom: 130}}>
-      <Button onPress={deleteAll} title="지우기"></Button>
+      {/* <Button onPress={deleteAll} title="지우기"></Button> */}
       <View style={styles.allcontainer}>
         {alertKeys.map((key, idx) => {
           if (
