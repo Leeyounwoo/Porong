@@ -227,7 +227,7 @@ export default function ReceivedBox({navigation}) {
                     return (
                       <Marker
                         key={idx}
-                        title={`${single.senderName}의 메세지`}
+                        // title={`${single.senderName}의 메세지`}
                         onPress={() => {
                           if (label1 === 'receive') {
                             goToMessageDetail1(single.messageId);
