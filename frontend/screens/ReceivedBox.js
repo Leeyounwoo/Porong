@@ -92,8 +92,11 @@ export default function ReceivedBox({navigation}) {
         `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getreceivedmessages`,
       )
       .then(res => {
+        console.log('성공');
+        const temp1 = receivedMessagesKeys;
         const tmessages = res.data;
         tmessages.map(async (message, midx) => {
+          temp1.push(message['messageId']);
           await setReceivedMessages(prev => {
             return {
               ...prev,
@@ -106,11 +109,10 @@ export default function ReceivedBox({navigation}) {
               },
             };
           });
-          setReceivedMessagesKeys(prev => [
-            ...prev,
-            tmessages[midx]['messageId'],
-          ]);
         });
+        const set = new Set();
+        temp1.map(item => set.add(item));
+        setReceivedMessagesKeys(Array.from(set));
       })
       .catch(err => {
         console.log('getreceivedmessages set error', err);
@@ -121,8 +123,11 @@ export default function ReceivedBox({navigation}) {
         `http://k6c102.p.ssafy.io:8080/v1/message/${user.memberId}/getsentmessages`,
       )
       .then(res => {
+        const temp = sendedMessagesKeys;
+
         const tmessages = res.data;
         tmessages.map(async (message, midx) => {
+          temp.push(message['messageId']);
           await setSendedMessages(prev => {
             return {
               ...prev,
@@ -135,11 +140,11 @@ export default function ReceivedBox({navigation}) {
               },
             };
           });
-          setSendedMessagesKeys(prev => [
-            ...prev,
-            tmessages[midx]['messageId'],
-          ]);
         });
+        const set = new Set();
+        temp.map(item => set.add(item));
+
+        setSendedMessagesKeys(Array.from(set));
       })
       .catch(err => {
         console.log('sentmessages set error', err);
