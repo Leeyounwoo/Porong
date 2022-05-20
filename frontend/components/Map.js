@@ -5,6 +5,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 export default function MapTest({totalpos, mark}) {
   const checkreceive = e => {
+    console.log("check1");
     mark(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude);
   };
   return (
@@ -18,7 +19,7 @@ export default function MapTest({totalpos, mark}) {
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
         }}
-        onPress={checkreceive}>
+        onPress={ checkreceive}>
         {totalpos ? (
           <Marker
             coordinate={{

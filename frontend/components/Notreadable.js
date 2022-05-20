@@ -1,8 +1,8 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {StyleSheet, View, Text, Button, Image} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useStore} from 'react-redux';
-import Geoloation from 'react-native-geolocation-service';
+import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 
 const icon = require('../assets/icons/letter.png');

@@ -41,7 +41,7 @@ const TAB_TO_RESET = 'HomeTab';
 const resetHomeStackOnTabPress = ({navigation, route}) => ({
   tabPress: e => {
     const state = navigation.getState();
-    console.log(state);
+    // console.log(state);
     if (state) {
       // Grab all the tabs that are NOT the one we just pressed
       const nonTargetTabs = state.routes.filter(r => r.key !== e.target);
@@ -69,10 +69,10 @@ const Tabs = () => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
     messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
+      // console.log(
+      //   'Notification caused app to open from background state:',
+      //   remoteMessage.notification,
+      // );
       navigation.navigate(remoteMessage.data.type);
     });
   }, []);
