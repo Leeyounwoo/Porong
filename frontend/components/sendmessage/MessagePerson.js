@@ -132,7 +132,7 @@ export default function MessagePerson({navigation}) {
       //???
       AsyncStorage.getItem('user')
         .then(res => {
-          console.log(JSON.parse(res));
+          // console.log(JSON.parse(res));
         })
         .catch(err => {
           console.log(err);
@@ -173,10 +173,10 @@ export default function MessagePerson({navigation}) {
           data: numData,
         })
           .then(result => {
-            console.log('from server', result);
+            // console.log('from server', result);
             const fetchData = [];
             for (let i = 0; i < result.data.length; i++) {
-              console.log('single data : ', result.data[i].memberId);
+              // console.log('single data : ', result.data[i].memberId);
               if (result.data[i].memberId < 0) {
                 fetchData.push({
                   name: res[i].displayName,

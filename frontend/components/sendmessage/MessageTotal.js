@@ -22,7 +22,7 @@ export default function MessageTotal({navigation ,route }) {
   const [transPos, setTransPos] = useState('');
   Geocoder.init('AIzaSyDKnRUG-QXwZuw5qy4SP38K0nfmI0LM09s');
   const store = useStore();
-  console.log(image);
+  // console.log(image);
   useLayoutEffect(() => {
     
     let tempTime = new Date(dueTime);

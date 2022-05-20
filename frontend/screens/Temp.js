@@ -55,14 +55,14 @@ export default function Temp({navigation, route}) {
       now.getMinutes(),
     )}:${dateTrans(now.getSeconds())}`;
 
-    console.log(
-      'memberId ',
-      user.memberId,
-      'messageId:',
-      parseInt(messageId),
-      'time : ',
-      time,
-    );
+    // console.log(
+    //   'memberId ',
+    //   user.memberId,
+    //   'messageId:',
+    //   parseInt(messageId),
+    //   'time : ',
+    //   time,
+    // );
     axios
       .post('http://k6c102.p.ssafy.io:8080/v1/message/getmessage', null, {
         params: {
@@ -72,7 +72,7 @@ export default function Temp({navigation, route}) {
         },
       })
       .then(res => {
-        console.log('성공', res.data);
+        // console.log('성공', res.data);
         const date = `${parseInt(res.data.dueTime[0])}년 ${parseInt(
           res.data.dueTime[1],
         )}월 ${parseInt(res.data.dueTime[2])}일 ${parseInt(

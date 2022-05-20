@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 import {NavigationContainer} from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import {Provider, useSelector} from 'react-redux';
@@ -89,7 +92,7 @@ const App = () => {
   const [userLng, setUserLng] = useState(0); // 경도
 
   useEffect(() => {
-    console.log('position test ', userLat, userLng);
+    // console.log('position test ', userLat, userLng);
 
     // if (userLat && userLng) {
     //   console.log("check11");
@@ -97,7 +100,7 @@ const App = () => {
       const messageKeys = keys.filter(key => key[0] !== 'A');
       AsyncStorage.multiGet(messageKeys, async (err, results) => {
         results.map((result, idx) => {
-          console.log('yrdy :        ', result);
+          // console.log('yrdy :        ', result);
           const key = results[idx][0];
           const value = JSON.parse(results[idx][1]);
 
@@ -107,7 +110,7 @@ const App = () => {
             const distance = calDistance(userLat, userLng, latitude, longitude);
 
             if (distance <= 100000) {
-              console.log('check!!0');
+              // console.log('check!!0');
               axios
                 .post(
                   'http://k6c102.p.ssafy.io:8080/v1/message/postSatisfyFCM',
@@ -141,7 +144,7 @@ const App = () => {
     );
   };
 
-  const Stacks = () => {
+  const Stacks =  () => {
     const [isLogin, setIsLogin] = React.useState(false);
     AsyncStorage.getItem('user')
       .then(info => {
@@ -190,7 +193,7 @@ const App = () => {
           )
           .then(json => {
             let received = [];
-            console.log(json);
+            // console.log(json);
             json.data.map(single => {
               received.push(single);
             });
