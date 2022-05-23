@@ -43,7 +43,7 @@ export default function MessageType({navigation}) {
               store.getState().reducer,
             )
             .then(res => {
-              console.log("success test : ",res);
+              // console.log("success test : ",res);
               navigation.navigate('Main');
             })
             .catch(err => {
@@ -74,7 +74,7 @@ export default function MessageType({navigation}) {
               store.getState().reducer,
             )
             .then(res => {
-              console.log(res);
+              // console.log(res);
               navigation.navigate('Main');
             })
             .catch(err => {

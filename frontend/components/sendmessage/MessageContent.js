@@ -39,7 +39,7 @@ export default function MessageContent({navigation}) {
 
   const nextColor = () => {
     if (colors < 4) {
-      console.log(colors);
+      // console.log(colors);
       return setColors(colors + 1);
     }
     setColors(0);

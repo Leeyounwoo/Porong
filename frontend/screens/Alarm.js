@@ -53,11 +53,15 @@ export default function Alarm({navigation}) {
 
   // 알림ID 배열 업데이트
   const updateAlertKeys = keys => {
+    const temp = alertKeys;
     keys.map((key, idx) => {
       if (alertKeys.includes(keys[idx]) === false) {
-        setAlertKeys(prev => [...prev, keys[idx]]);
+        temp.push(key);
       }
     });
+    const set = new Set();
+    temp.map(item => set.add(item));
+    setAlertKeys(Array.from(set));
   };
 
   useEffect(() => {
@@ -65,6 +69,8 @@ export default function Alarm({navigation}) {
       const newKeys = keys.filter(
         tempKey => !alertKeys.includes(tempKey) && tempKey[0] === 'A',
       );
+      console.log('newKeys', newKeys);
+
       AsyncStorage.multiGet(newKeys, async (err, stores) => {
         await updateAlertLocations(stores);
         await updateAlertKeys(newKeys);
@@ -76,17 +82,12 @@ export default function Alarm({navigation}) {
   useEffect(() => {
     AsyncStorage.getAllKeys((err, keys) => {
       const newKeys = keys.filter(
-        tempKey => !alertKeys.includes(tempKey) && tempKey[0] === 'A',
+        tempKey => alertKeys.includes(tempKey) === false && tempKey[0] === 'A',
       );
-      const talertKeys = [];
-      keys.map((key, idx) => {
-        if (keys[idx][0] === 'A') {
-          talertKeys.push(keys[idx]);
-        }
-      });
-      AsyncStorage.multiGet(talertKeys, async (err, stores) => {
+
+      AsyncStorage.multiGet(newKeys, async (err, stores) => {
         await updateAlertLocations(stores);
-        await updateAlertKeys(talertKeys);
+        await updateAlertKeys(newKeys);
       });
     });
   }, []);
@@ -96,7 +97,7 @@ export default function Alarm({navigation}) {
       AsyncStorage.multiRemove(tkeys)
         .then(res => {
           AsyncStorage.getAllKeys((err, alertKeys) => {
-            console.log('삭제 후', alertKeys);
+            // console.log('삭제 후', alertKeys);
           });
         })
         .catch(err => {
@@ -106,6 +107,7 @@ export default function Alarm({navigation}) {
   };
   return (
     <ScrollView style={{marginBottom: 130}}>
+      {/* <Button onPress={deleteAll} title="지우기"></Button> */}
       <View style={styles.allcontainer}>
         {alertKeys.map((key, idx) => {
           if (

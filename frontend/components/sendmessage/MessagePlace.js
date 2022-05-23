@@ -13,7 +13,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import {TextInput} from 'react-native-gesture-handler';
 import MapTest from '../Map';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {useStore} from 'react-redux';
 import {placeContain} from '../../reducer';
 
@@ -40,6 +40,7 @@ export default function MessagePlace({navigation}) {
   }, []);
 
   useEffect(() => {
+    console.log('totalpos');
     if (totalpos.lat != 0 && totalpos.lng != 0) {
       Geocoder.from(totalpos)
         .then(json => {
@@ -52,17 +53,20 @@ export default function MessagePlace({navigation}) {
   }, [totalpos]);
 
   const mark = (lat, lng) => {
+    console.log("check2");
     setTotalpos({...totalpos, lat: lat, lng: lng});
   };
 
-  const searchAddress = () => {
-    Geocoder.from(address).then(json => {
+  const searchAddress = async () => {
+    console.log("button click event");
+    await Geocoder.from(address).then(json => {
       setTotalpos({
         ...totalpos,
         lat: json.results[0].geometry.location.lat,
         lng: json.results[0].geometry.location.lng,
       });
     });
+    console.log(totalpos);
   };
 
   const prev = () => {
@@ -116,9 +120,7 @@ export default function MessagePlace({navigation}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-              onPress={() => {
-                searchAddress;
-              }}>
+              onPress={searchAddress}>
               <Text
                 style={{
                   color: 'white',

@@ -1,8 +1,8 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {StyleSheet, View, Text, Button, Image} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useStore} from 'react-redux';
-import Geoloation from 'react-native-geolocation-service';
+import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 
 const icon = require('../assets/icons/letter.png');
@@ -14,6 +14,7 @@ export default function Nodereadable({
   time,
   place,
   latitude,
+  senderUrl,
   longitude,
 }) {
   const [toFrom, setToFrom] = useState('false');
@@ -34,8 +35,8 @@ export default function Nodereadable({
           marginBottom: 15,
           alignSelf: 'baseline',
         }}>
-        <Text style={{fontSize: 15, color: 'black'}}>
-          <Text style={{color: '#0075FF', fontWeight: 'bold'}}>{nickName }</Text>
+        {senderUrl ? <Image source={{uri:senderUrl}} style={{ width: 35, height: 35, borderRadius: 30, alignSelf:'flex-start' }} ></Image> : null }<Text style={{fontSize: 15, color: '#595959'}}>
+          <Text style={{color: '#335342', fontWeight: 'bold'}}>{nickName }</Text>
           {toFrom}
         </Text>
       </View>
@@ -61,11 +62,11 @@ export default function Nodereadable({
         </MapView>
       </View>
       <View style={{ marginTop: 15, marginLeft: 20, alignSelf: 'baseline' }}>
-        <Text style={{color: 'black'}}><Text style={{color: '#0075FF', fontWeight: 'bold'}}>{time}</Text>확인 가능합니다</Text>
-        <Text style={{color: 'black'}}>
+        <Text style={{color: '#595959'}}><Text style={{color: '#335342', fontWeight: 'bold'}}>{time}</Text>확인 가능합니다</Text>
+        <Text style={{color: '#595959'}}>
           <Text
             style={{
-              color: '#0075FF',
+              color: '#335342',
               fontWeight: 'bold',
               alignSelf: 'baseline',
             }}>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     height: 150,
     width: 400,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#595959',
   },
   buttonContainer: {
     marginTop: 10,
