@@ -1,0 +1,74 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: d69493d9641df7cfe7ad6140fdd75a5a # kakao rest api key
+            client-secret: 5cjtbcma1P2ntCwMBnbkC1J3E9TrVfZU
+            client-name: Kakao
+            # redirect-uri 예시
+            # http://localhost:8080/login/oauth2/code/kakao
+            # http://i6c107.p.ssafy.io:8752/oauth/login
+            # '{baseUrl}/{action}/oauth2/code/{registrationId}'
+            redirect-uri: http://k6c102.p.ssafy.io:8082/oauth/login
+#            redirect-uri: http://localhost:8082/oauth/login
+            # 동의 항목에 있는 ID
+            scope: profile_nickname, profile_image, account_email, friends
+            authorization-grant-type: authorization_code
+            # 다른 서비스와 달리 카카오는 필수 파라미터 값들을 담아 POST 로만 요청이 가능하다 (그래서 yml 에 명시해 주어야 한다)
+            client-authentication-method: POST
+        provider:
+          # 스프링이 지원하는 서비스는 구글, 깃헙, 페이스북, 옥타라 그 외 서비스 (ex. 네이버, 카카오)는 provider 를 입력해주어야 한다
+          kakao:
+            authorization_uri: https://kauth.kakao.com/oauth/authorize # 인증을 요청하는 url
+            token_uri: https://kauth.kakao.com/oauth/token # 토큰을 요청하는 url
+            user-info-uri: https://kapi.kakao.com/v2/user/me # 회원 정보를 가져오는 url
+            user_name_attribute: id
+
+# beyond-meeting
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            clientId: 1054865786780-6c9h7c30tcd2icidolld1fius79trqvr.apps.googleusercontent.com
+#            clientSecret: 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
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - email
+#              - profile
+#app:
+#  auth:
+#    tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
+#    tokenExpirationMsec: 864000000
+#  cors:
+#    allowedOrigins: http://localhost:3000,http://localhost:8080, http://13.124.242.194:3000, http://13.124.242.194:8080, https://13.124.242.194:8080, https://13.124.242.194:3000
+#  oauth2:
+#    # After successfully authenticating with the OAuth2 Provider,
+#    # we'll be generating an auth token for the user and sending the token to the
+#    # redirectUri mentioned by the client in the /oauth2/authorize request.
+#    # We're not using cookies because they won't work well in mobile clients.
+#    # 13.124.242.194
+#    authorizedRedirectUris:
+#      - https://i6c101.p.ssafy.io:3000/oauth2/redirect
+#      - https://i6c101.p.ssafy.io/oauth2/redirect
+#      - https://localhost/oauth2/redirect
+#      - https://localhost:3000/oauth2/redirect
+#      - myandroidapp://oauth2/redirect
+#      - myiosapp://oauth2/redirect
+#
+#https 사용을 위한 추가
+#server:
+#  servlet:
+#    context-path: /api
+#  port: 8082
+#  ssl:
+#    enabled: true
+#    key-store-type: PKCS12
+#    key-store: classpath:keystore/ssafy.p12
+#    key-store-password: ssafyssafy
+#    key-alias: ssafy
+#trust:
+#  store: classpath:keystore/ssafy.p12
+#  store.password: ssafyssafy

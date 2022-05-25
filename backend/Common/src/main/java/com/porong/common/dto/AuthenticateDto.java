@@ -3,7 +3,7 @@ package com.porong.common.dto;
 import lombok.Data;
 
 @Data
-public class verifyDto {
+public class AuthenticateDto {
     private Long kakaoId;
-    private String number;
+    private String phoneNumber;
 }
