@@ -1,0 +1,57 @@
+# Spring Cloud Gateway port
+server:
+  port: 8888
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders:
+              - x-requested-with
+              - authorization
+              - content-type
+              - credential
+              - X-AUTH-TOKEN
+              - X-CSRF-TOKEN
+              - AccessToken
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
+
+      # routing microservice
+      routes:
+
+        - id: auth-service
+          uri: http://k6c102.p.ssafy.io:8080
+          predicates:
+            - Path=/v1/oauth/**
+
+        - id: capsule-service
+            uri: http://k6c102.p.ssafy.io:8080
+            predicates:
+              - Path=/v1/capsule/**
+
+        - id: member-service
+            uri: http://k6c102.p.ssafy.io:8080
+            predicates:
+              - Path=/v1/member/**
+
+        - id: message-service
+            uri: http://k6c102.p.ssafy.io:8080
+            predicates:
+              - Path=/v1/message/**
+
+        - id: ranking-service
+            uri: http://k6c102.p.ssafy.io:8085
+            predicates:
+              - Path=/v1/ranking/**
+
+# gateway 8888
+# common 8080 -> 8081
+# ranking 8085 -> 8085
