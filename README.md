@@ -138,7 +138,7 @@
 
 - 회원가입 및 휴대폰 인증
 
-  ![image-20220530161838627](README.assets/회원가입.png)
+  ![회원가입](https://user-images.githubusercontent.com/63943477/170945228-3b228ede-daba-45f4-add6-98a97450fc1d.png)
 
   - 카카오 계정을 이용하여 간단하게 회원가입을 할 수 있습니다.
 
@@ -173,7 +173,7 @@
 
 #### 장소 지정 (윤설)
 
-![image-20220530162540757](README.assets/장소 지정.png)
+![장소 지정](https://user-images.githubusercontent.com/63943477/170945217-9ef1fef2-0465-4b22-aa9a-8c80b467a5b7.png)
 
 - 주소를 입력하여 장소를 선택할 수 있습니다.
 - 지도를 직접 클릭하여 장소를 지정할 수 있습니다.
