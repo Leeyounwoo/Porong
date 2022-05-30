@@ -4,7 +4,7 @@
 >
 > 작은 새가 가볍게 날아오르는 소리를 뜻하는 '포롱거리다'에서 따온 말로 마음을 담은 메세지가 작은 새처럼 지정된 장소로 가는 모습을 비유하였다.
 
-![로고 이미지](.\README.assets\logo.png)
+![logo](https://user-images.githubusercontent.com/63943477/170923068-97f9ad82-2566-4556-958b-40e0269263ff.png)
 
 
 
@@ -260,11 +260,11 @@
 
 ### **3.1 아키텍처**
 
-![아키텍처 이미지](.\README.assets\아키텍처이미지.png)
+![아키텍처이미지](https://user-images.githubusercontent.com/63943477/170923398-f74f443e-a94f-4c9c-a123-e3254743601a.png)
 
 ### **3.2 ERD**
 
-![ERD 이미지](.\README.assets\ERD이미지.png)
+![ERD이미지](https://user-images.githubusercontent.com/63943477/170923273-a90b4f95-012d-4ee6-ac1c-5b7078154133.png)
 
 ### **3.3 API 명세서**
 
