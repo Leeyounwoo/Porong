@@ -4,7 +4,7 @@
 >
 > 작은 새가 가볍게 날아오르는 소리를 뜻하는 '포롱거리다'에서 따온 말로 마음을 담은 메세지가 작은 새처럼 지정된 장소로 가는 모습을 비유하였다.
 
-!![logo](https://user-images.githubusercontent.com/63943477/170923068-97f9ad82-2566-4556-958b-40e0269263ff.png)
+![logo](https://user-images.githubusercontent.com/63943477/170923068-97f9ad82-2566-4556-958b-40e0269263ff.png)
 
 
 
